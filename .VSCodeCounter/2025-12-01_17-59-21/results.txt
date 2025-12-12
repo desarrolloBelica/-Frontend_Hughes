@@ -1,0 +1,48 @@
+Date : 2025-12-01 17:59:21
+Directory : c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components
+Total : 21 files,  2579 codes, 97 comments, 297 blanks, all 2973 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |         21 |      2,579 |         97 |        297 |      2,973 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                            | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                               |         21 |      2,579 |         97 |        297 |      2,973 |
+| . (Files)                                                                                       |         11 |      1,841 |         83 |        209 |      2,133 |
+| parents                                                                                         |          2 |        152 |         12 |         20 |        184 |
+| ui                                                                                              |          8 |        586 |          2 |         68 |        656 |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                        | language       | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\FooterHs.tsx                 | TypeScript JSX |        114 |          7 |         10 |        131 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\NewsGallerySection.tsx       | TypeScript JSX |        146 |          4 |         15 |        165 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\TestimonialsHeader.tsx       | TypeScript JSX |         35 |          1 |          4 |         40 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\TestimonialsSection.tsx      | TypeScript JSX |        263 |         11 |         28 |        302 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\banner.tsx                   | TypeScript JSX |         87 |          5 |         13 |        105 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\events-recaps.tsx            | TypeScript JSX |        335 |          9 |         45 |        389 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\items-menu-mobile.tsx        | TypeScript JSX |        234 |         10 |         20 |        264 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\menu-list.tsx                | TypeScript JSX |        226 |         10 |         12 |        248 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\navbar.tsx                   | TypeScript JSX |         64 |          5 |         13 |         82 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\newspaper.tsx                | TypeScript JSX |        262 |         17 |         38 |        317 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\parents\ParentsNavbar.tsx    | TypeScript JSX |        108 |         10 |         13 |        131 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\parents\ParentsPortalNav.tsx | TypeScript JSX |         44 |          2 |          7 |         53 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\accordion.tsx             | TypeScript JSX |         59 |          0 |          8 |         67 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\badge.tsx                 | TypeScript JSX |         41 |          0 |          6 |         47 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\button.tsx                | TypeScript JSX |         54 |          0 |          6 |         60 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\card.tsx                  | TypeScript JSX |         83 |          0 |         10 |         93 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\navigation-menu.tsx       | TypeScript JSX |        161 |          2 |         13 |        176 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\separator.tsx             | TypeScript JSX |         24 |          0 |          5 |         29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\table.tsx                 | TypeScript JSX |        105 |          0 |         12 |        117 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\tabs.tsx                  | TypeScript JSX |         59 |          0 |          8 |         67 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\universities.tsx             | TypeScript JSX |         75 |          4 |         11 |         90 |
+| Total                                                                                           |                |      2,579 |         97 |        297 |      2,973 |
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

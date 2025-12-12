@@ -1,0 +1,40 @@
+"filename", "language", "TypeScript JSX", "PostCSS", "TypeScript", "comment", "blank", "total"
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\Chrome.tsx", "TypeScript JSX", 23, 0, 0, 1, 5, 29
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\about\page.tsx", "TypeScript JSX", 338, 0, 0, 25, 26, 389
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\academic-staff\page.tsx", "TypeScript JSX", 444, 0, 0, 24, 53, 521
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\graduates\page.tsx", "TypeScript JSX", 158, 0, 0, 8, 13, 179
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\learning-env\page.tsx", "TypeScript JSX", 234, 0, 0, 11, 20, 265
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\login\page.tsx", "TypeScript JSX", 194, 0, 0, 5, 28, 227
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\programs\page.tsx", "TypeScript JSX", 185, 0, 0, 12, 15, 212
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\undergraduate\page.tsx", "TypeScript JSX", 93, 0, 0, 10, 11, 114
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\admissions\page.tsx", "TypeScript JSX", 455, 0, 0, 24, 49, 528
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\admissions\route.ts", "TypeScript", 0, 0, 37, 0, 7, 44
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\login\route.ts", "TypeScript", 0, 0, 24, 1, 6, 31
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\logout\route.ts", "TypeScript", 0, 0, 13, 0, 3, 16
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\me\route.ts", "TypeScript", 0, 0, 14, 0, 5, 19
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\login\route.ts", "TypeScript", 0, 0, 24, 0, 5, 29
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\logout\route.ts", "TypeScript", 0, 0, 10, 0, 3, 13
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\me\route.ts", "TypeScript", 0, 0, 14, 0, 4, 18
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\art-staff\page.tsx", "TypeScript JSX", 367, 0, 0, 16, 42, 425
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\artprograms\page.tsx", "TypeScript JSX", 205, 0, 0, 10, 14, 229
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\contact\page.tsx", "TypeScript JSX", 435, 0, 0, 17, 23, 475
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\donation\page.tsx", "TypeScript JSX", 360, 0, 0, 2, 35, 397
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\EventsClient.tsx", "TypeScript JSX", 316, 0, 0, 10, 42, 368
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\[slug]\page.tsx", "TypeScript JSX", 223, 0, 0, 9, 34, 266
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\calendar\page.tsx", "TypeScript JSX", 561, 0, 0, 12, 58, 631
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\page.tsx", "TypeScript JSX", 20, 0, 0, 1, 7, 28
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\faqs\page.tsx", "TypeScript JSX", 147, 0, 0, 6, 21, 174
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\globals.css", "PostCSS", 0, 137, 0, 16, 49, 202
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\forms\page.tsx", "TypeScript JSX", 560, 0, 0, 30, 63, 653
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\page.tsx", "TypeScript JSX", 473, 0, 0, 13, 25, 511
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\timetables\page.tsx", "TypeScript JSX", 668, 0, 0, 19, 100, 787
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\layout.tsx", "TypeScript JSX", 18, 0, 0, 0, 4, 22
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\[slug]\page.tsx", "TypeScript JSX", 225, 0, 0, 16, 36, 277
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\page.tsx", "TypeScript JSX", 330, 0, 0, 15, 42, 387
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\page.tsx", "TypeScript JSX", 16, 0, 0, 0, 6, 22
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\parents\login\page.tsx", "TypeScript JSX", 212, 0, 0, 32, 31, 275
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\resources\page.tsx", "TypeScript JSX", 311, 0, 0, 10, 25, 346
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\help-center\page.tsx", "TypeScript JSX", 527, 0, 0, 39, 67, 633
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\library\page.tsx", "TypeScript JSX", 345, 0, 0, 31, 42, 418
+"c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\testimonials\page.tsx", "TypeScript JSX", 355, 0, 0, 15, 41, 411
+"Total", "-", 8798, 137, 136, 440, 1060, 10571

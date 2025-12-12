@@ -1,0 +1,134 @@
+Date : 2025-12-01 17:59:21
+Directory : c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components
+Total : 59 files,  -6492 codes, -343 comments, -763 blanks, all -7598 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript     |          7 |       -136 |         -1 |        -33 |       -170 |
+| PostCSS        |          1 |       -137 |        -16 |        -49 |       -202 |
+| TypeScript JSX |         51 |     -6,219 |       -326 |       -681 |     -7,226 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                            | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                               |         59 |     -6,492 |       -343 |       -763 |     -7,598 |
+| . (Files)                                                                                       |         11 |      1,841 |         83 |        209 |      2,133 |
+| ..                                                                                              |         38 |     -9,071 |       -440 |     -1,060 |    -10,571 |
+| ..\app                                                                                          |         38 |     -9,071 |       -440 |     -1,060 |    -10,571 |
+| ..\app (Files)                                                                                  |          4 |       -194 |        -17 |        -64 |       -275 |
+| ..\app\about                                                                                    |          1 |       -338 |        -25 |        -26 |       -389 |
+| ..\app\academics                                                                                |          6 |     -1,308 |        -70 |       -140 |     -1,518 |
+| ..\app\academics\academic-staff                                                                 |          1 |       -444 |        -24 |        -53 |       -521 |
+| ..\app\academics\graduates                                                                      |          1 |       -158 |         -8 |        -13 |       -179 |
+| ..\app\academics\learning-env                                                                   |          1 |       -234 |        -11 |        -20 |       -265 |
+| ..\app\academics\login                                                                          |          1 |       -194 |         -5 |        -28 |       -227 |
+| ..\app\academics\programs                                                                       |          1 |       -185 |        -12 |        -15 |       -212 |
+| ..\app\academics\undergraduate                                                                  |          1 |        -93 |        -10 |        -11 |       -114 |
+| ..\app\admissions                                                                               |          1 |       -455 |        -24 |        -49 |       -528 |
+| ..\app\api                                                                                      |          7 |       -136 |         -1 |        -33 |       -170 |
+| ..\app\api\admissions                                                                           |          1 |        -37 |          0 |         -7 |        -44 |
+| ..\app\api\auth                                                                                 |          3 |        -51 |         -1 |        -14 |        -66 |
+| ..\app\api\auth\login                                                                           |          1 |        -24 |         -1 |         -6 |        -31 |
+| ..\app\api\auth\logout                                                                          |          1 |        -13 |          0 |         -3 |        -16 |
+| ..\app\api\auth\me                                                                              |          1 |        -14 |          0 |         -5 |        -19 |
+| ..\app\api\student-auth                                                                         |          3 |        -48 |          0 |        -12 |        -60 |
+| ..\app\api\student-auth\login                                                                   |          1 |        -24 |          0 |         -5 |        -29 |
+| ..\app\api\student-auth\logout                                                                  |          1 |        -10 |          0 |         -3 |        -13 |
+| ..\app\api\student-auth\me                                                                      |          1 |        -14 |          0 |         -4 |        -18 |
+| ..\app\arts                                                                                     |          2 |       -572 |        -26 |        -56 |       -654 |
+| ..\app\arts\art-staff                                                                           |          1 |       -367 |        -16 |        -42 |       -425 |
+| ..\app\arts\artprograms                                                                         |          1 |       -205 |        -10 |        -14 |       -229 |
+| ..\app\contact                                                                                  |          1 |       -435 |        -17 |        -23 |       -475 |
+| ..\app\donation                                                                                 |          1 |       -360 |         -2 |        -35 |       -397 |
+| ..\app\events                                                                                   |          4 |     -1,120 |        -32 |       -141 |     -1,293 |
+| ..\app\events (Files)                                                                           |          2 |       -336 |        -11 |        -49 |       -396 |
+| ..\app\events\[slug]                                                                            |          1 |       -223 |         -9 |        -34 |       -266 |
+| ..\app\events\calendar                                                                          |          1 |       -561 |        -12 |        -58 |       -631 |
+| ..\app\faqs                                                                                     |          1 |       -147 |         -6 |        -21 |       -174 |
+| ..\app\help-center                                                                              |          3 |     -1,701 |        -62 |       -188 |     -1,951 |
+| ..\app\help-center (Files)                                                                      |          1 |       -473 |        -13 |        -25 |       -511 |
+| ..\app\help-center\forms                                                                        |          1 |       -560 |        -30 |        -63 |       -653 |
+| ..\app\help-center\timetables                                                                   |          1 |       -668 |        -19 |       -100 |       -787 |
+| ..\app\news                                                                                     |          2 |       -555 |        -31 |        -78 |       -664 |
+| ..\app\news (Files)                                                                             |          1 |       -330 |        -15 |        -42 |       -387 |
+| ..\app\news\[slug]                                                                              |          1 |       -225 |        -16 |        -36 |       -277 |
+| ..\app\parents                                                                                  |          1 |       -212 |        -32 |        -31 |       -275 |
+| ..\app\parents\login                                                                            |          1 |       -212 |        -32 |        -31 |       -275 |
+| ..\app\resources                                                                                |          1 |       -311 |        -10 |        -25 |       -346 |
+| ..\app\student                                                                                  |          2 |       -872 |        -70 |       -109 |     -1,051 |
+| ..\app\student\help-center                                                                      |          1 |       -527 |        -39 |        -67 |       -633 |
+| ..\app\student\library                                                                          |          1 |       -345 |        -31 |        -42 |       -418 |
+| ..\app\testimonials                                                                             |          1 |       -355 |        -15 |        -41 |       -411 |
+| parents                                                                                         |          2 |        152 |         12 |         20 |        184 |
+| ui                                                                                              |          8 |        586 |          2 |         68 |        656 |
++-------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                        | language       | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\Chrome.tsx                          | TypeScript JSX |        -23 |         -1 |         -5 |        -29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\about\page.tsx                      | TypeScript JSX |       -338 |        -25 |        -26 |       -389 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\academic-staff\page.tsx   | TypeScript JSX |       -444 |        -24 |        -53 |       -521 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\graduates\page.tsx        | TypeScript JSX |       -158 |         -8 |        -13 |       -179 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\learning-env\page.tsx     | TypeScript JSX |       -234 |        -11 |        -20 |       -265 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\login\page.tsx            | TypeScript JSX |       -194 |         -5 |        -28 |       -227 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\programs\page.tsx         | TypeScript JSX |       -185 |        -12 |        -15 |       -212 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\undergraduate\page.tsx    | TypeScript JSX |        -93 |        -10 |        -11 |       -114 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\admissions\page.tsx                 | TypeScript JSX |       -455 |        -24 |        -49 |       -528 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\admissions\route.ts             | TypeScript     |        -37 |          0 |         -7 |        -44 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\login\route.ts             | TypeScript     |        -24 |         -1 |         -6 |        -31 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\logout\route.ts            | TypeScript     |        -13 |          0 |         -3 |        -16 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\me\route.ts                | TypeScript     |        -14 |          0 |         -5 |        -19 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\login\route.ts     | TypeScript     |        -24 |          0 |         -5 |        -29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\logout\route.ts    | TypeScript     |        -10 |          0 |         -3 |        -13 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\me\route.ts        | TypeScript     |        -14 |          0 |         -4 |        -18 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\art-staff\page.tsx             | TypeScript JSX |       -367 |        -16 |        -42 |       -425 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\artprograms\page.tsx           | TypeScript JSX |       -205 |        -10 |        -14 |       -229 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\contact\page.tsx                    | TypeScript JSX |       -435 |        -17 |        -23 |       -475 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\donation\page.tsx                   | TypeScript JSX |       -360 |         -2 |        -35 |       -397 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\EventsClient.tsx             | TypeScript JSX |       -316 |        -10 |        -42 |       -368 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\[slug]\page.tsx              | TypeScript JSX |       -223 |         -9 |        -34 |       -266 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\calendar\page.tsx            | TypeScript JSX |       -561 |        -12 |        -58 |       -631 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\page.tsx                     | TypeScript JSX |        -20 |         -1 |         -7 |        -28 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\faqs\page.tsx                       | TypeScript JSX |       -147 |         -6 |        -21 |       -174 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\globals.css                         | PostCSS        |       -137 |        -16 |        -49 |       -202 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\forms\page.tsx          | TypeScript JSX |       -560 |        -30 |        -63 |       -653 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\page.tsx                | TypeScript JSX |       -473 |        -13 |        -25 |       -511 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\timetables\page.tsx     | TypeScript JSX |       -668 |        -19 |       -100 |       -787 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\layout.tsx                          | TypeScript JSX |        -18 |          0 |         -4 |        -22 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\[slug]\page.tsx                | TypeScript JSX |       -225 |        -16 |        -36 |       -277 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\page.tsx                       | TypeScript JSX |       -330 |        -15 |        -42 |       -387 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\page.tsx                            | TypeScript JSX |        -16 |          0 |         -6 |        -22 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\parents\login\page.tsx              | TypeScript JSX |       -212 |        -32 |        -31 |       -275 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\resources\page.tsx                  | TypeScript JSX |       -311 |        -10 |        -25 |       -346 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\help-center\page.tsx        | TypeScript JSX |       -527 |        -39 |        -67 |       -633 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\library\page.tsx            | TypeScript JSX |       -345 |        -31 |        -42 |       -418 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\testimonials\page.tsx               | TypeScript JSX |       -355 |        -15 |        -41 |       -411 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\FooterHs.tsx                 | TypeScript JSX |        114 |          7 |         10 |        131 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\NewsGallerySection.tsx       | TypeScript JSX |        146 |          4 |         15 |        165 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\TestimonialsHeader.tsx       | TypeScript JSX |         35 |          1 |          4 |         40 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\TestimonialsSection.tsx      | TypeScript JSX |        263 |         11 |         28 |        302 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\banner.tsx                   | TypeScript JSX |         87 |          5 |         13 |        105 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\events-recaps.tsx            | TypeScript JSX |        335 |          9 |         45 |        389 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\items-menu-mobile.tsx        | TypeScript JSX |        234 |         10 |         20 |        264 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\menu-list.tsx                | TypeScript JSX |        226 |         10 |         12 |        248 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\navbar.tsx                   | TypeScript JSX |         64 |          5 |         13 |         82 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\newspaper.tsx                | TypeScript JSX |        262 |         17 |         38 |        317 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\parents\ParentsNavbar.tsx    | TypeScript JSX |        108 |         10 |         13 |        131 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\parents\ParentsPortalNav.tsx | TypeScript JSX |         44 |          2 |          7 |         53 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\accordion.tsx             | TypeScript JSX |         59 |          0 |          8 |         67 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\badge.tsx                 | TypeScript JSX |         41 |          0 |          6 |         47 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\button.tsx                | TypeScript JSX |         54 |          0 |          6 |         60 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\card.tsx                  | TypeScript JSX |         83 |          0 |         10 |         93 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\navigation-menu.tsx       | TypeScript JSX |        161 |          2 |         13 |        176 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\separator.tsx             | TypeScript JSX |         24 |          0 |          5 |         29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\table.tsx                 | TypeScript JSX |        105 |          0 |         12 |        117 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\ui\tabs.tsx                  | TypeScript JSX |         59 |          0 |          8 |         67 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\components\universities.tsx             | TypeScript JSX |         75 |          4 |         11 |         90 |
+| Total                                                                                           |                |     -6,492 |       -343 |       -763 |     -7,598 |
++-------------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

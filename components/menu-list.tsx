@@ -234,6 +234,7 @@ export default function MenuList() {
         <SimpleItem href="/admissions" label="Admissions" />
         <SimpleItem href="/news" label="News" />
         <SimpleItem href="/donation" label="Donation" />
+        <SimpleItem href="/alumni" label="Alumni" />
         <SimpleItem href="/about" label="About us" />
         <SimpleItem href="/faqs" label="FAQS" />
         {/* 🔗 Parents en nueva pestaña */}

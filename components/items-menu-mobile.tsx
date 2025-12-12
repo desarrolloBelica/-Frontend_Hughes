@@ -47,6 +47,7 @@ const SINGLES: Item[] = [
   { label: "Admissions", href: "/admissions" },
   { label: "News", href: "/news" },
   { label: "Donation", href: "/donation" },
+  { label: "Alumni", href: "/alumni" },
   { label: "About us", href: "/about" },
   { label: "FAQS", href: "/faqs" },
   { label: "Parents", href: "/parents/login", newTab: true },

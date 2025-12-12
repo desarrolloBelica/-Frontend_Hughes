@@ -1,0 +1,108 @@
+Date : 2025-12-01 17:59:16
+Directory : c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app
+Total : 38 files,  9071 codes, 440 comments, 1060 blanks, all 10571 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| TypeScript JSX |         30 |      8,798 |        423 |        978 |     10,199 |
+| PostCSS        |          1 |        137 |         16 |         49 |        202 |
+| TypeScript     |          7 |        136 |          1 |         33 |        170 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                          | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                             |         38 |      9,071 |        440 |      1,060 |     10,571 |
+| . (Files)                                                                                     |          4 |        194 |         17 |         64 |        275 |
+| about                                                                                         |          1 |        338 |         25 |         26 |        389 |
+| academics                                                                                     |          6 |      1,308 |         70 |        140 |      1,518 |
+| academics\academic-staff                                                                      |          1 |        444 |         24 |         53 |        521 |
+| academics\graduates                                                                           |          1 |        158 |          8 |         13 |        179 |
+| academics\learning-env                                                                        |          1 |        234 |         11 |         20 |        265 |
+| academics\login                                                                               |          1 |        194 |          5 |         28 |        227 |
+| academics\programs                                                                            |          1 |        185 |         12 |         15 |        212 |
+| academics\undergraduate                                                                       |          1 |         93 |         10 |         11 |        114 |
+| admissions                                                                                    |          1 |        455 |         24 |         49 |        528 |
+| api                                                                                           |          7 |        136 |          1 |         33 |        170 |
+| api\admissions                                                                                |          1 |         37 |          0 |          7 |         44 |
+| api\auth                                                                                      |          3 |         51 |          1 |         14 |         66 |
+| api\auth\login                                                                                |          1 |         24 |          1 |          6 |         31 |
+| api\auth\logout                                                                               |          1 |         13 |          0 |          3 |         16 |
+| api\auth\me                                                                                   |          1 |         14 |          0 |          5 |         19 |
+| api\student-auth                                                                              |          3 |         48 |          0 |         12 |         60 |
+| api\student-auth\login                                                                        |          1 |         24 |          0 |          5 |         29 |
+| api\student-auth\logout                                                                       |          1 |         10 |          0 |          3 |         13 |
+| api\student-auth\me                                                                           |          1 |         14 |          0 |          4 |         18 |
+| arts                                                                                          |          2 |        572 |         26 |         56 |        654 |
+| arts\art-staff                                                                                |          1 |        367 |         16 |         42 |        425 |
+| arts\artprograms                                                                              |          1 |        205 |         10 |         14 |        229 |
+| contact                                                                                       |          1 |        435 |         17 |         23 |        475 |
+| donation                                                                                      |          1 |        360 |          2 |         35 |        397 |
+| events                                                                                        |          4 |      1,120 |         32 |        141 |      1,293 |
+| events (Files)                                                                                |          2 |        336 |         11 |         49 |        396 |
+| events\[slug]                                                                                 |          1 |        223 |          9 |         34 |        266 |
+| events\calendar                                                                               |          1 |        561 |         12 |         58 |        631 |
+| faqs                                                                                          |          1 |        147 |          6 |         21 |        174 |
+| help-center                                                                                   |          3 |      1,701 |         62 |        188 |      1,951 |
+| help-center (Files)                                                                           |          1 |        473 |         13 |         25 |        511 |
+| help-center\forms                                                                             |          1 |        560 |         30 |         63 |        653 |
+| help-center\timetables                                                                        |          1 |        668 |         19 |        100 |        787 |
+| news                                                                                          |          2 |        555 |         31 |         78 |        664 |
+| news (Files)                                                                                  |          1 |        330 |         15 |         42 |        387 |
+| news\[slug]                                                                                   |          1 |        225 |         16 |         36 |        277 |
+| parents                                                                                       |          1 |        212 |         32 |         31 |        275 |
+| parents\login                                                                                 |          1 |        212 |         32 |         31 |        275 |
+| resources                                                                                     |          1 |        311 |         10 |         25 |        346 |
+| student                                                                                       |          2 |        872 |         70 |        109 |      1,051 |
+| student\help-center                                                                           |          1 |        527 |         39 |         67 |        633 |
+| student\library                                                                               |          1 |        345 |         31 |         42 |        418 |
+| testimonials                                                                                  |          1 |        355 |         15 |         41 |        411 |
++-----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                      | language       | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\Chrome.tsx                        | TypeScript JSX |         23 |          1 |          5 |         29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\about\page.tsx                    | TypeScript JSX |        338 |         25 |         26 |        389 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\academic-staff\page.tsx | TypeScript JSX |        444 |         24 |         53 |        521 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\graduates\page.tsx      | TypeScript JSX |        158 |          8 |         13 |        179 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\learning-env\page.tsx   | TypeScript JSX |        234 |         11 |         20 |        265 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\login\page.tsx          | TypeScript JSX |        194 |          5 |         28 |        227 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\programs\page.tsx       | TypeScript JSX |        185 |         12 |         15 |        212 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\academics\undergraduate\page.tsx  | TypeScript JSX |         93 |         10 |         11 |        114 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\admissions\page.tsx               | TypeScript JSX |        455 |         24 |         49 |        528 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\admissions\route.ts           | TypeScript     |         37 |          0 |          7 |         44 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\login\route.ts           | TypeScript     |         24 |          1 |          6 |         31 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\logout\route.ts          | TypeScript     |         13 |          0 |          3 |         16 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\auth\me\route.ts              | TypeScript     |         14 |          0 |          5 |         19 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\login\route.ts   | TypeScript     |         24 |          0 |          5 |         29 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\logout\route.ts  | TypeScript     |         10 |          0 |          3 |         13 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\api\student-auth\me\route.ts      | TypeScript     |         14 |          0 |          4 |         18 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\art-staff\page.tsx           | TypeScript JSX |        367 |         16 |         42 |        425 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\arts\artprograms\page.tsx         | TypeScript JSX |        205 |         10 |         14 |        229 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\contact\page.tsx                  | TypeScript JSX |        435 |         17 |         23 |        475 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\donation\page.tsx                 | TypeScript JSX |        360 |          2 |         35 |        397 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\EventsClient.tsx           | TypeScript JSX |        316 |         10 |         42 |        368 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\[slug]\page.tsx            | TypeScript JSX |        223 |          9 |         34 |        266 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\calendar\page.tsx          | TypeScript JSX |        561 |         12 |         58 |        631 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\events\page.tsx                   | TypeScript JSX |         20 |          1 |          7 |         28 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\faqs\page.tsx                     | TypeScript JSX |        147 |          6 |         21 |        174 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\globals.css                       | PostCSS        |        137 |         16 |         49 |        202 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\forms\page.tsx        | TypeScript JSX |        560 |         30 |         63 |        653 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\page.tsx              | TypeScript JSX |        473 |         13 |         25 |        511 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\help-center\timetables\page.tsx   | TypeScript JSX |        668 |         19 |        100 |        787 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\layout.tsx                        | TypeScript JSX |         18 |          0 |          4 |         22 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\[slug]\page.tsx              | TypeScript JSX |        225 |         16 |         36 |        277 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\news\page.tsx                     | TypeScript JSX |        330 |         15 |         42 |        387 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\page.tsx                          | TypeScript JSX |         16 |          0 |          6 |         22 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\parents\login\page.tsx            | TypeScript JSX |        212 |         32 |         31 |        275 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\resources\page.tsx                | TypeScript JSX |        311 |         10 |         25 |        346 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\help-center\page.tsx      | TypeScript JSX |        527 |         39 |         67 |        633 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\student\library\page.tsx          | TypeScript JSX |        345 |         31 |         42 |        418 |
+| c:\Users\usuario\Desktop\hugues-schools\frontend-hugues\app\testimonials\page.tsx             | TypeScript JSX |        355 |         15 |         41 |        411 |
+| Total                                                                                         |                |      9,071 |        440 |      1,060 |     10,571 |
++-----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
