@@ -14,7 +14,6 @@ const BRAND = {
 type Item = { label: string; href?: string; newTab?: boolean; onClick?: () => void };
 type Group = { label: string; items: Item[] };
 
-// 🔄 Nueva estructura según la reorganización
 const GROUPS: Group[] = [
   {
     label: "Alumni",
@@ -23,7 +22,9 @@ const GROUPS: Group[] = [
       { label: "Academic Programs", href: "/academics/programs" },
       { label: "Our Learning Environment", href: "/academics/learning-env" },
       { label: "Where Our Graduates Go", href: "/academics/graduates" },
+      { label: "Hughes Space School", href: "/academics/hughes-space" },
       { label: "Art Programs", href: "/arts/artprograms" },
+      { label: "HS Robot", href: "/arts/hs-robot" },
       { label: "Events Recap", href: "/events" },
       { label: "Events Calendar", href: "/events/calendar" },
     ],

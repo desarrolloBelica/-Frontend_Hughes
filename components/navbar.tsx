@@ -6,7 +6,7 @@ import Link from "next/link";
 import MenuList from "./menu-list";
 import MobileMenu from "./items-menu-mobile";
 
-const H = 120; // altura del header en px (mantiene tu diseño)
+const H = 120; 
 
 const Navbar = () => {
   const [visible, setVisible] = useState(true);
@@ -25,7 +25,6 @@ const Navbar = () => {
         const y = window.scrollY;
         setAtTop(y <= 2);
 
-        // lógica: si vamos hacia abajo y pasamos 8px, ocultar; si subimos, mostrar
         if (y > lastY.current && y - lastY.current > 8) {
           setVisible(false);
         } else if (y < lastY.current && lastY.current - y > 8) {

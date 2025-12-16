@@ -12,7 +12,7 @@ import {
   NavigationMenuContent,
 } from "@/components/ui/navigation-menu";
 
-// 🎨 Brand colors
+//  Brand colors
 const BRAND = {
   blue: "var(--hs-blue)",
   yellow: "var(--hs-yellow)",
@@ -75,7 +75,7 @@ function ColLink({
   );
 }
 
-/** 🔽 Item especial para hacer scroll animado al footer */
+/**  Item especial para hacer scroll animado al footer */
 function ContactScrollItem({ label = "Contact" }: { label?: string }) {
   const onClick = React.useCallback(() => {
     const el = document.getElementById("footer");
@@ -114,7 +114,7 @@ export default function MenuList() {
       {/* Menú Izquierdo */}
       <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
         <NavigationMenuList className="flex items-center gap-6">
-        {/* 🎓 Alumni - Con sub-navegación */}
+        {/*  Alumni - Con sub-navegación */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -150,14 +150,16 @@ export default function MenuList() {
                         <ColLink href="/academics/programs" title="Academic Programs" />
                         <ColLink href="/academics/learning-env" title="Our Learning Environment" />
                         <ColLink href="/academics/graduates" title="Where Our Graduates Go" />
+                        <ColLink href="/academics/hughes-space" title="Hughes Space School" />
                       </div>
                     </div>
                     
                     {/* Performing Arts */}
                     <div>
-                      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Performing Arts</h4>
+                      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Performing</h4>
                       <div className="space-y-1">
                         <ColLink href="/arts/artprograms" title="Art Programs" />
+                        <ColLink href="/arts/hs-robot" title="HS Robot" />
                       </div>
                     </div>
                     
@@ -176,7 +178,7 @@ export default function MenuList() {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* 📝 Admissions - Con Resources */}
+        {/*  Admissions - Con Resources */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -205,7 +207,7 @@ export default function MenuList() {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* ℹ️ About Us - Con Staff y más */}
+        {/*  About Us - Con Staff y más */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -247,7 +249,7 @@ export default function MenuList() {
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* 🚪 Portal - Con Student y Parent */}
+        {/* Portal - Con Student y Parent */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -312,10 +314,8 @@ export default function MenuList() {
       {/* Menú Derecho */}
       <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
         <NavigationMenuList className="flex items-center gap-6">
-        {/* 💝 Donation - Simple item importante */}
         <SimpleItem href="/donation" label="Donation" />
 
-        {/* � Contact - con scroll animado al footer */}
         <ContactScrollItem label="Contact" />
       </NavigationMenuList>
     </NavigationMenu>
