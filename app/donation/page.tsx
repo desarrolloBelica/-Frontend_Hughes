@@ -1,98 +1,115 @@
-// app/support/page.tsx
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   GraduationCap,
-  Music,
-  MicVocal,
-  Sparkles,
-  Landmark,
-  School2,
+  Plane,
   Users,
-  Trophy,
-  ArrowRight,
-  Receipt,
+  BookOpen,
+  Award,
+  Heart,
+  CheckCircle2,
   Building2,
-  HandHeart,
+  Receipt,
+  TrendingUp,
+  Mail,
+  Phone,
+  ArrowRight,
 } from "lucide-react";
 
-const BG = "/38.JPG"; // replace with your image
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
+);
 
-export default function SupportPage() {
+const HERO_IMAGE = "/38.JPG";
+const BRAND = {
+  blue: "var(--hs-blue)",
+  yellow: "var(--hs-yellow)",
+};
+
+type DonationDesignation = 
+  | "Student Application Fund"
+  | "Teacher Development & Training"
+  | "Travel & Cultural Exchange Fund";
+
+type TributeType = "honor" | "memory" | "none";
+
+interface DonorInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+}
+
+export default function DonationPage() {
   return (
     <main className="min-h-screen bg-white">
       <Hero />
-
-      <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-        <WhyGive />
-      </section>
-
-      <section className="bg-[#f7f9fd]">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <WhereItGoes />
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-        <ImpactBand />
-      </section>
-
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <DonationWidget />
-        </div>
-      </section>
-
-
+      <WhyWeGive />
+      <DonationWidget />
+      <ImpactStories />
+      <MatchingChallenge />
+      <WaysToGive />
+      <Stewardship />
     </main>
   );
 }
 
+// Hero Section
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-hidden h-[70vh] min-h-[500px]">
       <div className="absolute inset-0 -z-10">
         <Image
-          src={BG}
-          alt="Students at Hughes Schools"
+          src={HERO_IMAGE}
+          alt="Students and teachers preparing for travel"
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,18,41,0.70),rgba(11,18,41,0.55))]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/60 to-slate-900/80" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 text-white">
-        <div className="max-w-3xl">
-          <div className="mb-4 flex items-center gap-2">
-            <span
-              className="inline-block h-2.5 w-2.5 rounded-full"
-              style={{ background: "var(--hs-yellow)" }}
-            />
-            <span className="text-xs tracking-[0.2em] font-semibold">
-              SUPPORT HUGHES SCHOOLS
-            </span>
-          </div>
+      <div className="relative h-full flex items-center">
+        <div className="mx-auto max-w-7xl px-6 w-full">
+          <div className="max-w-3xl text-white">
+            <div className="mb-4 flex items-center gap-2">
+              <span
+                className="inline-block h-2.5 w-2.5 rounded-full"
+                style={{ background: BRAND.yellow }}
+              />
+              <span className="text-xs tracking-[0.2em] font-semibold">
+                HUGHES SCHOOLS FOUNDATION (501c3)
+              </span>
+            </div>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            Fuel Excellence. Empower Every Student.
-          </h1>
-          <p className="mt-4 text-base md:text-lg text-white/90">
-            Your generosity sustains rigorous academics, world-class performing
-            arts, and life-changing opportunities for students from Pre-K to Grade 12.
-          </p>
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
+              Your Gift Opens Doors to the World
+            </h1>
+            
+            <p className="mt-6 text-xl md:text-2xl text-white/90 leading-relaxed">
+              Support students and teachers as they chase their dreams of higher 
+              education abroad.
+            </p>
 
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
-            <Chip icon={<GraduationCap className="h-4 w-4" />}>
-              100% college matriculation
-            </Chip>
-            <Chip icon={<Trophy className="h-4 w-4" />}>
-              200+ academic awards
-            </Chip>
-            <Chip icon={<Music className="h-4 w-4" />}>230+ performances</Chip>
-            <Chip icon={<Sparkles className="h-4 w-4" />}>$3.1M+ scholarships</Chip>
+            <button
+              onClick={() => {
+                const el = document.getElementById("donate-section");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl"
+              style={{
+                backgroundColor: BRAND.yellow,
+                color: BRAND.blue,
+              }}
+            >
+              Donate Now
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </div>
@@ -100,297 +117,642 @@ function Hero() {
   );
 }
 
-function Chip({
-  children,
-  icon,
-}: {
-  children: React.ReactNode;
-  icon: React.ReactNode;
-}) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-hughes-blue shadow-sm ring-1 ring-black/5">
-      {icon}
-      {children}
-    </span>
-  );
-}
-
-function WhyGive() {
-  return (
-    <div className="grid lg:grid-cols-2 gap-10 items-start">
-      <div>
-        <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">
-          Why your gift matters
-        </h2>
-        <p className="mt-3 text-hughes-blue/80">
-          Hughes Schools is a bilingual, independent PK–12 institution in
-          Cochabamba, Bolivia, delivering rigorous academics and a robust
-          Performing Arts program. Your support expands access to excellence,
-          funds specialized faculty development, enhances labs and studios, and
-          sustains performances and competitions that shape confident,
-          high-achieving graduates.
-        </p>
-
-        <ul className="mt-6 space-y-3 text-sm text-hughes-blue/90">
-          <li className="flex items-start gap-2">
-            <ArrowRight className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" />
-            80% of instruction is in English, from Pre-K to Grade 12.
-          </li>
-          <li className="flex items-start gap-2">
-            <ArrowRight className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" />
-            Science every year includes lab components and hands-on research.
-          </li>
-          <li className="flex items-start gap-2">
-            <ArrowRight className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" />
-            Honors pathway (up to 16 courses) in English, Physics, Chemistry, and Math.
-          </li>
-          <li className="flex items-start gap-2">
-            <ArrowRight className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" />
-            Performing Arts with choir, classical & folk music, and dance—over 230
-            national & international presentations.
-          </li>
-        </ul>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-4">
-        <Stat value="715" label="Students enrolled" />
-        <Stat value="100%" label="College placement" />
-        <Stat value="54" label="State science awards" />
-        <Stat value="11" label="National physics awards" />
-      </div>
-    </div>
-  );
-}
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="rounded-2xl bg-[#f7f9fd] p-5 ring-1 ring-black/5">
-      <div className="text-3xl font-extrabold text-hughes-blue">{value}</div>
-      <div className="mt-1 text-sm text-hughes-blue/70">{label}</div>
-    </div>
-  );
-}
-
-function WhereItGoes() {
-  const items = [
-    {
-      icon: <School2 className="h-5 w-5" />,
-      title: "Academic Excellence",
-      desc: "Curriculum innovation, science labs, bilingual resources, and honors coursework across high school.",
-    },
-    {
-      icon: <MicVocal className="h-5 w-5" />,
-      title: "Performing Arts",
-      desc: "Choir, classical training, and Bolivian Folk Music—individual lessons, instruments, costumes, productions.",
-    },
-    {
-      icon: <Users className="h-5 w-5" />,
-      title: "Access & Scholarships",
-      desc: "Need-based support ensures talented students thrive regardless of financial background.",
-    },
-    {
-      icon: <Landmark className="h-5 w-5" />,
-      title: "Faculty & Facilities",
-      desc: "Professional development, classroom upgrades, and safe spaces where learning and creativity flourish.",
-    },
+// Why We Give Section
+function WhyWeGive() {
+  const stats = [
+    { icon: <GraduationCap className="w-8 h-8" />, label: "Application Fees", value: "85%" },
+    { icon: <Plane className="w-8 h-8" />, label: "Travel Costs", value: "70%" },
+    { icon: <Users className="w-8 h-8" />, label: "Teacher Development", value: "60%" },
   ];
+
   return (
-    <>
-      <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">
-        Where your gift goes
-      </h3>
-      <div className="mt-6 grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {items.map((item) => (
-          <div
-            key={item.title}
-            className="rounded-2xl bg-white p-5 ring-1 ring-black/5 hover:shadow-sm transition"
-          >
-            <div className="flex items-center gap-2 text-hughes-blue">
-              <span className="text-[var(--hs-yellow)]">{item.icon}</span>
-              <div className="font-semibold">{item.title}</div>
-            </div>
-            <p className="mt-2 text-sm text-hughes-blue/80">{item.desc}</p>
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-gray-50">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: BRAND.blue }}>
+              Why We Give
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed mb-6">
+              At <strong>Hughes Schools Foundation (501c3)</strong>, over <strong>70%</strong> of 
+              our students and teachers rely on financial support to apply for universities, pay visa 
+              fees, and travel abroad.
+            </p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Your gift ensures these dreams can become reality, opening doors to world-class education 
+              and transformative experiences that shape the next generation of global leaders.
+            </p>
           </div>
-        ))}
+
+          <div className="grid grid-cols-3 gap-6">
+            {stats.map((stat, i) => (
+              <div
+                key={i}
+                className="text-center p-6 rounded-2xl bg-white shadow-lg border border-gray-100"
+              >
+                <div
+                  className="inline-flex p-4 rounded-full mb-4"
+                  style={{ backgroundColor: "rgba(var(--hs-blue-rgb), 0.1)" }}
+                >
+                  <div style={{ color: BRAND.blue }}>{stat.icon}</div>
+                </div>
+                <div className="text-3xl font-bold mb-2" style={{ color: BRAND.blue }}>
+                  {stat.value}
+                </div>
+                <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </>
+    </section>
   );
 }
 
-function ImpactBand() {
-  const items = [
-    {
-      quote:
-        "Hughes challenged me to think critically and lead with purpose. The arts program helped me find my voice.",
-      name: "Class of 2023 Graduate",
-    },
-    {
-      quote:
-        "Our child discovered a passion for science thanks to labs and fairs—your support makes this possible.",
-      name: "Hughes Parent",
-    },
-    {
-      quote:
-        "Through Bolivian Folk Music, we celebrate identity while performing nationwide. It changes lives.",
-      name: "Folk Ensemble Student",
-    },
-  ];
-  return (
-    <div className="grid md:grid-cols-3 gap-4">
-      {items.map((t, i) => (
-        <figure
-          key={i}
-          className="rounded-2xl bg-[#f7f9fd] p-5 ring-1 ring-black/5"
-        >
-          <blockquote className="text-hughes-blue/90">{t.quote}</blockquote>
-          <figcaption className="mt-3 text-sm font-medium text-hughes-blue">
-            — {t.name}
-          </figcaption>
-        </figure>
-      ))}
-    </div>
-  );
-}
-
-/* ---------------- Donation widget ---------------- */
-
+// Donation Widget - Complete Form
 function DonationWidget() {
-  const [amount, setAmount] = useState<string>("50");
-  const [freq, setFreq] = useState<"once" | "monthly">("once");
+  const [designation, setDesignation] = useState<DonationDesignation>("Student Application Fund");
+  const [frequency, setFrequency] = useState<"once" | "monthly">("once");
+  const [amount, setAmount] = useState<string>("150");
+  const [tributeType, setTributeType] = useState<TributeType>("none");
+  const [tributeName, setTributeName] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+  const [donorInfo, setDonorInfo] = useState<DonorInfo>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+  });
 
-  const presets = ["25", "50", "100", "250"];
+  const presets = ["50", "150", "500", "1000"];
+
+  const designationDescriptions = {
+    "Student Application Fund": "Help cover application fees and documentation costs",
+    "Teacher Development & Training": "Support professional development and training abroad",
+    "Travel & Cultural Exchange Fund": "Fund airfare and travel for transformative experiences",
+  };
 
   function formatAmount(v: string) {
     const digits = v.replace(/[^\d]/g, "");
     return digits.replace(/^0+/, "") || "0";
   }
 
-  return (
-    <div className="grid lg:grid-cols-3 gap-8 items-start">
-      <div className="lg:col-span-2">
-        <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">
-          Start your donation
-        </h3>
-        <p className="mt-2 text-hughes-blue/80">
-          Make a one-time or recurring gift to expand access, fund excellence,
-          and power the Performing Arts at Hughes Schools.
-        </p>
+  async function handleDonation() {
+    // Validación
+    if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
+      alert("Please fill in all required fields");
+      return;
+    }
 
-        <div className="mt-6 rounded-2xl border p-5 ring-1 ring-black/5">
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => setFreq("once")}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition
-                ${
-                  freq === "once"
-                    ? "bg-[var(--hs-yellow)] text-hughes-blue"
-                    : "bg-[#f2f4fb] text-hughes-blue/80 hover:bg-[#e9ecf7]"
-                }`}
-            >
-              One-time
-            </button>
-            <button
-              onClick={() => setFreq("monthly")}
-              className={`rounded-full px-4 py-2 text-sm font-semibold transition
-                ${
-                  freq === "monthly"
-                    ? "bg-[var(--hs-yellow)] text-hughes-blue"
-                    : "bg-[#f2f4fb] text-hughes-blue/80 hover:bg-[#e9ecf7]"
-                }`}
-            >
-              Monthly
-            </button>
+    if (!amount || Number(amount) <= 0) {
+      alert("Please enter a valid donation amount");
+      return;
+    }
+
+    setIsProcessing(true);
+
+    try {
+      const stripe = await stripePromise;
+
+      const response = await fetch("/api/donations/create-checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          amount: Number(amount),
+          frequency,
+          designation,
+          donorInfo,
+          tributeInfo: {
+            type: tributeType !== "none" ? tributeType : null,
+            name: tributeName || null,
+          },
+        }),
+      });
+
+      const session = await response.json();
+
+      if (session.error) {
+        alert(session.error);
+        setIsProcessing(false);
+        return;
+      }
+
+      // Redirigir a Stripe Checkout
+      const result = await stripe?.redirectToCheckout({
+        sessionId: session.sessionId,
+      });
+
+      if (result?.error) {
+        alert(result.error.message);
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred. Please try again.");
+      setIsProcessing(false);
+    }
+  }
+
+  return (
+    <section id="donate-section" className="py-16 sm:py-24 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+            Make Your Gift Today
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Choose how you&apos;d like to support our students and teachers
+          </p>
+        </div>
+
+        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 md:p-12">
+          {/* Gift Designation */}
+          <div className="mb-8">
+            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+              Choose Your Gift Designation
+            </label>
+            <div className="grid md:grid-cols-3 gap-4">
+              {(["Student Application Fund", "Teacher Development & Training", "Travel & Cultural Exchange Fund"] as DonationDesignation[]).map((des) => (
+                <button
+                  key={des}
+                  onClick={() => setDesignation(des)}
+                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                    designation === des
+                      ? "border-[var(--hs-blue)] bg-blue-50"
+                      : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <div className="font-semibold mb-1" style={{ color: BRAND.blue }}>
+                    {des}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {designationDescriptions[des]}
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="mt-5 grid sm:grid-cols-5 gap-3">
-            {presets.map((p) => (
+          {/* Frequency */}
+          <div className="mb-8">
+            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+              Gift Frequency
+            </label>
+            <div className="flex gap-4">
               <button
-                key={p}
-                onClick={() => setAmount(p)}
-                className="rounded-xl bg-[#f7f9fd] px-4 py-3 text-sm font-semibold text-hughes-blue ring-1 ring-black/5 hover:bg-white"
+                onClick={() => setFrequency("once")}
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
+                  frequency === "once"
+                    ? "bg-[var(--hs-yellow)] text-[var(--hs-blue)]"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
               >
-                ${p}
+                One-Time
               </button>
-            ))}
+              <button
+                onClick={() => setFrequency("monthly")}
+                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
+                  frequency === "monthly"
+                    ? "bg-[var(--hs-yellow)] text-[var(--hs-blue)]"
+                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                Monthly
+              </button>
+            </div>
+          </div>
 
-            <div className="sm:col-span-2 flex items-center gap-2 rounded-xl bg-white px-4 py-3 ring-1 ring-black/10">
-              <span className="text-hughes-blue/70 font-semibold">$</span>
+          {/* Amount */}
+          <div className="mb-8">
+            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+              Donation Amount
+            </label>
+            <div className="grid grid-cols-5 gap-3 mb-4">
+              {presets.map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => setAmount(preset)}
+                  className={`py-3 px-4 rounded-xl font-semibold transition-all ${
+                    amount === preset
+                      ? "bg-[var(--hs-blue)] text-white"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  ${preset}
+                </button>
+              ))}
+              <div className="flex items-center gap-2 px-4 rounded-xl bg-gray-50 border-2 border-gray-200">
+                <span className="text-gray-600 font-semibold">$</span>
+                <input
+                  inputMode="numeric"
+                  value={amount}
+                  onChange={(e) => setAmount(formatAmount(e.target.value))}
+                  className="w-full bg-transparent outline-none font-semibold"
+                  style={{ color: BRAND.blue }}
+                  placeholder="Other"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Donor Information */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+              Your Information
+            </h3>
+            <div className="grid md:grid-cols-2 gap-4">
               <input
-                inputMode="numeric"
-                value={amount}
-                onChange={(e) => setAmount(formatAmount(e.target.value))}
-                className="w-full bg-transparent outline-none text-hughes-blue font-semibold"
-                aria-label="Donation amount"
+                type="text"
+                placeholder="First Name *"
+                value={donorInfo.firstName}
+                onChange={(e) => setDonorInfo({ ...donorInfo, firstName: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Last Name *"
+                value={donorInfo.lastName}
+                onChange={(e) => setDonorInfo({ ...donorInfo, lastName: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email *"
+                value={donorInfo.email}
+                onChange={(e) => setDonorInfo({ ...donorInfo, email: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                required
+              />
+              <input
+                type="tel"
+                placeholder="Phone"
+                value={donorInfo.phone}
+                onChange={(e) => setDonorInfo({ ...donorInfo, phone: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Address *"
+                value={donorInfo.address}
+                onChange={(e) => setDonorInfo({ ...donorInfo, address: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                required
+              />
+              <input
+                type="text"
+                placeholder="City *"
+                value={donorInfo.city}
+                onChange={(e) => setDonorInfo({ ...donorInfo, city: e.target.value })}
+                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                required
               />
             </div>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <button
-              className="inline-flex items-center justify-center rounded-full bg-[var(--hs-yellow)] px-6 py-3 font-semibold text-hughes-blue hover:opacity-90 transition"
-              onClick={() => {
-                alert(
-                  `Thank you! Processing a ${freq} donation of $${Number(
-                    amount || "0"
-                  ).toLocaleString()}`
-                );
-              }}
-            >
-              Donate
-            </button>
-            <p className="text-xs text-hughes-blue/60">
-              Secure form. You’ll receive a confirmation email and receipt.
-            </p>
+          {/* Tribute Gift */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+              Tribute Gift (Optional)
+            </h3>
+            <div className="flex gap-4 mb-4">
+              <button
+                onClick={() => setTributeType("none")}
+                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                  tributeType === "none"
+                    ? "bg-[var(--hs-blue)] text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                No Tribute
+              </button>
+              <button
+                onClick={() => setTributeType("honor")}
+                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                  tributeType === "honor"
+                    ? "bg-[var(--hs-blue)] text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                In Honor Of
+              </button>
+              <button
+                onClick={() => setTributeType("memory")}
+                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                  tributeType === "memory"
+                    ? "bg-[var(--hs-blue)] text-white"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                In Memory Of
+              </button>
+            </div>
+            {tributeType !== "none" && (
+              <input
+                type="text"
+                placeholder="Name"
+                value={tributeName}
+                onChange={(e) => setTributeName(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+              />
+            )}
           </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleDonation}
+            disabled={isProcessing}
+            className="w-full py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            style={{
+              backgroundColor: BRAND.yellow,
+              color: BRAND.blue,
+            }}
+          >
+            {isProcessing ? "Processing..." : `Complete Donation - $${Number(amount || 0).toLocaleString()}`}
+          </button>
+
+          <p className="text-sm text-gray-500 text-center mt-4">
+            Secure payment processed by Stripe. Tax-deductible under 501(c)(3).
+          </p>
         </div>
       </div>
-
-      <aside className="rounded-2xl bg-[#f7f9fd] p-6 ring-1 ring-black/5">
-        <h4 className="text-lg font-bold text-hughes-blue">Your impact</h4>
-        <ul className="mt-3 space-y-3 text-sm text-hughes-blue/85">
-          <li className="flex items-start gap-2">
-            <Sparkles className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" />
-            Funds instruments, rehearsal space, and festival travel.
-          </li>
-        </ul>
-        <div className="mt-4 grid grid-cols-2 gap-3">
-          <MiniStat value="80%" label="Instruction in English" />
-          <MiniStat value="230+" label="Performances" />
-          <MiniStat value="100%" label="University matriculation" />
-          <MiniStat value="$3.1M+" label="Scholarships (5 yrs)" />
-        </div>
-      </aside>
-    </div>
+    </section>
   );
 }
 
-function MiniStat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="rounded-xl bg-white p-4 ring-1 ring-black/5">
-      <div className="text-xl font-extrabold text-hughes-blue">{value}</div>
-      <div className="text-xs text-hughes-blue/70">{label}</div>
-    </div>
-  );
-}
-
-function OtherWays() {
-  const items = [
+// Impact Stories
+function ImpactStories() {
+  const stories = [
     {
-      icon: <Receipt className="h-5 w-5" />,
-      title: "Wire / Bank Transfer",
-      desc: "Prefer to give by bank transfer? Contact our office for account details and a receipt.",
+      name: "María González",
+      role: "Class of 2024",
+      quote: "Thanks to Hughes help, I'll apply to university in the U.S. and pursue my dream of studying engineering.",
+      image: "/38.JPG",
     },
     {
-      icon: <Building2 className="h-5 w-5" />,
-      title: "Corporate Matching",
-      desc: "Multiply your gift. Ask your employer if they offer a matching-gift program.",
+      name: "Prof. Carlos Mendoza",
+      role: "Science Teacher",
+      quote: "Your gift helped me attend a training workshop abroad, bringing cutting-edge techniques back to our students.",
+      image: "/38.JPG",
     },
     {
-      icon: <HandHeart className="h-5 w-5" />,
-      title: "Legacy & Planned Gifts",
-      desc: "Create lasting impact with bequests and planned giving. We can help you get started.",
+      name: "Ana Rodríguez",
+      role: "Class of 2023",
+      quote: "The travel fund made it possible for me to visit universities and find the perfect fit for my future.",
+      image: "/38.JPG",
     },
   ];
 
+  return (
+    <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+            Meet Our Scholars
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Real stories from students and teachers whose lives have been transformed
+          </p>
+        </div>
 
+        <div className="grid md:grid-cols-3 gap-8">
+          {stories.map((story, i) => (
+            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+              <div className="relative h-64">
+                <Image
+                  src={story.image}
+                  alt={story.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="p-6">
+                <blockquote className="text-gray-700 italic mb-4">
+                  &quot;{story.quote}&quot;
+                </blockquote>
+                <div>
+                  <div className="font-bold" style={{ color: BRAND.blue }}>
+                    {story.name}
+                  </div>
+                  <div className="text-sm text-gray-600">{story.role}</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center mt-8">
+          <button className="text-[var(--hs-blue)] font-semibold hover:underline">
+            Read More Stories →
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Matching Challenge
+function MatchingChallenge() {
+  const currentAmount = 45000;
+  const goalAmount = 100000;
+  const percentage = (currentAmount / goalAmount) * 100;
+
+  return (
+    <section className="py-16 sm:py-24 bg-gradient-to-br from-blue-900 to-blue-800 text-white">
+      <div className="mx-auto max-w-5xl px-6">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-400 text-blue-900 font-bold mb-4">
+            <TrendingUp className="w-5 h-5" />
+            MATCHING CHALLENGE
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Double Your Impact!
+          </h2>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            A generous sponsor will match your donation 1:1 to help us reach our goal 
+            of $100,000 for travel scholarships
+          </p>
+        </div>
+
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
+          <div className="flex justify-between items-center mb-4">
+            <span className="text-2xl font-bold">${currentAmount.toLocaleString()}</span>
+            <span className="text-2xl font-bold">${goalAmount.toLocaleString()}</span>
+          </div>
+          <div className="h-6 bg-white/20 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-yellow-400 transition-all duration-1000"
+              style={{ width: `${percentage}%` }}
+            />
+          </div>
+          <p className="text-center mt-4 text-white/90">
+            {percentage.toFixed(0)}% to our goal
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Ways to Give
+function WaysToGive() {
+  const ways = [
+    {
+      icon: <Heart className="w-6 h-6" />,
+      title: "Online",
+      desc: "Credit card, PayPal, or Donorbox - secure and instant",
+    },
+    {
+      icon: <Building2 className="w-6 h-6" />,
+      title: "Bank Transfer / Wire",
+      desc: "Contact us for account details and receipt",
+    },
+    {
+      icon: <Receipt className="w-6 h-6" />,
+      title: "Donor-Advised Fund",
+      desc: "Recommend a grant from your DAF",
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Stock / Securities",
+      desc: "Tax-efficient giving through appreciated assets",
+    },
+    {
+      icon: <Award className="w-6 h-6" />,
+      title: "Corporate Matching",
+      desc: "Multiply your gift through employer matching programs",
+    },
+    {
+      icon: <BookOpen className="w-6 h-6" />,
+      title: "Legacy & Planned Gifts",
+      desc: "Create lasting impact with bequests",
+    },
+  ];
+
+  return (
+    <section className="py-16 sm:py-24 bg-white">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+            Ways to Give
+          </h2>
+          <p className="text-xl text-gray-600">
+            Choose the giving method that works best for you
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ways.map((way, i) => (
+            <div key={i} className="p-6 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
+              <div
+                className="inline-flex p-3 rounded-full mb-4"
+                style={{ backgroundColor: "rgba(var(--hs-yellow-rgb), 0.2)" }}
+              >
+                <div style={{ color: BRAND.blue }}>{way.icon}</div>
+              </div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
+                {way.title}
+              </h3>
+              <p className="text-gray-600">{way.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 text-center">
+          <p className="text-sm text-gray-600">
+            <strong>Note:</strong> All gifts are tax-deductible under IRS 501(c)(3).
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Stewardship & Transparency
+function Stewardship() {
+  return (
+    <section className="py-16 sm:py-24 bg-gray-50">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+            Stewardship & Transparency
+          </h2>
+          <p className="text-xl text-gray-600">
+            Your trust matters. See how we steward every gift.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-12">
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
+            <CheckCircle2 className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
+            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
+              Annual Impact Report
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Detailed breakdown of how every dollar makes a difference
+            </p>
+            <button className="text-[var(--hs-blue)] font-semibold hover:underline">
+              Download Report →
+            </button>
+          </div>
+
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
+            <Users className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
+            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
+              Board of Directors
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Meet the dedicated leaders guiding our mission
+            </p>
+            <button className="text-[var(--hs-blue)] font-semibold hover:underline">
+              Learn More →
+            </button>
+          </div>
+
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
+            <Mail className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
+            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
+              Contact Us
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Development Office / Foundation Team
+            </p>
+            <div className="space-y-2 text-sm text-gray-600">
+              <div className="flex items-center justify-center gap-2">
+                <Mail className="w-4 h-4" />
+                donations@hughesschools.edu
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Phone className="w-4 h-4" />
+                +591 4 123 4567
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white p-8 rounded-2xl border-2 border-[var(--hs-yellow)]">
+          <div className="flex items-start gap-4">
+            <CheckCircle2 className="w-8 h-8 flex-shrink-0" style={{ color: BRAND.yellow }} />
+            <div>
+              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
+                Legal & Nonprofit Information
+              </h3>
+              <p className="text-gray-600">
+                <strong>EIN:</strong> 12-3456789<br />
+                <strong>Status:</strong> 501(c)(3) Tax-Exempt Organization<br />
+                <strong>Disclaimer:</strong> Hughes Schools Foundation is a registered nonprofit. 
+                All donations are tax-deductible to the fullest extent allowed by law.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 }

@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "impact_stories",
+  "info": {
+    "singularName": "impact-story",
+    "pluralName": "impact-stories",
+    "displayName": "Impact Story",
+    "description": "Success stories from students and teachers"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "role": {
+      "type": "string",
+      "required": true
+    },
+    "quote": {
+      "type": "text",
+      "required": true
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": ["student", "teacher", "alumni"],
+      "required": true
+    },
+    "year": {
+      "type": "integer",
+      "required": false
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}
