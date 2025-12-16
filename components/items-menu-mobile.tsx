@@ -14,45 +14,50 @@ const BRAND = {
 type Item = { label: string; href?: string; newTab?: boolean; onClick?: () => void };
 type Group = { label: string; items: Item[] };
 
+// 🔄 Nueva estructura según la reorganización
 const GROUPS: Group[] = [
   {
-    label: "Academics",
+    label: "Alumni",
     items: [
+      { label: "Alumni Network", href: "/alumni" },
       { label: "Academic Programs", href: "/academics/programs" },
       { label: "Our Learning Environment", href: "/academics/learning-env" },
       { label: "Where Our Graduates Go", href: "/academics/graduates" },
-      { label: "Why choose Hughes Schools?", href: "/academics/undergraduate" },
-      { label: "Student Testimonials", href: "/testimonials" },
-      { label: "Academic Staff", href: "/academics/academic-staff" },
-      { label: "Student Portal (Login)", href: "/academics/login", newTab: true },
-    ],
-  },
-  {
-    label: "Performing Arts",
-    items: [
       { label: "Art Programs", href: "/arts/artprograms" },
-      { label: "Art Staff", href: "/arts/art-staff" },
-    ],
-  },
-  {
-    label: "Events",
-    items: [
       { label: "Events Recap", href: "/events" },
       { label: "Events Calendar", href: "/events/calendar" },
+    ],
+  },
+  {
+    label: "Admissions",
+    items: [
+      { label: "Apply Now", href: "/admissions" },
+      { label: "Resources", href: "/resources" },
+    ],
+  },
+  {
+    label: "About Us",
+    items: [
+      { label: "Our Story", href: "/about" },
+      { label: "Why Choose Hughes Schools?", href: "/academics/undergraduate" },
+      { label: "Academic Staff", href: "/academics/academic-staff" },
+      { label: "Art Staff", href: "/arts/art-staff" },
+      { label: "News & Updates", href: "/news" },
+      { label: "FAQs", href: "/faqs" },
+    ],
+  },
+  {
+    label: "Portal",
+    items: [
+      { label: "Student Portal", href: "/academics/login", newTab: true },
+      { label: "Parent Portal", href: "/parents/login", newTab: true },
     ],
   },
 ];
 
 const SINGLES: Item[] = [
-  { label: "Admissions", href: "/admissions" },
-  { label: "News", href: "/news" },
   { label: "Donation", href: "/donation" },
-  { label: "Alumni", href: "/alumni" },
-  { label: "About us", href: "/about" },
-  { label: "FAQS", href: "/faqs" },
-  { label: "Parents", href: "/parents/login", newTab: true },
   { label: "Contact" }, // se completará con onClick
-  { label: "Resources", href: "/resources" },
 ];
 
 export default function MobileMenu() {

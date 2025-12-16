@@ -51,21 +51,23 @@ const Navbar = () => {
     >
       {/* contenedor interno */}
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-4">
-        {/* Logo */}
-        <Link href="/" className="flex shrink-0 items-center">
-          <Image
-            src="/Logo Transparente.png"
-            alt="Hughes Schools"
-            width={240}
-            height={240}
-            priority
-            className="h-[110px] w-auto object-contain object-center"
-            sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 110px"
-          />
-        </Link>
+        {/* Logo + Menú Izquierdo */}
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex shrink-0 items-center">
+            <Image
+              src="/Logo Transparente.png"
+              alt="Hughes Schools"
+              width={240}
+              height={240}
+              priority
+              className="h-[110px] w-auto object-contain object-center"
+              sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 110px"
+            />
+          </Link>
+        </div>
 
-        {/* Menú escritorio */}
-        <nav className="hidden h-full items-center sm:flex">
+        {/* Menú escritorio completo */}
+        <nav className="hidden h-full items-center sm:flex flex-1 justify-between px-8">
           <MenuList />
         </nav>
 

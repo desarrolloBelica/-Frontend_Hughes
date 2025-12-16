@@ -110,9 +110,11 @@ function ContactScrollItem({ label = "Contact" }: { label?: string }) {
 
 export default function MenuList() {
   return (
-    <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
-      <NavigationMenuList className="flex items-center gap-8">
-        {/* Academics */}
+    <>
+      {/* Menú Izquierdo */}
+      <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
+        <NavigationMenuList className="flex items-center gap-6">
+        {/* 🎓 Alumni - Con sub-navegación */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -122,7 +124,7 @@ export default function MenuList() {
               className="relative inline-block text-sm font-semibold tracking-wide"
               style={{ color: BRAND.blue }}
             >
-              Academics
+              Alumni
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
@@ -132,47 +134,49 @@ export default function MenuList() {
             </motion.span>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="min-w-[640px] max-w-[900px]">
-              <div className="grid grid-cols-3 gap-x-10 gap-y-4 p-6 bg-white rounded-xl shadow-xl">
-                <div className="col-span-2 grid grid-cols-2 gap-4">
-                  <div>
-                    <ColLink href="/academics/programs" title="Academic Programs" />
-                    <ColLink href="/academics/learning-env" title="Our Learning Environment" />
-                    <ColLink href="/academics/graduates" title="Where Our Graduates Go" />
+            <div className="min-w-[700px] max-w-[900px]">
+              <div className="p-6 bg-white rounded-xl shadow-xl">
+                <div className="space-y-4">
+                  {/* Sección Principal Alumni */}
+                  <div className="pb-3 border-b border-gray-200">
+                    <ColLink href="/alumni" title="Alumni Network" desc="Connect with our global alumni community" />
                   </div>
-                  <div>
-                    <ColLink href="/academics/undergraduate" title="Why choose Hughes Schools?" />
-                    <ColLink href="/testimonials" title="Student Testimonials" />
-                    <ColLink href="/academics/academic-staff" title="Academic Staff" />
-                  </div>
-                </div>
-                <div className="col-span-1">
-                  <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">
-                    Student Portal
-                  </h4>
-                  {/* 🔗 Abrir en nueva pestaña y apuntar a /student/login */}
-                  <Link
-                    href="/academics/login"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block overflow-hidden rounded-2xl border"
-                  >
-                    <div className="p-4">
-                      <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
-                        Log in here
+                  
+                  <div className="grid grid-cols-3 gap-x-8 gap-y-3">
+                    {/* Academics */}
+                    <div>
+                      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Academics</h4>
+                      <div className="space-y-1">
+                        <ColLink href="/academics/programs" title="Academic Programs" />
+                        <ColLink href="/academics/learning-env" title="Our Learning Environment" />
+                        <ColLink href="/academics/graduates" title="Where Our Graduates Go" />
                       </div>
-                      <p className="mt-1 text-xs text-gray-600">
-                        View your schedule, courses, and library resources.
-                      </p>
                     </div>
-                  </Link>
+                    
+                    {/* Performing Arts */}
+                    <div>
+                      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Performing Arts</h4>
+                      <div className="space-y-1">
+                        <ColLink href="/arts/artprograms" title="Art Programs" />
+                      </div>
+                    </div>
+                    
+                    {/* Events */}
+                    <div>
+                      <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Events</h4>
+                      <div className="space-y-1">
+                        <ColLink href="/events" title="Events Recap" />
+                        <ColLink href="/events/calendar" title="Events Calendar" />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* Performing Arts */}
+        {/* 📝 Admissions - Con Resources */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -182,7 +186,7 @@ export default function MenuList() {
               className="relative inline-block text-sm font-semibold tracking-wide"
               style={{ color: BRAND.blue }}
             >
-              Performing Arts
+              Admissions
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
@@ -192,16 +196,16 @@ export default function MenuList() {
             </motion.span>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="w-max min-w=[320px] max-w-[90vw]">
-              <div className="grid grid-cols-2 gap-x-10 gap-y-4 p-6 bg-white rounded-xl shadow-xl">
-                <ColLink href="/arts/artprograms" title="Art Programs" />
-                <ColLink href="/arts/art-staff" title="Art Staff" />
+            <div className="w-max min-w-[350px] max-w-[90vw]">
+              <div className="grid grid-cols-1 gap-3 p-6 bg-white rounded-xl shadow-xl">
+                <ColLink href="/admissions" title="Apply Now" desc="Start your application process" />
+                <ColLink href="/resources" title="Resources" desc="Additional information for applicants" />
               </div>
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* Events */}
+        {/* ℹ️ About Us - Con Staff y más */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
             <motion.span
@@ -211,7 +215,7 @@ export default function MenuList() {
               className="relative inline-block text-sm font-semibold tracking-wide"
               style={{ color: BRAND.blue }}
             >
-              Events
+              About Us
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
@@ -221,28 +225,100 @@ export default function MenuList() {
             </motion.span>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="w-max min-w-[320px] max-w-[90vw]">
-              <div className="grid grid-cols-2 gap-x-10 gap-y-4 p-6 bg-white rounded-xl shadow-xl">
-                <ColLink href="/events" title="Events Recap" />
-                <ColLink href="/events/calendar" title="Events Calendar" />
+            <div className="min-w-[550px] max-w-[90vw]">
+              <div className="p-6 bg-white rounded-xl shadow-xl">
+                <div className="grid grid-cols-2 gap-x-8 gap-y-3">
+                  <div className="space-y-2">
+                    <ColLink href="/about" title="Our Story" desc="Learn about Hughes Schools" />
+                    <ColLink href="/academics/undergraduate" title="Why Choose Hughes Schools?" />
+                    <ColLink href="/news" title="News & Updates" />
+                  </div>
+                  <div className="space-y-2">
+                    <h4 className="mb-2 text-xs font-bold uppercase tracking-wider text-gray-500">Our Team</h4>
+                    <ColLink href="/academics/academic-staff" title="Academic Staff" />
+                    <ColLink href="/arts/art-staff" title="Art Staff" />
+                    <div className="pt-2">
+                      <ColLink href="/faqs" title="FAQs" desc="Common questions answered" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
 
-        {/* Simples */}
-        <SimpleItem href="/admissions" label="Admissions" />
-        <SimpleItem href="/news" label="News" />
-        <SimpleItem href="/donation" label="Donation" />
-        <SimpleItem href="/alumni" label="Alumni" />
-        <SimpleItem href="/about" label="About us" />
-        <SimpleItem href="/faqs" label="FAQS" />
-        {/* 🔗 Parents en nueva pestaña */}
-        <SimpleItem href="/parents/login" label="Parents" newTab />
-        {/* 👇 Contact con scroll animado al footer */}
-        <ContactScrollItem label="Contact" />
-        <SimpleItem href="/resources" label="Resources" />
+        {/* 🚪 Portal - Con Student y Parent */}
+        <NavigationMenuItem>
+          <NavigationMenuTrigger className="bg-transparent p-0 data-[state=open]:bg-transparent data-[state=open]:shadow-none">
+            <motion.span
+              initial="rest"
+              animate="rest"
+              whileHover="hover"
+              className="relative inline-block text-sm font-semibold tracking-wide"
+              style={{ color: BRAND.blue }}
+            >
+              Portal
+              <motion.span
+                variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
+                transition={{ duration: 0.28 }}
+                className="absolute left-0 bottom-0 h-[2px]"
+                style={{ backgroundColor: BRAND.yellow }}
+              />
+            </motion.span>
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <div className="w-max min-w-[450px] max-w-[90vw]">
+              <div className="grid grid-cols-2 gap-4 p-6 bg-white rounded-xl shadow-xl">
+                {/* Student Portal */}
+                <Link
+                  href="/academics/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] transition-colors"
+                >
+                  <div className="p-4">
+                    <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
+                      Student Portal
+                    </div>
+                    <p className="mt-1 text-xs text-gray-600">
+                      View your schedule, courses, and library resources.
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Parent Portal */}
+                <Link
+                  href="/parents/login"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] transition-colors"
+                >
+                  <div className="p-4">
+                    <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
+                      Parent Portal
+                    </div>
+                    <p className="mt-1 text-xs text-gray-600">
+                      Track your child&apos;s progress and communicate with staff.
+                    </p>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
+
+      {/* Menú Derecho */}
+      <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
+        <NavigationMenuList className="flex items-center gap-6">
+        {/* 💝 Donation - Simple item importante */}
+        <SimpleItem href="/donation" label="Donation" />
+
+        {/* � Contact - con scroll animado al footer */}
+        <ContactScrollItem label="Contact" />
+      </NavigationMenuList>
+    </NavigationMenu>
+    </>
   );
 }
