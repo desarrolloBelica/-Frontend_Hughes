@@ -243,13 +243,15 @@ function DonationWidget() {
       }
 
       // Redirigir a Stripe Checkout
-      const result = await stripe?.redirectToCheckout({
-        sessionId: session.sessionId,
-      });
+      if (session.sessionId && stripe) {
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: session.sessionId,
+        });
 
-      if (result?.error) {
-        alert(result.error.message);
-        setIsProcessing(false);
+        if (error) {
+          alert(error.message);
+          setIsProcessing(false);
+        }
       }
     } catch (error) {
       console.error("Error:", error);
