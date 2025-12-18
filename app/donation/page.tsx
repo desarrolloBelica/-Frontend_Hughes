@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe as StripeJs } from "@stripe/stripe-js";
 import {
   GraduationCap,
   Plane,
@@ -215,43 +215,56 @@ function DonationWidget() {
     setIsProcessing(true);
 
     try {
-      const stripe = await stripePromise;
+      const stripe = (await stripePromise) as StripeJs | null;
 
-      const response = await fetch("/api/donations/create-checkout", {
+      // 🔄 TEMPORAL: Usando controller de Strapi
+      // TODO: En producción, cambiar a webhook (ver /api/donations/webhook/route.ts)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/create-checkout-session`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           amount: Number(amount),
-          frequency,
-          designation,
-          donorInfo,
-          tributeInfo: {
-            type: tributeType !== "none" ? tributeType : null,
-            name: tributeName || null,
+          frecuency: frequency, // Nota: el backend usa "frecuency"
+          donationDestiny: designation,
+          donator: {
+            firstName: donorInfo.firstName,
+            lastName: donorInfo.lastName,
+            email: donorInfo.email,
+            phone: donorInfo.phone,
+            address: donorInfo.address,
+            city: donorInfo.city,
           },
+          comments: tributeType !== "none" 
+            ? `${tributeType === "honor" ? "In Honor Of" : "In Memory Of"}: ${tributeName}`
+            : "",
         }),
       });
 
-      const session = await response.json();
+      const data = await response.json();
 
-      if (session.error) {
-        alert(session.error);
+      if (data.error) {
+        alert(data.error);
         setIsProcessing(false);
         return;
       }
 
-      // Redirigir a Stripe Checkout
-      if (session.sessionId && stripe) {
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: session.sessionId,
+      // Redirigir a Stripe Checkout (mantener error disponible)
+      if (data.stripeSession?.id && stripe && "redirectToCheckout" in stripe) {
+        const { error } = await (stripe as any).redirectToCheckout({
+          sessionId: data.stripeSession.id,
         });
 
         if (error) {
           alert(error.message);
           setIsProcessing(false);
+          return;
         }
+      } else if (data.stripeSession?.url) {
+        // Fallback: redirección directa por URL si está disponible
+        window.location.href = data.stripeSession.url as string;
+        return;
       }
     } catch (error) {
       console.error("Error:", error);

@@ -18,9 +18,19 @@ export default function DonationSuccessPage() {
 
   useEffect(() => {
     if (sessionId) {
-      // Aquí puedes hacer una llamada para obtener detalles de la sesión si es necesario
-      // Por ahora solo mostramos el mensaje de éxito
-      setLoading(false);
+      // Confirmar el pago en el backend
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/confirm?session_id=${sessionId}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Donation confirmed:", data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error confirming donation:", error);
+          setLoading(false);
+        });
     }
   }, [sessionId]);
 

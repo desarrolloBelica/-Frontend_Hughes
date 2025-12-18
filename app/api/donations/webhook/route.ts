@@ -1,6 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
+/**
+ * 🔄 WEBHOOK DE STRIPE - ACTUALMENTE DESHABILITADO
+ * 
+ * Este webhook es la forma MÁS SEGURA de confirmar donaciones en producción.
+ * Stripe envía automáticamente notificaciones cuando un pago se completa.
+ * 
+ * ✅ VENTAJAS:
+ * - No depende del frontend (funciona aunque el usuario cierre la ventana)
+ * - Stripe garantiza la entrega del evento
+ * - Más seguro y confiable
+ * 
+ * 📋 PARA ACTIVAR EN PRODUCCIÓN:
+ * 1. Configurar webhook en Stripe Dashboard:
+ *    - URL: https://tu-dominio.com/api/donations/webhook
+ *    - Evento: checkout.session.completed
+ * 2. Copiar el Webhook Secret y agregarlo a .env
+ * 3. Actualizar donation/page.tsx para usar /api/donations/create-checkout
+ * 4. Eliminar la llamada a /confirm en donation/success/page.tsx
+ * 
+ * 🚧 ACTUALMENTE: Usando controller de Strapi con /confirm manual
+ */
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const STRAPI_URL = process.env.STRAPI_URL;
 const STRAPI_TOKEN = process.env.STRAPI_TOKEN;
