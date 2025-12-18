@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle, Download, Mail, Home } from "lucide-react";
@@ -10,7 +10,7 @@ const BRAND = {
   yellow: "var(--hs-yellow)",
 };
 
-export default function DonationSuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get("session_id");
   const [session, setSession] = useState<any>(null);
@@ -109,5 +109,25 @@ export default function DonationSuccessPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function DonationSuccessPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-gradient-to-b from-white to-gray-50 flex items-center justify-center px-6">
+        <div className="max-w-2xl w-full">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 text-center">
+            <div className="animate-pulse">
+              <div className="w-16 h-16 bg-gray-200 rounded-full mx-auto mb-6"></div>
+              <div className="h-10 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-1/2 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    }>
+      <SuccessContent />
+    </Suspense>
   );
 }
