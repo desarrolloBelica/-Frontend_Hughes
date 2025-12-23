@@ -32,7 +32,7 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
           href={href}
           target={newTab ? "_blank" : undefined}
           rel={newTab ? "noopener noreferrer" : undefined}
-          className="relative text-sm font-semibold tracking-wide px-1 py-1"
+          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-yellow-300 hover:bg-yellow-400 hover:shadow-md"
           style={{ color: BRAND.blue }}
         >
           {label}
@@ -41,7 +41,7 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
             whileHover={{ width: "100%" }}
             transition={{ duration: 0.28 }}
             className="absolute left-0 bottom-0 h-[2px]"
-            style={{ backgroundColor: BRAND.yellow }}
+            style={{ backgroundColor: BRAND.blue }}
           />
         </Link>
       </NavigationMenuLink>
@@ -65,12 +65,15 @@ function ColLink({
       href={href}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noopener noreferrer" : undefined}
-      className="block rounded-xl p-3 transition hover:bg-gray-50 focus:bg-gray-50"
+      className="block rounded-xl p-3 transition-colors hover:bg-yellow-100 focus:bg-yellow-100"
     >
-      <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
-        {title}
+      <div className="flex items-center gap-2">
+        <span className="text-lg font-bold" style={{ color: BRAND.yellow }}>•</span>
+        <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
+          {title}
+        </div>
       </div>
-      {desc && <p className="mt-1 text-xs text-gray-600 leading-snug">{desc}</p>}
+      {desc && <p className="mt-1 ml-6 text-xs text-gray-600 leading-snug">{desc}</p>}
     </Link>
   );
 }
@@ -91,7 +94,7 @@ function ContactScrollItem({ label = "Contact" }: { label?: string }) {
         <button
           type="button"
           onClick={onClick}
-          className="relative text-sm font-semibold tracking-wide px-1 py-1"
+          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-yellow-300 hover:bg-yellow-400 hover:shadow-md"
           style={{ color: BRAND.blue }}
         >
           {label}
@@ -100,7 +103,7 @@ function ContactScrollItem({ label = "Contact" }: { label?: string }) {
             whileHover={{ width: "100%" }}
             transition={{ duration: 0.28 }}
             className="absolute left-0 bottom-0 h-[2px]"
-            style={{ backgroundColor: BRAND.yellow }}
+            style={{ backgroundColor: BRAND.blue }}
           />
         </button>
       </NavigationMenuLink>
@@ -121,15 +124,20 @@ export default function MenuList() {
               initial="rest"
               animate="rest"
               whileHover="hover"
-              className="relative inline-block text-sm font-semibold tracking-wide"
+              className="relative inline-block text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
               style={{ color: BRAND.blue }}
+              variants={{
+                rest: { backgroundColor: "transparent" },
+                hover: { backgroundColor: "rgb(253 224 71)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }
+              }}
+              transition={{ duration: 0.3 }}
             >
               Alumni
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
                 className="absolute left-0 bottom-0 h-[2px]"
-                style={{ backgroundColor: BRAND.yellow }}
+                style={{ backgroundColor: BRAND.blue }}
               />
             </motion.span>
           </NavigationMenuTrigger>
@@ -185,15 +193,20 @@ export default function MenuList() {
               initial="rest"
               animate="rest"
               whileHover="hover"
-              className="relative inline-block text-sm font-semibold tracking-wide"
+              className="relative inline-block text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
               style={{ color: BRAND.blue }}
+              variants={{
+                rest: { backgroundColor: "transparent" },
+                hover: { backgroundColor: "rgb(253 224 71)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }
+              }}
+              transition={{ duration: 0.3 }}
             >
               Admissions
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
                 className="absolute left-0 bottom-0 h-[2px]"
-                style={{ backgroundColor: BRAND.yellow }}
+                style={{ backgroundColor: BRAND.blue }}
               />
             </motion.span>
           </NavigationMenuTrigger>
@@ -214,15 +227,20 @@ export default function MenuList() {
               initial="rest"
               animate="rest"
               whileHover="hover"
-              className="relative inline-block text-sm font-semibold tracking-wide"
+              className="relative inline-block text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
               style={{ color: BRAND.blue }}
+              variants={{
+                rest: { backgroundColor: "transparent" },
+                hover: { backgroundColor: "rgb(253 224 71)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }
+              }}
+              transition={{ duration: 0.3 }}
             >
               About Us
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
                 className="absolute left-0 bottom-0 h-[2px]"
-                style={{ backgroundColor: BRAND.yellow }}
+                style={{ backgroundColor: BRAND.blue }}
               />
             </motion.span>
           </NavigationMenuTrigger>
@@ -256,15 +274,20 @@ export default function MenuList() {
               initial="rest"
               animate="rest"
               whileHover="hover"
-              className="relative inline-block text-sm font-semibold tracking-wide"
+              className="relative inline-block text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
               style={{ color: BRAND.blue }}
+              variants={{
+                rest: { backgroundColor: "transparent" },
+                hover: { backgroundColor: "rgb(253 224 71)", boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)" }
+              }}
+              transition={{ duration: 0.3 }}
             >
-              Portal
+              Portal login
               <motion.span
                 variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
                 transition={{ duration: 0.28 }}
                 className="absolute left-0 bottom-0 h-[2px]"
-                style={{ backgroundColor: BRAND.yellow }}
+                style={{ backgroundColor: BRAND.blue }}
               />
             </motion.span>
           </NavigationMenuTrigger>
@@ -276,7 +299,7 @@ export default function MenuList() {
                   href="/academics/login"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] transition-colors"
+                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] hover:bg-yellow-50 transition-colors"
                 >
                   <div className="p-4">
                     <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
@@ -293,7 +316,7 @@ export default function MenuList() {
                   href="/parents/login"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] transition-colors"
+                  className="block overflow-hidden rounded-2xl border border-gray-200 hover:border-[var(--hs-blue)] hover:bg-yellow-50 transition-colors"
                 >
                   <div className="p-4">
                     <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
