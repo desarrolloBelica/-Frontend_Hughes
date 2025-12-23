@@ -150,8 +150,7 @@ export default function MenuList() {
                         <ColLink href="/academics/programs" title="Academic Programs" />
                         <ColLink href="/academics/learning-env" title="Our Learning Environment" />
                         <ColLink href="/academics/graduates" title="Where Our Graduates Go" />
-                        <ColLink href="/academics/hughes-space" title="Hughes Space School" />
-                      </div>
+                        </div>
                     </div>
                     
                     {/* Performing Arts */}
@@ -160,6 +159,7 @@ export default function MenuList() {
                       <div className="space-y-1">
                         <ColLink href="/arts/artprograms" title="Art Programs" />
                         <ColLink href="/arts/hs-robot" title="HS Robot" />
+                        <ColLink href="/academics/hughes-space" title="Hughes Space School" />
                       </div>
                     </div>
                     

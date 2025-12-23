@@ -106,13 +106,11 @@ function NavigationMenuViewport({
   return (
     <div
       className={cn("absolute top-full left-0 z-50")}
-      // 👇 Radix calcula la posición horizontal del trigger abierto
       style={{ left: "var(--radix-navigation-menu-viewport-left, 0px)" }}
     >
       <NavigationMenuPrimitive.Viewport
         data-slot="navigation-menu-viewport"
         className={cn(
-          // 👇 ancho y alto exactos del contenido abierto
           "origin-top-left relative mt-1.5",
           "h-[var(--radix-navigation-menu-viewport-height)]",
           "w-[var(--radix-navigation-menu-viewport-width)] max-w-[92vw]",

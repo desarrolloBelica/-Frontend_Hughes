@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { loadStripe, Stripe as StripeJs } from "@stripe/stripe-js";
 import {
   GraduationCap,
   Plane,
@@ -18,10 +17,6 @@ import {
   Phone,
   ArrowRight,
 } from "lucide-react";
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ""
-);
 
 const HERO_IMAGE = "/38.JPG";
 const BRAND = {
@@ -215,11 +210,9 @@ function DonationWidget() {
     setIsProcessing(true);
 
     try {
-      const stripe = (await stripePromise) as StripeJs | null;
-
       // 🔄 TEMPORAL: Usando controller de Strapi
       // TODO: En producción, cambiar a webhook (ver /api/donations/webhook/route.ts)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/create-checkout-session`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -242,6 +235,11 @@ function DonationWidget() {
         }),
       });
 
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || `Request failed with status ${response.status}`);
+      }
+
       const data = await response.json();
 
       if (data.error) {
@@ -250,20 +248,15 @@ function DonationWidget() {
         return;
       }
 
-      // Redirigir a Stripe Checkout (mantener error disponible)
-      if (data.stripeSession?.id && stripe && "redirectToCheckout" in stripe) {
-        const { error } = await (stripe as any).redirectToCheckout({
-          sessionId: data.stripeSession.id,
-        });
-
-        if (error) {
-          alert(error.message);
-          setIsProcessing(false);
-          return;
-        }
-      } else if (data.stripeSession?.url) {
-        // Fallback: redirección directa por URL si está disponible
+      // Redirigir a Stripe Checkout usando la URL que retorna Stripe
+      if (data.stripeSession?.url) {
         window.location.href = data.stripeSession.url as string;
+        return;
+      }
+
+      // Fallback: construir URL si solo viene el sessionId (Stripe removió redirectToCheckout)
+      if (data.stripeSession?.id) {
+        window.location.href = `https://checkout.stripe.com/c/pay/${data.stripeSession.id}`;
         return;
       }
     } catch (error) {

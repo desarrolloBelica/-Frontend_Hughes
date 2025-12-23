@@ -19,10 +19,20 @@ function SuccessContent() {
   useEffect(() => {
     if (sessionId) {
       // Confirmar el pago en el backend
-      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/confirm?session_id=${sessionId}`, {
-        method: "GET",
+      fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/confirm`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ session_id: sessionId }),
       })
-        .then((res) => res.json())
+        .then(async (res) => {
+          if (!res.ok) {
+            const message = await res.text();
+            throw new Error(message || `Request failed with status ${res.status}`);
+          }
+          return res.json();
+        })
         .then((data) => {
           console.log("Donation confirmed:", data);
           setLoading(false);
