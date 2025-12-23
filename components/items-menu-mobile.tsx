@@ -48,7 +48,7 @@ const GROUPS: Group[] = [
     ],
   },
   {
-    label: "Portal",
+    label: "Portal Login",
     items: [
       { label: "Student Portal", href: "/academics/login", newTab: true },
       { label: "Parent Portal", href: "/parents/login", newTab: true },

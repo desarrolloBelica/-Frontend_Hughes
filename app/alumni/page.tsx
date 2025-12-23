@@ -64,7 +64,7 @@ function Hero() {
 					At Hughes Schools, we are proud to see our graduates thrive in universities, artistic programs, and professional fields—representing the spirit and commitment that define our institution. Once a Hughes student, always a member of the Hughes family.
 				</p>
 				<div className="h-px w-full bg-white/15" />
-				<div className="grid gap-4 text-sm md:grid-cols-2 md:text-base">
+				<div className="grid gap-4 text-base md:grid-cols-2 md:text-base lg:grid-cols-4">
 					<StatCard title="Global Impact" body="Alumni thriving across Bolivia, Latin America, North America, and Europe." />
 					<StatCard title="Disciplines" body="Arts, science, education, business, technology, and public service." />
 				</div>

@@ -1,28 +1,29 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ChevronLeft, ChevronRight, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 
-/** ───────────── Tipos ───────────── */
-
+// ───────────── Tipos ─────────────
 type Media = {
   id?: number | string;
-  url?: string;                    // v5
-  alternativeText?: string | null; // v5
-  attributes?: {                   // v4
+  url?: string;
+  alternativeText?: string | null;
+  attributes?: {
     url?: string;
     alternativeText?: string | null;
   };
 };
 
-type KnownFieldKey = "title" | "type" | "gallery" | "featured_image";
+type KnownFieldKey = "title" | "type" | "gallery" | "featured_image" | "slug" | "date" | "publishedAt" | "createdAt";
 
 type BlogV5 = {
   id: number | string;
   title?: string;
   type?: string;
+  slug?: string;
+  date?: string;
   gallery?: Media[] | Media | null;
   featured_image?: Media | null;
 };
@@ -32,6 +33,8 @@ type BlogV4 = {
   attributes?: {
     title?: string;
     type?: string;
+    slug?: string;
+    date?: string;
     gallery?: { data?: Media[] | Media | null } | Media[] | Media | null;
     featured_image?: { data?: Media | null } | Media | null;
   };
@@ -39,29 +42,34 @@ type BlogV4 = {
 
 type Blog = BlogV4 | BlogV5;
 
-/** ───────────── Helpers v4/v5 ───────────── */
+// ───────────── Helpers v4/v5 ─────────────
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null;
+}
 
 function getAttr<T = unknown>(row: Blog, key: KnownFieldKey): T | undefined {
-  if ((row as Record<string, unknown>)[key] !== undefined) {
-    return (row as Record<string, unknown>)[key] as T; // v5
-  }
-  const attrs = (row as BlogV4).attributes as Record<string, unknown> | undefined; // v4
-  if (attrs && attrs[key] !== undefined) {
-    return attrs[key] as T;
-  }
+  if (isRecord(row) && key in row) return (row as Partial<Record<KnownFieldKey, unknown>>)[key] as T;
+  const attrs = (row as { attributes?: unknown }).attributes;
+  if (isRecord(attrs) && key in attrs) return (attrs as Partial<Record<KnownFieldKey, unknown>>)[key] as T;
   return undefined;
 }
 
 function getMediaArray(val: unknown): Media[] {
   if (Array.isArray(val)) return val as Media[];
-  if (val && typeof val === "object") {
-    const obj = val as Record<string, unknown>;
-    if (typeof obj.url === "string" || obj.url === undefined) return [obj as Media];
-    const d = obj.data as unknown;
+  if (isRecord(val)) {
+    if ("url" in val) return [val as Media];
+    const d = (val as { data?: unknown }).data;
     if (Array.isArray(d)) return d as Media[];
-    if (d && typeof d === "object") return [d as Media];
+    if (isRecord(d)) return [d as Media];
   }
   return [];
+}
+
+function abs(u?: string | null): string | null {
+  if (!u) return null;
+  if (u.startsWith("http://") || u.startsWith("https://")) return u;
+  const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+  return `${base}${u}`;
 }
 
 function mediaUrl(m?: Media | null): string | null {
@@ -75,195 +83,82 @@ function mediaAlt(m?: Media | null): string | undefined {
   return m?.alternativeText ?? m?.attributes?.alternativeText ?? undefined;
 }
 
-function abs(u?: string | null) {
-  if (!u) return null;
-  if (u.startsWith("http://") || u.startsWith("https://")) return u;
-  const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
-  return `${base}${u}`;
-}
-
-function normalizeGallery(blog: Blog): { url: string; alt: string }[] {
+function normalizeCover(blog: Blog): { url: string; alt: string } | null {
   const title = (getAttr<string>(blog, "title") ?? "") as string;
-  const galleryRaw = getAttr(blog, "gallery");
-  const galleryArr = getMediaArray(galleryRaw);
+  const gRaw = getAttr(blog, "gallery");
+  const gArr = getMediaArray(gRaw);
+  const first = gArr[0];
+  const u1 = mediaUrl(first);
+  if (u1) return { url: u1, alt: mediaAlt(first) ?? title };
 
-  const items: { url: string; alt: string }[] = [];
-  for (const m of galleryArr) {
-    const url = mediaUrl(m);
-    if (url) items.push({ url, alt: mediaAlt(m) ?? title });
-  }
+  const fRaw = getAttr(blog, "featured_image");
+  const fArr = getMediaArray(fRaw);
+  const f = fArr[0] ?? null;
+  const u2 = mediaUrl(f);
+  if (u2) return { url: u2, alt: mediaAlt(f) ?? title };
 
-  if (items.length === 0) {
-    const fiRaw = getAttr(blog, "featured_image");
-    const fiArr = getMediaArray(fiRaw);
-    const fi = fiArr[0] ?? null;
-    const url = mediaUrl(fi);
-    if (url) items.push({ url, alt: mediaAlt(fi) ?? title });
-  }
-  return items;
+  return null;
 }
 
-/** ───────────── Copys UI ───────────── */
-
-const TYPE_COPY: Record<string, { title: string; blurb: string }> = {
-  Academic: {
-    title: "Academic",
-    blurb:
-      "Moments that celebrate learning: science fairs, competitions, and student achievements reflecting our community's academic effort.",
-  },
-  Artistic: {
-    title: "Artistic",
-    blurb:
-      "Expressions of art and culture: performances, music, dance, and everything that showcases the creative talent of our students.",
-  },
-  Extracurricular: {
-    title: "Extracurricular",
-    blurb:
-      "Experiences beyond the classroom: trips, sports activities, and special visits that strengthen the Hughes spirit.",
-  },
-};
-
-/** ───────────── UI ───────────── */
-
-function CTAButton({ href, children }: { href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      className="group relative inline-flex h-11 items-center justify-center overflow-hidden rounded-full border-2 px-6 text-[15px] font-semibold shadow-xl transition-transform focus:outline-none focus:ring-2 focus:ring-offset-2 text-hughes-blue"
-      style={{ borderColor: "var(--hs-yellow)" }}
-    >
-      <span className="absolute inset-0 rounded-full bg-white transition-opacity duration-200 group-hover:opacity-0" />
-      <span className="relative z-10"> {children} </span>
-      <span
-        className="pointer-events-none absolute inset-0 rounded-full opacity-0 transition-opacity duration-200 group-hover:opacity-100"
-        style={{ background: "var(--hs-yellow)", mixBlendMode: "multiply" }}
-      />
-    </a>
-  );
+function recapHref(item: Blog): string {
+  const slug = (getAttr<string>(item, "slug") ?? "").trim();
+  return slug ? `/events/${encodeURIComponent(slug)}` : `/events/${encodeURIComponent(String(item.id))}`;
 }
 
-function Chip({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-medium bg-white text-hughes-blue"
-          style={{ borderColor: "#e6e6f0" }}>
-      {children}
-    </span>
-  );
+function parseDateMs(val?: string): number {
+  if (!val) return 0;
+  const t = Date.parse(val);
+  return Number.isFinite(t) ? t : 0;
 }
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <div
-      className={`rounded-2xl border bg-white shadow-[0_6px_40px_-20px_rgba(17,6,49,0.35)] text-hughes-blue ${className}`}
-      style={{ borderColor: "#ececf4" }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function Carousel({ images }: { images: { url: string; alt?: string }[] }) {
-  const [index, setIndex] = useState(0);
-  const count = images.length;
-
-  useEffect(() => {
-    if (count <= 1) return;
-    const id = setInterval(() => setIndex((i) => (i + 1) % count), 5000);
-    return () => clearInterval(id);
-  }, [count]);
-
-  if (count === 0) {
-    return (
-      <div
-        className="w-full aspect-[16/9] grid place-content-center rounded-2xl bg-neutral-50 border text-hughes-blue"
-        style={{ borderColor: "#ececf4" }}
-      >
-        <div className="flex items-center gap-2">
-          <ImageIcon className="w-5 h-5" />
-          <span>No images available.</span>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative w-full">
-      <div className="overflow-hidden rounded-2xl border" style={{ borderColor: "#ececf4" }}>
-        <div className="relative w-full aspect-[16/9]">
-          <AnimatePresence initial={false}>
-            <motion.img
-              key={index}
-              src={images[index].url}
-              alt={images[index].alt ?? ""}
-              className="absolute inset-0 h-full w-full object-cover"
-              initial={{ opacity: 0, scale: 1.02 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.45 }}
-              loading="lazy"
-            />
-          </AnimatePresence>
-        </div>
-      </div>
-
-      {count > 1 && (
-        <>
-          <button
-            aria-label="Previous"
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur px-2 py-2 rounded-xl shadow hover:bg-white text-hughes-blue"
-            onClick={() => setIndex((i) => (i - 1 + count) % count)}
-            style={{ boxShadow: "0 6px 25px -10px rgba(17,6,49,0.35)" }}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            aria-label="Next"
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 backdrop-blur px-2 py-2 rounded-xl shadow hover:bg-white text-hughes-blue"
-            onClick={() => setIndex((i) => (i + 1) % count)}
-            style={{ boxShadow: "0 6px 25px -10px rgba(17,6,49,0.35)" }}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1">
-            {images.map((_, i) => (
-              <span
-                key={i}
-                className="h-1.5 w-6 rounded-full transition-all"
-                style={{ backgroundColor: i === index ? "var(--hs-yellow)" : "var(--hs-blue)" }}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
-/** ───────────── Página ───────────── */
-
-export default function EventsRecapsTabs({ viewAllHref = "/events" }: { viewAllHref?: string }) {
+// ───────────── Página ─────────────
+export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?: string }) {
   const [data, setData] = useState<Blog[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [index, setIndex] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     async function load() {
       try {
         setLoading(true);
+        setError(null);
         const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
 
         const params = new URLSearchParams();
         params.set("populate[gallery]", "true");
         params.set("populate[featured_image]", "true");
-        params.set("pagination[pageSize]", "100");
+        params.set("pagination[pageSize]", "25");
+        params.set("pagination[page]", "1");
+        // Some Strapi setups reject unknown fields; sort by publishedAt/createdAt to be safe.
+        params.set("sort[0]", "publishedAt:desc");
+        params.set("sort[1]", "createdAt:desc");
 
         const res = await fetch(`${base}/api/blogs?${params.toString()}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        if (!res.ok) {
+          // Try to surface the Strapi error message for easier debugging.
+          let detail = "";
+          try {
+            const errJson = (await res.json()) as { error?: { message?: string; details?: unknown } };
+            detail = errJson?.error?.message ? ` - ${errJson.error.message}` : "";
+          } catch {
+            try {
+              detail = ` - ${(await res.text()).slice(0, 200)}`;
+            } catch {
+              detail = "";
+            }
+          }
+          throw new Error(`HTTP ${res.status}${detail}`);
+        }
 
-        const json = (await res.json()) as { data?: Blog[] } | Blog[];
-        const items: Blog[] = Array.isArray(json) ? json : json?.data ?? [];
+        const json: unknown = await res.json();
+        const items: Blog[] = Array.isArray(json)
+          ? (json as Blog[])
+          : (isRecord(json) && Array.isArray((json as { data?: unknown }).data)
+              ? ((json as { data: Blog[] }).data)
+              : []);
+
         if (!cancelled) setData(items);
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : "Unknown error";
@@ -278,110 +173,198 @@ export default function EventsRecapsTabs({ viewAllHref = "/events" }: { viewAllH
     };
   }, []);
 
-  const grouped = useMemo(() => {
-    const groups: Record<string, { images: { url: string; alt: string }[]; count: number }> = {
-      Academic: { images: [], count: 0 },
-      Artistic: { images: [], count: 0 },
-      Extracurricular: { images: [], count: 0 },
-    };
+  const slides = useMemo(() => {
+    const mapped = data
+      .map((b) => {
+        const cover = normalizeCover(b);
+        if (!cover) return null;
+        const title = (getAttr<string>(b, "title") ?? "Untitled") as string;
+        const type = (getAttr<string>(b, "type") ?? "") as string;
+        const date =
+          (getAttr<string>(b, "date") ??
+            getAttr<string>(b, "publishedAt") ??
+            getAttr<string>(b, "createdAt") ??
+            "") as string;
+        const href = recapHref(b);
+        return {
+          id: String((b as { id?: unknown }).id ?? title),
+          title,
+          type,
+          date,
+          href,
+          cover,
+        };
+      })
+      .filter(Boolean) as {
+        id: string;
+        title: string;
+        type: string;
+        date: string;
+        href: string;
+        cover: { url: string; alt: string };
+      }[];
 
-    for (const b of data) {
-      const t = (getAttr<string>(b, "type") ?? "").toString();
-      if (!groups[t]) continue;
-      const imgs = normalizeGallery(b);
-      groups[t].images.push(...imgs);
-      groups[t].count += 1;
-    }
-
-    function shuffle<T>(arr: T[]): T[] {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    }
-
-    (["Academic", "Artistic", "Extracurricular"] as const).forEach((k) => {
-      groups[k].images = shuffle(groups[k].images).slice(0, 5);
+    mapped.sort((a, b) => {
+      const diff = parseDateMs(b.date) - parseDateMs(a.date);
+      if (diff !== 0) return diff;
+      return b.id.localeCompare(a.id);
     });
 
-    return groups;
+    return mapped.slice(0, 8);
   }, [data]);
 
+  useEffect(() => {
+    if (slides.length === 0) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  const current = slides[index] ?? null;
+  const bg = "radial-gradient(circle at 15% 20%, #fff6d4 0, #f6f7fb 35%, #f6f7fb 100%)";
+
   return (
-    <section className="w-full py-16" style={{ background: "#f5f6fb" }}>
+    <section className="w-full py-14" style={{ background: bg }}>
       <div className="mx-auto max-w-6xl px-4">
-        {/* Encabezado */}
-        <div className="mb-10 text-center">
-          <div className="mx-auto inline-flex items-center gap-2 tag-hs">
-            Event Recaps
+        <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-sm" style={{ border: "1px solid var(--hs-yellow)" }}>
+              <Sparkles className="h-4 w-4" /> Últimos eventos
+            </div>
+            <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+              Mira lo reciente y entra al recap
+            </h2>
           </div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
-            Hughes Schools by the Moments
-          </h2>
-          <p className="text-sm md:text-base mt-2 text-hughes-blue">
-            Relive the best snapshots of our community.
-          </p>
+
+          <Link
+            href={viewAllHref}
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--hs-yellow)] px-4 py-2 text-sm font-semibold text-hughes-blue transition hover:bg-yellow-100"
+          >
+            Ver todos
+          </Link>
         </div>
 
-        {/* Tabs estilo HS */}
-        <Tabs defaultValue="Academic" className="w-full">
-          <TabsList className="mx-auto grid w-full max-w-xl grid-cols-3 rounded-full p-1 bg-[#ebeaf3]">
-            {(["Academic", "Artistic", "Extracurricular"] as const).map((val) => (
-              <TabsTrigger
-                key={val}
-                value={val}
-                className="tab-pill rounded-full px-5 py-2 border border-transparent transition-colors data-[state=active]:bg-white"
-              >
-                {val}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+        <div className="relative overflow-hidden rounded-3xl border bg-white shadow-[0_10px_50px_-25px_rgba(0,0,0,0.35)]" style={{ borderColor: "#ececf4" }}>
+          {loading ? (
+            <div className="aspect-[16/8] w-full animate-pulse bg-gray-100" />
+          ) : error ? (
+            <div className="aspect-[16/8] w-full grid place-content-center text-center text-hughes-blue p-8">
+              Error al cargar eventos: {error}
+            </div>
+          ) : current ? (
+            <div className="relative aspect-[16/8] w-full">
+              <AnimatePresence initial={false}>
+                <motion.div
+                  key={current.id}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0.4, scale: 1.01 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.99 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <img
+                    src={current.cover.url}
+                    alt={current.cover.alt}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.58)] via-[rgba(0,0,0,0.25)] to-[rgba(0,0,0,0.05)]" />
+                </motion.div>
+              </AnimatePresence>
 
-          {(["Academic", "Artistic", "Extracurricular"] as const).map((key) => (
-            <TabsContent key={key} value={key} className="mt-8">
-              <div className="grid md:grid-cols-2 gap-8 items-stretch">
-                {/* Columna de texto */}
-                <Card className="p-7 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-2xl font-semibold text-hughes-blue">
-                      {TYPE_COPY[key].title}
-                    </h3>
-                    <p className="mt-2 leading-relaxed text-hughes-blue">
-                      {TYPE_COPY[key].blurb}
-                    </p>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between gap-4">
-                    <CTAButton href={viewAllHref}>View all events</CTAButton>
-                    <Chip>
-                      {grouped[key].count > 0
-                        ? `${grouped[key].count} recap${grouped[key].count === 1 ? "" : "s"}`
-                        : "No recaps yet"}
-                    </Chip>
-                  </div>
-                </Card>
-
-                {/* Columna de carrusel */}
-                <Card className="p-2">
-                  {loading ? (
-                    <div className="w-full aspect-[16/9] animate-pulse rounded-xl" style={{ background: "#ececf4" }} />
-                  ) : error ? (
-                    <div
-                      className="w-full aspect-[16/9] grid place-content-center rounded-xl border text-center text-hughes-blue"
-                      style={{ borderColor: "var(--hs-yellow)" }}
-                    >
-                      Error loading images: {error}
-                    </div>
-                  ) : (
-                    <Carousel images={grouped[key].images} />
+              <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white">
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hughes-blue">
+                    {current.type || "Evento"}
+                  </span>
+                  {current.date && (
+                    <span className="text-xs font-semibold text-white/90">
+                      {new Date(current.date).toLocaleDateString()}
+                    </span>
                   )}
-                </Card>
+                </div>
+                <h3 className="mt-3 text-2xl sm:text-3xl font-bold leading-tight drop-shadow-md">
+                  {current.title}
+                </h3>
+                <div className="mt-4 flex items-center gap-3 flex-wrap">
+                  <Link
+                    href={current.href}
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+                  >
+                    Leer recap
+                  </Link>
+                  <span className="text-xs font-semibold uppercase tracking-wide bg-white/20 px-3 py-1 rounded-full">
+                    Últimos eventos
+                  </span>
+                </div>
               </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+
+              {slides.length > 1 && (
+                <>
+                  <button
+                    aria-label="Anterior"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/85 p-3 text-hughes-blue shadow hover:bg-white"
+                    onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    aria-label="Siguiente"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/85 p-3 text-hughes-blue shadow hover:bg-white"
+                    onClick={() => setIndex((i) => (i + 1) % slides.length)}
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 px-4">
+                    {slides.map((s, i) => (
+                      <button
+                        key={s.id}
+                        aria-label={`Ir al evento ${s.title}`}
+                        className="h-2.5 rounded-full transition-all"
+                        style={{
+                          width: i === index ? "32px" : "10px",
+                          backgroundColor: i === index ? "var(--hs-yellow)" : "rgba(255,255,255,0.7)",
+                        }}
+                        onClick={() => setIndex(i)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <div className="aspect-[16/8] w-full grid place-content-center text-center text-hughes-blue p-8">
+              No hay eventos disponibles.
+            </div>
+          )}
+        </div>
+
+        {slides.length > 0 && (
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
+            {slides.slice(0, 4).map((s, i) => (
+              <button
+                key={s.id}
+                onClick={() => setIndex(i)}
+                className={`group flex items-center gap-3 rounded-2xl border px-3 py-3 text-left transition hover:border-[var(--hs-yellow)] ${
+                  index === i ? "bg-yellow-50 border-[var(--hs-yellow)]" : "bg-white"
+                }`}
+                style={{ borderColor: index === i ? "var(--hs-yellow)" : "#ececf4" }}
+              >
+                <div className="relative h-14 w-14 overflow-hidden rounded-xl">
+                  <img src={s.cover.url} alt={s.cover.alt} className="h-full w-full object-cover" loading="lazy" />
+                </div>
+                <div className="flex-1">
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-hughes-blue/70">
+                    {s.type || "Evento"}
+                  </div>
+                  <div className="text-sm font-bold text-hughes-blue leading-tight line-clamp-2">{s.title}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
