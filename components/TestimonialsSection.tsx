@@ -206,14 +206,14 @@ const picks = useMemo(() => {
       <div className="relative mx-auto max-w-6xl px-4">
         {/* encabezado */}
         <div className="mb-10 text-center">
-          <div className="mx-auto inline-flex items-center gap-2 tag-hs">Testimonials</div>
+          <div className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-white">Testimonials</div>
           <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-white">
             What our community says
           </h2>
           <p className="text-sm md:text-base mt-2 text-white/80">
             Real voices from students, graduates, and parents.
           </p>
-        </div>
+          </div>
 
         <AnimatePresence mode="wait">
           {loading ? (

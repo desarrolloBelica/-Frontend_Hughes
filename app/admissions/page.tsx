@@ -1,7 +1,9 @@
 // app/admissions/page.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { FileDown, ChevronDown, ChevronUp } from "lucide-react";
 
 /* ───────────── Helpers: obtener ID de YouTube ───────────── */
 function getYouTubeId(url: string) {
@@ -135,6 +137,71 @@ const INITIAL: FormState = {
   preferredInterview: "",
 };
 
+/* ───────────── Helper para recursos ───────────── */
+type MediaAttrs = { url?: string; name?: string; mime?: string };
+type MediaEntry = { id?: number | string; attributes?: MediaAttrs } & MediaAttrs;
+type RelationData<T> = { data?: T | T[] | null } | T | T[] | null;
+type ResourceV4 = { id: number | string; attributes?: { name?: string; file?: RelationData<MediaEntry> } };
+type ResourceV5 = { id: number | string; name?: string; file?: RelationData<MediaEntry> };
+type ResourceRow = ResourceV4 | ResourceV5;
+type MediaNormalized = { url: string; name: string; mime?: string };
+
+function isObject(x: unknown): x is Record<string, unknown> {
+  return typeof x === "object" && x !== null;
+}
+function hasData(x: unknown): x is { data?: unknown } {
+  return isObject(x) && "data" in x;
+}
+function abs(u?: string | null): string {
+  if (!u) return "";
+  if (u.startsWith("http://") || u.startsWith("https://")) return u;
+  const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+  return `${base}${u}`;
+}
+function toMedia(m: unknown): MediaNormalized {
+  if (!isObject(m)) return { url: "", name: "" };
+  const me = m as MediaEntry;
+  return {
+    url: me.url ?? me.attributes?.url ?? "",
+    name: me.name ?? me.attributes?.name ?? "",
+    mime: me.mime ?? me.attributes?.mime ?? undefined,
+  };
+}
+function normalizeMedia(rel: RelationData<MediaEntry>): MediaNormalized[] {
+  if (!rel) return [];
+  if (Array.isArray(rel)) return rel.map(toMedia);
+  if (hasData(rel)) {
+    const d = (rel as { data?: unknown }).data;
+    if (!d) return [];
+    return Array.isArray(d) ? d.map(toMedia) : [toMedia(d)];
+  }
+  return [toMedia(rel)];
+}
+function isV4(r: ResourceRow): r is ResourceV4 {
+  return (r as ResourceV4).attributes !== undefined;
+}
+function getName(r: ResourceRow): string {
+  return isV4(r) ? r.attributes?.name ?? "" : (r as ResourceV5).name ?? "";
+}
+function getFiles(r: ResourceRow): MediaNormalized[] {
+  const rel = isV4(r) ? r.attributes?.file : (r as ResourceV5).file;
+  return normalizeMedia(rel ?? null);
+}
+function asResourceArray(input: unknown): ResourceRow[] {
+  if (Array.isArray(input)) return input as ResourceRow[];
+  if (isObject(input) && "data" in input) {
+    const d = (input as { data?: unknown }).data;
+    if (Array.isArray(d)) return d as ResourceRow[];
+  }
+  return [];
+}
+function fileBadgeName(mime?: string, url?: string) {
+  const u = (url ?? "").toLowerCase();
+  if (mime?.includes("pdf") || u.endsWith(".pdf")) return "PDF";
+  if (mime?.includes("word") || u.endsWith(".docx") || u.endsWith(".doc")) return "DOCX";
+  return "FILE";
+}
+
 export default function AdmissionsPage() {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
@@ -142,6 +209,47 @@ export default function AdmissionsPage() {
   const [error, setError] = useState<string | null>(null);
 
   const showChangeReason = UPPER_GRADES.has(form.incomingCourse);
+
+  // Resources state
+  const [resources, setResources] = useState<Array<{ id: string; title: string; url: string; mime?: string }>>([]);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [loadingResources, setLoadingResources] = useState(false);
+
+  useEffect(() => {
+    let cancel = false;
+    (async () => {
+      try {
+        setLoadingResources(true);
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+        const qs = new URLSearchParams();
+        qs.set("populate[file]", "true");
+        qs.set("pagination[pageSize]", "10");
+        const res = await fetch(`${base}/api/resources?${qs.toString()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json: unknown = await res.json();
+        const rows = asResourceArray(json);
+
+        const flat: Array<{ id: string; title: string; url: string; mime?: string }> = [];
+        rows.forEach((r) => {
+          const baseName = getName(r) || "Untitled";
+          getFiles(r).forEach((m, i) => {
+            const url = abs(m.url);
+            if (!url) return;
+            flat.push({ id: `${String(r.id)}-${i}`, title: m.name || baseName, url, mime: m.mime });
+          });
+        });
+
+        if (!cancel) setResources(flat);
+      } catch {
+        // silently fail
+      } finally {
+        if (!cancel) setLoadingResources(false);
+      }
+    })();
+    return () => {
+      cancel = true;
+    };
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -254,6 +362,84 @@ export default function AdmissionsPage() {
               url="https://www.youtube.com/watch?v=Q85YLX65Oa8&list=TLGG5EgtexIIU6gxNDA4MjAyNQ"
               title="Hughes Schools Tour"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Resources Section */}
+      <section className="bg-white border-t" style={{ borderColor: "#ececf4" }}>
+        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">Admissions Resources</h3>
+              <p className="mt-2 text-hughes-blue/80">Download important documents and school regulations</p>
+            </div>
+            <Link
+              href="/resources"
+              className="inline-flex items-center gap-2 rounded-full border-2 px-6 py-2 font-semibold text-hughes-blue border-hughes-blue hover:bg-hughes-blue hover:text-white transition"
+            >
+              See All Resources
+            </Link>
+          </div>
+
+          {/* Collapsible Resources */}
+          <div className="rounded-2xl border bg-white" style={{ borderColor: "#ececf4" }}>
+            <button
+              onClick={() => setResourcesOpen(!resourcesOpen)}
+              className="w-full flex items-center justify-between p-6 text-left"
+              aria-expanded={resourcesOpen}
+            >
+              <div className="flex items-center gap-3">
+                <FileDown className="w-6 h-6" style={{ color: "var(--hs-blue)" }} />
+                <span className="font-semibold text-hughes-blue">
+                  {loadingResources ? "Loading resources..." : `Available Documents (${resources.length})`}
+                </span>
+              </div>
+              {resourcesOpen ? (
+                <ChevronUp className="w-5 h-5 text-hughes-blue" />
+              ) : (
+                <ChevronDown className="w-5 h-5 text-hughes-blue" />
+              )}
+            </button>
+
+            {resourcesOpen && (
+              <div className="border-t px-6 pb-6" style={{ borderColor: "#ececf4" }}>
+                {resources.length === 0 ? (
+                  <p className="py-4 text-sm text-hughes-blue/60">No resources available at this time.</p>
+                ) : (
+                  <ul className="space-y-3 mt-4">
+                    {resources.map((f) => (
+                      <li key={f.id}>
+                        <a
+                          href={f.url}
+                          download
+                          target={f.url.startsWith("http") ? "_blank" : undefined}
+                          rel="noopener"
+                          className="flex items-center justify-between gap-4 rounded-xl border bg-white p-4 transition hover:bg-gray-50"
+                          style={{ borderColor: "#ececf4" }}
+                        >
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span
+                              className="inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold"
+                              style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
+                            >
+                              {fileBadgeName(f.mime, f.url)}
+                            </span>
+                            <span className="truncate font-medium text-hughes-blue text-sm">{f.title}</span>
+                          </div>
+                          <span
+                            className="shrink-0 text-xs font-semibold px-3 py-1 rounded-full"
+                            style={{ background: "var(--hs-yellow)", color: "var(--hs-blue)" }}
+                          >
+                            Download
+                          </span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>

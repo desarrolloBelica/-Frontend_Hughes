@@ -114,11 +114,6 @@ function SectionHeading() {
     <div className="mb-10 text-center">
       {/* Título estilizado: “Hughes Newspaper” */}
       <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-hughes-blue inline-flex items-center gap-3">
-        <span
-          aria-hidden
-          className="inline-block h-6 w-6 rounded-full"
-          style={{ background: "var(--hs-yellow)" }}
-        />
         Hughes Schools Newspaper
       </h2>
       <p className="text-sm md:text-base mt-2 text-hughes-blue/80">

@@ -341,30 +341,6 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
           )}
         </div>
 
-        {slides.length > 0 && (
-          <div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-            {slides.slice(0, 4).map((s, i) => (
-              <button
-                key={s.id}
-                onClick={() => setIndex(i)}
-                className={`group flex items-center gap-3 rounded-2xl border px-3 py-3 text-left transition hover:border-[var(--hs-yellow)] ${
-                  index === i ? "bg-yellow-50 border-[var(--hs-yellow)]" : "bg-white"
-                }`}
-                style={{ borderColor: index === i ? "var(--hs-yellow)" : "#ececf4" }}
-              >
-                <div className="relative h-14 w-14 overflow-hidden rounded-xl">
-                  <img src={s.cover.url} alt={s.cover.alt} className="h-full w-full object-cover" loading="lazy" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-[11px] font-semibold uppercase tracking-wide text-hughes-blue/70">
-                    {s.type || "Evento"}
-                  </div>
-                  <div className="text-sm font-bold text-hughes-blue leading-tight line-clamp-2">{s.title}</div>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );

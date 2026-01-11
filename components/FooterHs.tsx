@@ -1,7 +1,28 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+import type { IconType } from "react-icons";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
+
+type SocialLink = {
+  href: string;
+  label: string;
+  icon: IconType;
+};
+
+const defaultSocials: SocialLink[] = [
+  {
+    href: "https://www.instagram.com/hughesschools/",
+    label: "Instagram",
+    icon: FaInstagram,
+  },
+  {
+    href: "https://www.facebook.com/HughesSchoolsCbba",
+    label: "Facebook",
+    icon: FaFacebook,
+  },
+];
 
 export default function FooterHS({
   applyHref = "/admissions",
@@ -9,12 +30,14 @@ export default function FooterHS({
   logoSrc = "/Logo%20Transparente.png",
   schoolName = "Hughes Schools",
   description = "Hughes Schools offers a rigorous and modern education focused on academic excellence and comprehensive development.",
+  socials = defaultSocials,
 }: {
   applyHref?: string;
   ctaText?: string;
   logoSrc?: string;
   schoolName?: string;
   description?: string;
+  socials?: SocialLink[];
 }) {
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
@@ -83,6 +106,23 @@ export default function FooterHS({
                 </a>
               </li>
             </ul>
+            <div className="mt-5">
+              <span className="block text-white/60 text-sm">Follow us</span>
+              <div className="mt-3 flex items-center gap-3">
+                {socials.map(({ href, label, icon: Icon }) => (
+                  <a
+                    key={href}
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={label}
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/85 transition hover:bg-white/10 hover:text-white"
+                  >
+                    <Icon size={18} />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Column 3: Map */}

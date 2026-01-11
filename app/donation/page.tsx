@@ -48,7 +48,6 @@ export default function DonationPage() {
       <DonationWidget />
       <ImpactStories />
       <MatchingChallenge />
-      <WaysToGive />
       <Stewardship />
     </main>
   );
@@ -608,79 +607,6 @@ function MatchingChallenge() {
   );
 }
 
-// Ways to Give
-function WaysToGive() {
-  const ways = [
-    {
-      icon: <Heart className="w-6 h-6" />,
-      title: "Online",
-      desc: "Credit card, PayPal, or Donorbox - secure and instant",
-    },
-    {
-      icon: <Building2 className="w-6 h-6" />,
-      title: "Bank Transfer / Wire",
-      desc: "Contact us for account details and receipt",
-    },
-    {
-      icon: <Receipt className="w-6 h-6" />,
-      title: "Donor-Advised Fund",
-      desc: "Recommend a grant from your DAF",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      title: "Stock / Securities",
-      desc: "Tax-efficient giving through appreciated assets",
-    },
-    {
-      icon: <Award className="w-6 h-6" />,
-      title: "Corporate Matching",
-      desc: "Multiply your gift through employer matching programs",
-    },
-    {
-      icon: <BookOpen className="w-6 h-6" />,
-      title: "Legacy & Planned Gifts",
-      desc: "Create lasting impact with bequests",
-    },
-  ];
-
-  return (
-    <section className="py-16 sm:py-24 bg-white">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
-            Ways to Give
-          </h2>
-          <p className="text-xl text-gray-600">
-            Choose the giving method that works best for you
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ways.map((way, i) => (
-            <div key={i} className="p-6 rounded-2xl border border-gray-200 hover:shadow-lg transition-shadow">
-              <div
-                className="inline-flex p-3 rounded-full mb-4"
-                style={{ backgroundColor: "rgba(var(--hs-yellow-rgb), 0.2)" }}
-              >
-                <div style={{ color: BRAND.blue }}>{way.icon}</div>
-              </div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
-                {way.title}
-              </h3>
-              <p className="text-gray-600">{way.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">
-            <strong>Note:</strong> All gifts are tax-deductible under IRS 501(c)(3).
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 // Stewardship & Transparency
 function Stewardship() {

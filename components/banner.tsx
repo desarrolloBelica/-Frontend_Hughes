@@ -87,12 +87,15 @@ export default function BannerPrincipal() {
 
         {/* CTA: blanco, hover a outline + texto blanco */}
         <motion.button
-          whileHover={{ y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => router.push("/admissions")}
-          aria-label="Apply Now"
-          className="group relative mt-6 inline-flex h-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#FFBB00] px-7 text-[15px] font-semibold shadow-2xl transition-transform"
-        >
+  whileHover={{ y: -2 }}
+  whileTap={{ scale: 0.98 }}
+  onClick={() => router.push("/admissions")}
+  aria-label="Apply Now"
+  className="group relative mt-6 inline-flex h-14 items-center justify-center
+  overflow-hidden rounded-full border-2 border-[#FFBB00]
+  px-10 text-[17px] font-semibold shadow-2xl transition-transform"
+>
+
           <span className="absolute inset-0 rounded-full bg-white transition-opacity duration-200 group-hover:opacity-0" />
           <span className="relative z-10 transition-colors duration-200 !text-[#110631] group-hover:!text-white">
             Apply Now

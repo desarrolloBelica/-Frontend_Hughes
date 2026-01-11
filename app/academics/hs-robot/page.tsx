@@ -53,17 +53,17 @@ export default function HSRobotPage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 text-white">
         <div className="absolute inset-0 bg-grid-white/[0.05] bg-[size:30px_30px]" />
-        <div className="relative mx-auto max-w-7xl px-6 py-24 sm:py-32">
+        <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="text-center space-y-8">
             {/* Logo/Icon */}
             <div className="flex justify-center">
-              <div className="rounded-full bg-white/10 p-6 backdrop-blur-sm">
-                <Bot className="w-16 h-16" style={{ color: BRAND.yellow }} />
+              <div className="rounded-full bg-white/10 p-5 backdrop-blur-sm">
+                <Bot className="w-12 h-12" style={{ color: BRAND.yellow }} />
               </div>
             </div>
             
             {/* Title */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
               HS Robot Rumble
             </h1>
             
@@ -210,7 +210,10 @@ export default function HSRobotPage() {
               <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
                 Be part of the next generation of innovators and showcase your robotic creations
               </p>
-              <button
+              <a
+                href="https://ideasycodigo.com/hs-robot-rumble"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 style={{ 
                   backgroundColor: BRAND.yellow,
@@ -219,7 +222,7 @@ export default function HSRobotPage() {
               >
                 <Car className="w-5 h-5" />
                 Learn More
-              </button>
+              </a>
             </div>
           </div>
         </div>

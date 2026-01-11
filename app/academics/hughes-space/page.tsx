@@ -37,15 +37,15 @@ export default function HughesSpacePage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-        <div className="absolute inset-0 bg-[url('/stars-bg.png')] opacity-20 bg-repeat" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-slate-900/50" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
         
-        <div className="relative mx-auto max-w-7xl px-6 py-20 sm:py-32">
+        <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="text-center space-y-10">
             {/* Logo */}
             <div className="flex justify-center">
-              <div className="relative w-48 h-48 sm:w-64 sm:h-64">
+              <div className="relative w-40 h-40 sm:w-52 sm:h-52">
                 <Image
                   src="/HS Space School.png"
                   alt="Hughes Space School"
@@ -57,7 +57,7 @@ export default function HughesSpacePage() {
             </div>
             
             {/* Title */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
               Hughes Space School
             </h1>
             
@@ -295,15 +295,22 @@ export default function HughesSpacePage() {
                 </p>
 
                 {/* CTA Button */}
-                <button
-                  className="w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                <a
+                  href={
+                    program.id === 'space-curriculum' 
+                      ? '/academics/hughes-space/curriculum' 
+                      : program.id === 'united-space-school'
+                      ? '/academics/hughes-space/united-space-school'
+                      : '#'
+                  }
+                  className="block w-full py-3 px-6 rounded-xl font-semibold text-center transition-all duration-300 hover:scale-105"
                   style={{
                     backgroundColor: program.highlight ? BRAND.yellow : BRAND.blue,
                     color: program.highlight ? BRAND.blue : 'white',
                   }}
                 >
                   Learn More & Enroll
-                </button>
+                </a>
               </div>
             ))}
           </div>
