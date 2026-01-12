@@ -211,7 +211,7 @@ export default function HSRobotPage() {
                 Be part of the next generation of innovators and showcase your robotic creations
               </p>
               <a
-                href="https://ideasycodigo.com/hs-robot-rumble"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSfEQgzP6Dp5AN9GFeD0iGZt4aOU4wnB3opAqo3tf6uk1PCMgA/viewform"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 text-lg font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl"

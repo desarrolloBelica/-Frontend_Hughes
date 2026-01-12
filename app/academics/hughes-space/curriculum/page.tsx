@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { Rocket, Sparkles, Brain, FlaskConical, Stars } from "lucide-react";
+import { Rocket, Sparkles, Brain, FlaskConical, Stars, ArrowLeft } from "lucide-react";
 
 const BRAND = {
   blue: "var(--hs-blue)",
   yellow: "var(--hs-yellow)",
 };
 
-const HSC_URL = "https://docs.google.com/forms/d/e/1FAIpQLScbqbZUv5HpSEtqUunv5V-tm7ioIxVOi_fG379RndG2zjY5-w/viewformc";
+const HSC_URL = "https://docs.google.com/forms/d/e/1FAIpQLScbqbZUv5HpSEtqUunv5V-tm7ioIxVOi_fG379RndG2zjY5-w/viewform";
 
 function EnrollButton({ className = "" }: { className?: string }) {
   return (
-    <Link
+    <a
       href={HSC_URL}
       target="_blank"
       rel="noopener noreferrer"
@@ -20,8 +20,8 @@ function EnrollButton({ className = "" }: { className?: string }) {
       style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
     >
       <Rocket className="w-5 h-5" />
-      Get in Space Curriculum
-    </Link>
+      Registrations HERE
+    </a>
   );
 }
 
@@ -29,10 +29,20 @@ export default function SpaceCurriculumPage() {
   return (
     <main className="min-h-screen bg-white">
       {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
-        <div className="relative mx-auto max-w-7xl px-6 py-16 sm:py-24">
+      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-[520px] sm:min-h-[600px]">
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
+        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
+        {/* Back to HSS inside hero */}
+        <Link
+          href="/academics/hughes-space"
+          className="absolute top-4 left-4 z-10 inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105"
+          style={{ backgroundColor: "white", color: BRAND.blue, border: `2px solid ${BRAND.blue}` }}
+          aria-label="Back to HSS"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          HSS
+        </Link>
+        <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="text-center space-y-6">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
               Space Curriculum
@@ -40,13 +50,11 @@ export default function SpaceCurriculumPage() {
             <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-white/90">
               How can I represent Bolivia on the international stage?
             </p>
-            <div className="flex justify-center">
-              <EnrollButton />
-            </div>
+            {/* CTA moved below hero to test clickability */}
           </div>
         </div>
         {/* wave */}
-        <div className="absolute bottom-0 left-0 right-0">
+        <div className="absolute -bottom-px left-0 right-0">
           <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
             <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
           </svg>
@@ -56,6 +64,9 @@ export default function SpaceCurriculumPage() {
       {/* Intro */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="mx-auto max-w-7xl px-6">
+          <div className="text-center mb-8">
+            <EnrollButton />
+          </div>
           <div className="mx-auto max-w-4xl space-y-6 text-lg text-gray-700 leading-relaxed">
             <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
               Hughes Space School is the first space education organization in Bolivia.

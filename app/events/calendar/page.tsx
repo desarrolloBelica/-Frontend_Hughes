@@ -25,6 +25,8 @@ type EventV5 = {
   start?: string;
   end?: string | null;
   location?: string | null;
+  ticketLink?: string | null;
+  description?: string | null;
   tipo?: string | null;
 };
 
@@ -35,6 +37,8 @@ type EventV4 = {
     start?: string;
     end?: string | null;
     location?: string | null;
+    ticketLink?: string | null;
+    description?: string | null;
     tipo?: string | null;
   };
 };
@@ -47,6 +51,8 @@ export type EventItem = {
   start: string;
   end: string | null;
   location: string | null;
+  ticketLink: string | null;
+  description: string | null;
   tipo: string | null;
 };
 
@@ -91,6 +97,25 @@ function formatISO(d: Date) {
   return `${y}-${m}-${day}`;
 }
 
+function toPlainDescription(val: unknown): string | null {
+  if (val == null) return null;
+  if (typeof val === "string") return val;
+  if (Array.isArray(val)) {
+    const flat = val.map((v) => toPlainDescription(v)).filter(Boolean).join(" ");
+    return flat || null;
+  }
+  if (typeof val === "object") {
+    const maybeText = (val as { text?: unknown }).text;
+    if (typeof maybeText === "string") return maybeText;
+    const children = (val as { children?: unknown }).children;
+    if (Array.isArray(children)) {
+      const flat = children.map((v) => toPlainDescription(v)).filter(Boolean).join(" ");
+      return flat || null;
+    }
+  }
+  return String(val);
+}
+
 function includesDay(ev: EventItem, day: Date) {
   const s = parseISO(ev.start);
   const e = parseISO(ev.end ?? ev.start);
@@ -125,6 +150,8 @@ async function fetchEventsByRange(
     "fields[2]": "end",
     "fields[3]": "location",
     "fields[4]": "tipo",
+    "fields[5]": "ticketLink",
+    "fields[6]": "description",
   });
 
   const res = await fetch(`${base}/api/events?${params.toString()}`, { cache: "no-store" });
@@ -145,10 +172,19 @@ async function fetchEventsByRange(
       getAttr<string | null>(row, "location") ??
       (row as EventV5).location ??
       null;
+    const ticketLink =
+      getAttr<string | null>(row, "ticketLink") ??
+      (row as EventV5).ticketLink ??
+      null;
+    const descriptionRaw =
+      getAttr<unknown>(row, "description") ??
+      (row as EventV5).description ??
+      null;
+    const description = toPlainDescription(descriptionRaw);
     const tipo =
       getAttr<string | null>(row, "tipo") ?? (row as EventV5).tipo ?? null;
 
-    return { id: row.id, title, start, end, location, tipo };
+    return { id: row.id, title, start, end, location, ticketLink, description, tipo };
 
   });
 
@@ -239,19 +275,23 @@ function ListView({ events }: { events: EventItem[] }) {
               { locale: enUS }
             )}`;
 
+        const isLocationLink = ev.location?.startsWith("http://") || ev.location?.startsWith("https://");
+        const hasTicketLink = !!ev.ticketLink;
+
         return (
-          <div
+          <button
             key={ev.id}
-            className="relative rounded-2xl border bg-white p-4 md:p-5 text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)]"
+            onClick={() => window.dispatchEvent(new CustomEvent("hs-calendar-open", { detail: ev }))}
+            className="relative w-full text-left rounded-2xl border bg-white p-4 md:p-5 text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)] focus:outline-none focus:ring-2 focus:ring-[var(--hs-yellow)]"
             style={{ borderColor: "#ececf4" }}
           >
             <span
               className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl"
               style={{ background: c.border }}
             />
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               <div className="flex-1">
-                <div className="flex items-start md:items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-start gap-2 md:items-center">
                   <h3 className="text-lg md:text-xl font-extrabold tracking-tight">
                     {ev.title}
                   </h3>
@@ -268,11 +308,38 @@ function ListView({ events }: { events: EventItem[] }) {
                 </div>
                 <div className="mt-1 text-sm text-hughes-blue/80">
                   {dayLabel}
-                  {ev.location ? ` • ${ev.location}` : ""}
+                </div>
+                <div className="mt-1 text-sm text-hughes-blue/80 flex flex-wrap gap-2 items-center">
+                  {ev.location && (
+                    isLocationLink ? (
+                      <a
+                        href={ev.location}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline font-semibold text-[var(--hs-blue)]"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        Location
+                      </a>
+                    ) : (
+                      <span>📍 {ev.location}</span>
+                    )
+                  )}
+                  {hasTicketLink && (
+                    <a
+                      href={ev.ticketLink ?? "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline font-semibold text-[var(--hs-blue)]"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Tickets
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
-          </div>
+          </button>
         );
       })}
     </div>
@@ -284,9 +351,11 @@ function ListView({ events }: { events: EventItem[] }) {
 function MonthView({
   monthDate,
   events,
+  onSelect,
 }: {
   monthDate: Date;
   events: EventItem[];
+  onSelect: (ev: EventItem) => void;
 }) {
   const monthStart = startOfMonth(monthDate);
   const monthEnd = endOfMonth(monthDate);
@@ -364,12 +433,21 @@ function MonthView({
                     <div key={`${ev.id}-${ev.start}`} className="relative group">
                       {/* BLOQUE del evento (móvil: columna; desktop: igual) */}
                       <div
-                        className="w-full rounded-md px-2 py-2 text-[12px] md:text-[13px] font-semibold leading-[1.25] break-words whitespace-normal"
+                        className="w-full rounded-md px-2 py-2 text-[12px] md:text-[13px] font-semibold leading-[1.25] break-words whitespace-normal cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--hs-yellow)]"
                         style={{
                           background: c.bg,
                           color: c.text,
                           border: `2px solid ${c.border}`,
                           minHeight: "70px",
+                        }}
+                        onClick={() => onSelect(ev)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            onSelect(ev);
+                          }
                         }}
                       >
                         {/* Título (máx 2 líneas) */}
@@ -404,35 +482,7 @@ function MonthView({
                         </div>
                       </div>
 
-                      {/* Hover card (solo md+) */}
-                      <div
-                        className="pointer-events-none absolute z-20 hidden w-64 md:w-72 rounded-xl border bg-white p-3 text-[12px] shadow-xl md:group-hover:block"
-                        style={{
-                          top: "100%",
-                          left: 0,
-                          marginTop: "8px",
-                          borderColor: "#ececf4",
-                          color: "var(--hs-blue)",
-                        }}
-                      >
-                        <div className="text-sm font-semibold mb-1">{ev.title}</div>
-                        <div className="opacity-80">{dateText}</div>
-                        {ev.location && (
-                          <div className="opacity-80">📍 {ev.location}</div>
-                        )}
-                        {ev.tipo && (
-                          <div
-                            className="mt-1 inline-block rounded-full border px-2 py-0.5 text-[11px]"
-                            style={{
-                              borderColor: c.border,
-                              background: c.bg,
-                              color: c.text,
-                            }}
-                          >
-                            {ev.tipo}
-                          </div>
-                        )}
-                      </div>
+                      {/* Hover card removed in favor of click modal */}
                     </div>
                   );
                 })}
@@ -477,6 +527,7 @@ export default function CalendarPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
 
   const allTypeKeys = useMemo(() => Object.keys(TIPO_COLORS), []);
   const [activeTypes, setActiveTypes] = useState<string[]>(allTypeKeys);
@@ -524,11 +575,23 @@ export default function CalendarPage() {
 
   const title = format(currentMonth, "MMMM yyyy", { locale: enUS });
 
+  const openEvent = (ev: EventItem) => setSelectedEvent(ev);
+  const closeModal = () => setSelectedEvent(null);
+  // Allow cross-component open via custom event (list view uses dispatch to avoid prop drilling there)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<EventItem>).detail;
+      if (detail) setSelectedEvent(detail);
+    };
+    window.addEventListener("hs-calendar-open", handler as EventListener);
+    return () => window.removeEventListener("hs-calendar-open", handler as EventListener);
+  }, []);
+
   return (
     <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
       <section className="bg-white">
         <div className="mx-auto max-w-7xl px-6 py-10 md:py-14">
-          <HSBadge>Calendar 2025 · Schedule</HSBadge>
+          <HSBadge>Calendar · Schedule</HSBadge>
 
           <div className="mt-3 flex items-center justify-between gap-4">
             <div>
@@ -616,7 +679,7 @@ export default function CalendarPage() {
                       <ListView events={monthEvents} />
                     </TabsContent>
                     <TabsContent value="Month" className="mt-0">
-                      <MonthView monthDate={currentMonth} events={monthEvents} />
+                      <MonthView monthDate={currentMonth} events={monthEvents} onSelect={openEvent} />
                     </TabsContent>
                   </>
                 )}
@@ -624,7 +687,99 @@ export default function CalendarPage() {
             </Tabs>
           </div>
         </div>
+
+        {selectedEvent && (
+          <EventModal event={selectedEvent} onClose={closeModal} />
+        )}
       </section>
     </main>
+  );
+}
+
+/* ─────────── Modal ─────────── */
+
+function EventModal({ event, onClose }: { event: EventItem; onClose: () => void }) {
+  const c = colorFor(event.tipo);
+  const oneDay = event.start === (event.end ?? event.start);
+  const dateText = oneDay
+    ? format(parseISO(event.start), "PP", { locale: enUS })
+    : `${format(parseISO(event.start), "PP", { locale: enUS })} – ${format(
+        parseISO(event.end ?? event.start),
+        "PP",
+        { locale: enUS }
+      )}`;
+
+  const isLocationLink = event.location?.startsWith("http://") || event.location?.startsWith("https://");
+  const hasTicketLink = !!event.ticketLink;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+      <div className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl relative">
+        <button
+          onClick={onClose}
+          className="absolute right-4 top-4 text-hughes-blue/70 hover:text-hughes-blue font-semibold"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+        <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: c.bg, color: c.text, border: `1px solid ${c.border}` }}>
+          {event.tipo ?? "Other"}
+        </div>
+        <h2 className="mt-3 text-2xl font-extrabold text-hughes-blue">{event.title}</h2>
+        <p className="mt-2 text-sm text-hughes-blue/80">{dateText}</p>
+
+        <div className="mt-4 space-y-2 text-sm text-hughes-blue">
+          {event.description && (
+            <div className="flex items-start gap-2">
+              <span className="font-semibold">Description:</span>
+              <span className="text-hughes-blue/90 leading-relaxed">{event.description}</span>
+            </div>
+          )}
+
+          {event.location && (
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">Location:</span>
+              {isLocationLink ? (
+                <a
+                  href={event.location}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-[var(--hs-blue)]"
+                >
+                  Open location
+                </a>
+              ) : (
+                <span>{event.location}</span>
+              )}
+            </div>
+          )}
+
+
+          {hasTicketLink && (
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">Tickets:</span>
+              <a
+                href={event.ticketLink ?? "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline text-[var(--hs-blue)]"
+              >
+                Buy tickets
+              </a>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6 flex justify-end">
+          <button
+            onClick={onClose}
+            className="rounded-full px-4 py-2 font-semibold text-hughes-blue border"
+            style={{ borderColor: "#ececf4" }}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
