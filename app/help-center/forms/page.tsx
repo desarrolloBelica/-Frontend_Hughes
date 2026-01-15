@@ -6,6 +6,7 @@ import * as React from "react";
 import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CheckCircle2, Info, Send, XCircle } from "lucide-react";
+import { useParentAuth } from "@/hooks/useParentAuth";
 
 /* ─────────── Config ─────────── */
 const API = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
@@ -140,6 +141,26 @@ async function fetchExistingSeatReservation(studentId: number | string, year: st
 
 /* ─────────── Página ─────────── */
 export default function HelpCenterFormsPage() {
+  // 🔐 Proteger la ruta - redirige al login si no está autenticado
+  const { user, loading: authLoading } = useParentAuth();
+
+  // Mostrar loader mientras se verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#f9f9fb" }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: "var(--hs-blue)" }} />
+          <p className="text-hughes-blue">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario después de cargar, el hook ya redirigió al login
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen" style={{ background: "#f9f9fb" }}>
       <ParentsPortalNav />

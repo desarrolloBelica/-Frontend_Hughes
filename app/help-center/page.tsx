@@ -4,6 +4,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useParentAuth } from "@/hooks/useParentAuth";
 
 import ParentsNavbar from "@/components/parents/ParentsNavbar"; // ← navbar superior original
 // Si ya tienes un componente para este subnav, puedes reemplazar PortalSubnav por el tuyo.
@@ -273,6 +274,9 @@ function IconAvatar() {
 
 /* ───────────────────── Page ───────────────────── */
 export default function HelpCenterPage() {
+  // 🔐 Proteger la ruta - redirige al login si no está autenticado
+  const { user, loading: authLoading } = useParentAuth();
+
   // Filtros/buscador
   const [query, setQuery] = React.useState("");
   const [area, setArea] = React.useState<string>("All");
@@ -300,6 +304,23 @@ export default function HelpCenterPage() {
   }, [area, query]);
 
   const toRender = showAll ? filtered : filtered.slice(0, 6);
+
+  // Mostrar loader mientras se verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#f9f9fb" }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: BRAND.blue }} />
+          <p className="text-hughes-blue">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario después de cargar, el hook ya redirigió al login
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen" style={{ background: "#f9f9fb" }}>

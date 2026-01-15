@@ -85,16 +85,16 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
           href={href}
           target={newTab ? "_blank" : undefined}
           rel={newTab ? "noopener noreferrer" : undefined}
-          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-yellow-300 hover:bg-yellow-400 hover:shadow-md"
-          style={{ color: BRAND.blue }}
+          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-blue-900 text-white hover:bg-blue-800 hover:shadow-md"
         >
           {label}
+          
+          {/* Línea animada (ahora en blanco) */}
           <motion.span
             initial={{ width: 0 }}
             whileHover={{ width: "100%" }}
             transition={{ duration: 0.28 }}
-            className="absolute left-0 bottom-0 h-[2px]"
-            style={{ backgroundColor: BRAND.blue }}
+            className="absolute left-0 bottom-0 h-[2px] bg-white"
           />
         </Link>
       </NavigationMenuLink>
@@ -260,7 +260,7 @@ export default function MenuList() {
 
       {/* Menú Derecho */}
       <NavigationMenu className="group/navigation-menu relative flex max-w-max flex-1 items-center justify-center">
-        <NavigationMenuList className="flex items-center gap-6">
+        <NavigationMenuList className="flex items-center gap-6 ">
         <SimpleItem href="/admissions" label="Admissions" />
         <SimpleItem href="/donation" label="Donations" />
 

@@ -207,6 +207,7 @@ export default function AdmissionsPage() {
   const [submitting, setSubmitting] = useState(false);
   const [ok, setOk] = useState<null | boolean>(null);
   const [error, setError] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   const showChangeReason = UPPER_GRADES.has(form.incomingCourse);
 
@@ -251,16 +252,47 @@ export default function AdmissionsPage() {
     };
   }, []);
 
+  // Validation helper
+  function validateForm(): boolean {
+    const errors: Record<string, string> = {};
+
+    // Required fields
+    if (!form.studentName?.trim()) errors.studentName = "Student name is required";
+    if (!form.incomingCourse) errors.incomingCourse = "Grade/course is required";
+    if (!form.parentsEmail?.trim()) {
+      errors.parentsEmail = "Parents' email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.parentsEmail)) {
+      errors.parentsEmail = "Please enter a valid email address";
+    }
+
+    // Phone validation (optional but should be valid if provided)
+    if (form.fatherPhone && !/^\+?[0-9\s-()]+$/.test(form.fatherPhone)) {
+      errors.fatherPhone = "Please enter a valid phone number";
+    }
+    if (form.motherPhone && !/^\+?[0-9\s-()]+$/.test(form.motherPhone)) {
+      errors.motherPhone = "Please enter a valid phone number";
+    }
+
+    // Sibling validation
+    if (form.hasSiblingsHS === "yes" && !form.siblingNames?.trim()) {
+      errors.siblingNames = "Please provide sibling names";
+    }
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  }
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitting(true);
     setOk(null);
     setError(null);
+    setFieldErrors({});
 
     try {
-      // Validaciones mínimas
-      if (!form.studentName || !form.incomingCourse || !form.parentsEmail) {
-        setError("Please complete required fields.");
+      // Run validation
+      if (!validateForm()) {
+        setError("Please fix the errors above before submitting.");
         setSubmitting(false);
         return;
       }
@@ -279,7 +311,22 @@ export default function AdmissionsPage() {
 
       if (!res.ok || !okFlag) {
         setOk(false);
-        setError("There was a problem submitting your application. Please try again.");
+        // Extract detailed error message
+        let errorMsg = "There was a problem submitting your application.";
+        if (typeof json === "object" && json !== null) {
+          const jsonObj = json as Record<string, unknown>;
+          if (jsonObj.error && typeof jsonObj.error === "object") {
+            const errObj = jsonObj.error as Record<string, unknown>;
+            if (errObj.message) errorMsg += ` ${String(errObj.message)}`;
+            if (errObj.details) errorMsg += ` Details: ${JSON.stringify(errObj.details)}`;
+          } else if (jsonObj.error) {
+            errorMsg += ` ${String(jsonObj.error)}`;
+          }
+        }
+        if (res.status === 401) {
+          errorMsg = "Authentication error. Please contact support or try again later.";
+        }
+        setError(errorMsg);
       } else {
         setOk(true);
         setForm(INITIAL);
@@ -485,9 +532,19 @@ export default function AdmissionsPage() {
                   <input
                     required
                     value={form.studentName}
-                    onChange={(e) => setForm({ ...form, studentName: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, studentName: e.target.value });
+                      if (fieldErrors.studentName) {
+                        setFieldErrors({ ...fieldErrors, studentName: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.studentName ? "border-red-500" : ""
+                    }`}
                   />
+                  {fieldErrors.studentName && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.studentName}</p>
+                  )}
                 </div>
 
                 <div>
@@ -509,8 +566,15 @@ export default function AdmissionsPage() {
                   <select
                     required
                     value={form.incomingCourse}
-                    onChange={(e) => setForm({ ...form, incomingCourse: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, incomingCourse: e.target.value });
+                      if (fieldErrors.incomingCourse) {
+                        setFieldErrors({ ...fieldErrors, incomingCourse: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.incomingCourse ? "border-red-500" : ""
+                    }`}
                   >
                     <option value="">Select a grade</option>
                     {GRADE_OPTIONS.map((grade) => (
@@ -519,6 +583,9 @@ export default function AdmissionsPage() {
                       </option>
                     ))}
                   </select>
+                  {fieldErrors.incomingCourse && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.incomingCourse}</p>
+                  )}
                 </div>
 
                 <div>
@@ -555,20 +622,40 @@ export default function AdmissionsPage() {
                   <label className="block text-sm font-semibold text-hughes-blue">Father’s phone</label>
                   <input
                     value={form.fatherPhone}
-                    onChange={(e) => setForm({ ...form, fatherPhone: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, fatherPhone: e.target.value });
+                      if (fieldErrors.fatherPhone) {
+                        setFieldErrors({ ...fieldErrors, fatherPhone: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.fatherPhone ? "border-red-500" : ""
+                    }`}
                     placeholder="+591 70000000"
                   />
+                  {fieldErrors.fatherPhone && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.fatherPhone}</p>
+                  )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-hughes-blue">Mother’s phone</label>
                   <input
                     value={form.motherPhone}
-                    onChange={(e) => setForm({ ...form, motherPhone: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, motherPhone: e.target.value });
+                      if (fieldErrors.motherPhone) {
+                        setFieldErrors({ ...fieldErrors, motherPhone: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.motherPhone ? "border-red-500" : ""
+                    }`}
                     placeholder="+591 70000000"
                   />
+                  {fieldErrors.motherPhone && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.motherPhone}</p>
+                  )}
                 </div>
 
                 <div className="md:col-span-2">
@@ -577,10 +664,20 @@ export default function AdmissionsPage() {
                     required
                     type="email"
                     value={form.parentsEmail}
-                    onChange={(e) => setForm({ ...form, parentsEmail: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, parentsEmail: e.target.value });
+                      if (fieldErrors.parentsEmail) {
+                        setFieldErrors({ ...fieldErrors, parentsEmail: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.parentsEmail ? "border-red-500" : ""
+                    }`}
                     placeholder="family@email.com"
                   />
+                  {fieldErrors.parentsEmail && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.parentsEmail}</p>
+                  )}
                 </div>
 
                 {/* Hermanos en Hughes */}
@@ -616,11 +713,21 @@ export default function AdmissionsPage() {
                   </label>
                   <input
                     value={form.siblingNames}
-                    onChange={(e) => setForm({ ...form, siblingNames: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    onChange={(e) => {
+                      setForm({ ...form, siblingNames: e.target.value });
+                      if (fieldErrors.siblingNames) {
+                        setFieldErrors({ ...fieldErrors, siblingNames: "" });
+                      }
+                    }}
+                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
+                      fieldErrors.siblingNames ? "border-red-500" : ""
+                    }`}
                     placeholder="Si aplica"
                     disabled={form.hasSiblingsHS !== "yes"}
                   />
+                  {fieldErrors.siblingNames && (
+                    <p className="mt-1 text-xs text-red-600">{fieldErrors.siblingNames}</p>
+                  )}
                 </div>
 
                 {/* Referencias */}

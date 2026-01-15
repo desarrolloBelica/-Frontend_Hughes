@@ -210,7 +210,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
       return b.id.localeCompare(a.id);
     });
 
-    return mapped.slice(0, 8);
+    return mapped.slice(0, 10);
   }, [data]);
 
   useEffect(() => {
@@ -230,10 +230,10 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
         <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>
             <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-sm" style={{ border: "1px solid var(--hs-yellow)" }}>
-              <Sparkles className="h-4 w-4" /> Últimos eventos
+              <Sparkles className="h-4 w-4" /> Last Recaps
             </div>
             <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
-              Mira lo reciente y entra al recap
+              See what's new and dive into the event recap
             </h2>
           </div>
 
@@ -241,7 +241,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
             href={viewAllHref}
             className="inline-flex items-center gap-2 rounded-full border border-[var(--hs-yellow)] px-4 py-2 text-sm font-semibold text-hughes-blue transition hover:bg-yellow-100"
           >
-            Ver todos
+            View All
           </Link>
         </div>
 
@@ -276,7 +276,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
               <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white">
                 <div className="flex items-center gap-2">
                   <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hughes-blue">
-                    {current.type || "Evento"}
+                    {current.type || "Event"}
                   </span>
                   {current.date && (
                     <span className="text-xs font-semibold text-white/90">
@@ -292,10 +292,10 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
                     href={current.href}
                     className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
                   >
-                    Leer recap
+                    Read Recap
                   </Link>
                   <span className="text-xs font-semibold uppercase tracking-wide bg-white/20 px-3 py-1 rounded-full">
-                    Últimos eventos
+                    Last Recaps
                   </span>
                 </div>
               </div>

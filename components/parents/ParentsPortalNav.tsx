@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Calendar, Home, FileText, Users } from "lucide-react";
+import { LogoutButton } from "@/components/parents/LogoutButton";
 
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 
@@ -45,6 +46,12 @@ export default function ParentsPortalNav() {
               </Link>
             );
           })}
+          
+          {/* Separador */}
+          <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden />
+          
+          {/* Logout */}
+          <LogoutButton />
         </nav>
       </div>
     </header>

@@ -6,6 +6,7 @@ import * as React from "react";
 import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { User, Tag, Download } from "lucide-react";
+import { useParentAuth } from "@/hooks/useParentAuth";
 
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 const API = process.env.NEXT_PUBLIC_BACKEND_URL ;
@@ -170,12 +171,32 @@ async function fetchArtTimetableByGroupId(groupId: number) {
 
 /* ─────────── Página ─────────── */
 export default function TimetablesPage() {
+  // 🔐 Proteger la ruta - redirige al login si no está autenticado
+  const { user, loading: authLoading } = useParentAuth();
+
   const [tab, setTab] = React.useState<"academic" | "artistic" | "teachers">("academic");
 
   const handleExportPDF = React.useCallback(() => {
     window.scrollTo({ top: 0, behavior: "instant" as any });
     window.print();
   }, []);
+
+  // Mostrar loader mientras se verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center print:bg-white" style={{ background: "#f9f9fb" }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: "var(--hs-blue)" }} />
+          <p className="text-hughes-blue">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario después de cargar, el hook ya redirigió al login
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen print:bg-white" style={{ background: "#f9f9fb" }}>

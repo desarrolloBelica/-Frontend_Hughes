@@ -1,4 +1,5 @@
 // app/events/[slug]/page.tsx
+import  Link  from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react"; // ⬅️ solo tipos
@@ -259,6 +260,18 @@ export default async function EventDetailPage({
             </div>
           </div>
         )}
+        {/* Back */}
+        <section className="bg-white py-10">
+          <div className="mx-auto max-w-7xl px-6 text-left">
+            <Link
+              href="/events"
+              className="inline-flex items-center text-sm font-semibold"
+              style={{ color: "var(--hs-blue)" }}
+            >
+              ← Back to Events
+            </Link>
+          </div>
+        </section>
       </section>
     </main>
   );

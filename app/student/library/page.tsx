@@ -4,6 +4,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Download, ExternalLink, Search, Tag as TagIcon, BookOpen } from 'lucide-react';
+import { useStudentAuth } from '@/hooks/useStudentAuth';
+import { StudentLogoutButton } from '@/components/parents/LogoutButton';
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:1337';
 
@@ -75,6 +77,9 @@ async function fetchJSON(url: string, token?: string) {
 
 /* ───────── Página Library ───────── */
 export default function LibraryPage() {
+  // 🔐 Proteger la ruta - redirige al login si no está autenticado
+  const { user, loading: authLoading } = useStudentAuth();
+
   // filtros
   const [q, setQ] = React.useState('');
   const [gradeId, setGradeId] = React.useState<string>('');
@@ -188,6 +193,23 @@ export default function LibraryPage() {
     window.print();
   }, []);
 
+  // Mostrar loader mientras se verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f9f9fb' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--hs-blue)' }} />
+          <p className="text-hughes-blue">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario después de cargar, el hook ya redirigió al login
+  if (!user) {
+    return null;
+  }
+
   // helpers de portada/descarga a partir de "file" (Multiple Media)
   function pickCoverAndDownload(filesRel: unknown) {
     const files = relMany(filesRel);
@@ -224,7 +246,6 @@ export default function LibraryPage() {
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-hughes-blue">Library</h1>
             </div>
             <div className="flex items-center gap-2">
-
               <Link
                 href="/student/help-center"
                 className="inline-flex items-center rounded-xl border px-3 py-2 text-sm font-semibold bg-white hover:bg-slate-50"
@@ -232,6 +253,12 @@ export default function LibraryPage() {
               >
                 Volver al portal
               </Link>
+              
+              {/* Separador */}
+              <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden />
+              
+              {/* Logout */}
+              <StudentLogoutButton />
             </div>
           </div>
 

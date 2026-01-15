@@ -2,7 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { UsersRound, User2, LogOut } from "lucide-react";
+import { UsersRound, User2 } from "lucide-react";
+import { LogoutButton } from "@/components/parents/LogoutButton";
 
 type Student = { id: number; firstName?: string; lastName?: string; code?: string };
 type ParentMe = { parent: { id: number; fullName?: string; email?: string; students?: Student[] } };
@@ -99,29 +100,10 @@ export default function ParentsNavbar() {
             {loading ? "Cargando…" : parentName || "No identificado"}
           </div>
 
-          {/* Logout opcional (usa tu /api/auth/logout) */}
-          <form action="/api/auth/logout" method="post" className="hidden md:block">
-{/* Logout */}
-<button
-  onClick={async () => {
-    try {
-      await fetch("/api/auth/logout", { method: "POST" });
-    } catch (err) {
-      console.error("Error en logout:", err);
-    } finally {
-      // Redirige a la página de login siempre
-      window.location.href = "parents/login";
-    }
-  }}
-  className="hidden md:inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold transition hover:shadow"
-  style={{ background: "#fff", borderColor: "#e6e6f0", color: BRAND.blue }}
-  title="Salir"
->
-  <LogOut size={12} />
-  Salir
-</button>
-
-          </form>
+          {/* Logout */}
+          <div className="hidden md:block">
+            <LogoutButton />
+          </div>
           {/* En móvil, podrías mover este botón dentro de un menú si prefieres */}
         </div>
       </div>

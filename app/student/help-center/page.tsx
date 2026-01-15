@@ -4,6 +4,8 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { Tag, Download } from 'lucide-react';
+import { useStudentAuth } from '@/hooks/useStudentAuth';
+import { StudentLogoutButton } from '@/components/parents/LogoutButton';
 
 /* =========================
    Config & Helpers
@@ -233,12 +235,32 @@ function SubjectCell({ cell, height }: { cell: GridCell | null; height: number }
    Página Student Home (estética Parents)
    ========================= */
 export default function StudentHomePage() {
+  // 🔐 Proteger la ruta - redirige al login si no está autenticado
+  const { user, loading: authLoading } = useStudentAuth();
+
   const [activeTab, setActiveTab] = React.useState<'academic' | 'artistic'>('academic');
 
   const handleExportPDF = React.useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as any });
     window.print();
   }, []);
+
+  // Mostrar loader mientras se verifica autenticación
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f9f9fb' }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--hs-blue)' }} />
+          <p className="text-hughes-blue">Verificando autenticación...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Si no hay usuario después de cargar, el hook ya redirigió al login
+  if (!user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen print:bg-white" style={{ background: '#f9f9fb' }}>
@@ -297,6 +319,12 @@ export default function StudentHomePage() {
               >
                 Volver al inicio
               </Link>
+              
+              {/* Separador */}
+              <span className="mx-1 h-5 w-px bg-slate-200" aria-hidden />
+              
+              {/* Logout */}
+              <StudentLogoutButton />
             </div>
           </div>
 

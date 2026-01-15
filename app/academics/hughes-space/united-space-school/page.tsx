@@ -18,16 +18,7 @@ export default function UnitedSpaceSchoolPage() {
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-[520px] sm:min-h-[600px]">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
         <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
-        {/* Back to HSS inside hero */}
-        <Link
-          href="/academics/hughes-space"
-          className="absolute top-4 left-4 z-10 inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold shadow-md hover:shadow-lg transition-all hover:scale-105"
-          style={{ backgroundColor: "white", color: BRAND.blue, border: `2px solid ${BRAND.blue}` }}
-          aria-label="Back to HSS"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          HSS
-        </Link>
+        
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="text-center space-y-6">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
@@ -170,6 +161,19 @@ export default function UnitedSpaceSchoolPage() {
         </div>
       </section>
 
+      {/* Back */}
+      <section className="bg-white py-10">
+        <div className="mx-auto max-w-7xl px-6 text-left">
+          <Link
+            href="/academics/hughes-space"
+            className="inline-flex items-center text-sm font-semibold"
+            style={{ color: "var(--hs-blue)" }}
+          >
+            ← Back to HSS
+          </Link>
+        </div>
+      </section>
+
       {/* Final CTA */}
       <section className="py-12 sm:py-16 bg-gradient-to-br from-slate-900 to-blue-900">
         <div className="mx-auto max-w-7xl px-6">
@@ -194,6 +198,8 @@ export default function UnitedSpaceSchoolPage() {
           </div>
         </div>
       </section>
+
+      
     </main>
   );
 }
