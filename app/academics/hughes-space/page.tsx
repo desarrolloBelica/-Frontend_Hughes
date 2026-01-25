@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { Rocket, BookOpen, Users, Target, Award, Star } from "lucide-react";
+import { Rocket, BookOpen, Users, Target, Award, Star, Sparkles, Zap } from "lucide-react";
+import { CountingNumber } from "@/components/CountingNumber";
 
 const BRAND = {
   blue: "var(--hs-blue)",
@@ -39,13 +40,13 @@ export default function HughesSpacePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
+        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
         
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="text-center space-y-10">
             {/* Logo */}
             <div className="flex justify-center">
-              <div className="relative w-40 h-40 sm:w-52 sm:h-52">
+              <div className="relative w-80 h-80 sm:w-82 sm:h-82">
                 <Image
                   src="/HS Space School.png"
                   alt="Hughes Space School"
@@ -57,7 +58,7 @@ export default function HughesSpacePage() {
             </div>
             
             {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow">
               Hughes Space School
             </h1>
             
@@ -77,22 +78,19 @@ export default function HughesSpacePage() {
             {/* Icon decoration */}
             <div className="flex justify-center gap-6 pt-6">
               <Rocket className="w-8 h-8 text-white/70 animate-bounce" />
+              <Sparkles className="w-8 h-8 animate-spin" style={{ color: BRAND.yellow, animationDuration: '3s' }} />
               <Star className="w-8 h-8" style={{ color: BRAND.yellow }} />
+              <Zap className="w-8 h-8 animate-pulse" style={{ color: BRAND.yellow }} />
               <Rocket className="w-8 h-8 text-white/70 animate-bounce" style={{ animationDelay: '0.5s' }} />
             </div>
           </div>
         </div>
 
-        {/* Wave divider */}
-        <div className="absolute -bottom-px left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
-          </svg>
-        </div>
+        
       </section>
 
       {/* What is HSS Section */}
-      <section className="py-16 sm:py-24 bg-white">
+      <section className="py-16 sm:py-24 bg-gradient-to-b section-gradient-soft-yellow">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-4xl">
             {/* Section Title */}
@@ -142,7 +140,7 @@ export default function HughesSpacePage() {
       </section>
 
       {/* Our Learning Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16 sm:py-24 bg-gradient-to-b sction-gradient-soft from-white to-blue-50">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-5xl">
             {/* Section Title */}
@@ -218,8 +216,12 @@ export default function HughesSpacePage() {
       </section>
 
       {/* Programs Section */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="py-16 sm:py-24 bg-white relative overflow-hidden">
+        
+        {/* Glowing orbs */}
+        <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
+        <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
           {/* Section Header */}
           <div className="text-center mb-16">
             <div className="flex items-center justify-center gap-3 mb-4">
@@ -241,10 +243,10 @@ export default function HughesSpacePage() {
             {programs.map((program, index) => (
               <div
                 key={program.id}
-                className={`relative group bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 ${
+                className={`relative group bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 hover:scale-105 hover:-translate-y-2 ${
                   program.highlight 
-                    ? 'border-[var(--hs-yellow)]' 
-                    : 'border-gray-200 hover:border-[var(--hs-blue)]'
+                    ? 'border-[var(--hs-yellow)] shadow-[0_0_30px_rgba(234,179,8,0.3)]' 
+                    : 'border-gray-200 hover:border-[var(--hs-blue)] hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'
                 }`}
               >
                 {/* Highlight badge */}

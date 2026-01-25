@@ -106,7 +106,14 @@ export default function ResourcesPage() {
         qs.set("populate[file]", "true");
         qs.set("pagination[pageSize]", "300");
         const res = await fetch(`${base}/api/resources?${qs.toString()}`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        
+        if (!res.ok) {
+          if (res.status === 403) {
+            throw new Error("Access denied. Please enable 'find' permission for Resources in Strapi (Settings → Users & Permissions → Roles → Public → Resources)");
+          }
+          throw new Error(`HTTP ${res.status}`);
+        }
+        
         const json: unknown = await res.json();
         const rows = asResourceArray(json);
 

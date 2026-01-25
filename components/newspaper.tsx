@@ -255,19 +255,19 @@ export default function NewspaperStrip() {
     };
   }, []);
 
-  // Tomar los 3 más recientes si hay fecha; si no, primeros 3
-  const top3 = useMemo(() => {
+  // Tomar los 6 más recientes si hay fecha; si no, primeros 6
+  const top6 = useMemo(() => {
     const a = [...rows];
     a.sort((x, y) => {
       const dx = new Date((getAttr<string>(x, "date") ?? "") as string).getTime();
       const dy = new Date((getAttr<string>(y, "date") ?? "") as string).getTime();
       return isNaN(dy - dx) ? 0 : dy - dx;
     });
-    return a.slice(0, 3);
+    return a.slice(0, 6);
   }, [rows]);
 
   return (
-    <section className="w-full py-16" style={{ background: "#f5f6fb" }}>
+    <section className="section-white py-16">
       <div className="mx-auto max-w-6xl px-4">
         <SectionHeading />
 
@@ -278,23 +278,23 @@ export default function NewspaperStrip() {
               <div
                 key={i}
                 className="h-[320px] w-full rounded-3xl bg-white border animate-pulse"
-                style={{ borderColor: "#ececf4" }}
+                style={{ borderColor: "var(--hs-gray-200)" }}
               />
             ))}
           </div>
         ) : error ? (
           <div
-            className="rounded-xl border p-6 text-center text-hughes-blue"
+            className="rounded-xl border p-6 text-center text-hs-blue"
             style={{ borderColor: "var(--hs-yellow)" }}
           >
             Error loading news: {error}
           </div>
-        ) : top3.length === 0 ? (
-          <p className="text-center text-hughes-blue">No news yet.</p>
+        ) : top6.length === 0 ? (
+          <p className="text-center text-hs-blue">No news yet.</p>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-              {top3.map((article, idx) => (
+              {top6.map((article, idx) => (
                 <Card key={String(article.id)} article={article} delay={idx * 0.05} />
               ))}
             </div>

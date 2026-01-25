@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { IconType } from "react-icons";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaYoutube, FaWhatsapp } from "react-icons/fa";
 
 type SocialLink = {
   href: string;
@@ -21,6 +21,16 @@ const defaultSocials: SocialLink[] = [
     href: "https://www.facebook.com/HughesSchoolsCbba",
     label: "Facebook",
     icon: FaFacebook,
+  },
+  {
+    href: "https://www.youtube.com/@hughesschools1133",
+    label: "YouTube",
+    icon: FaYoutube,
+  },
+  {
+    href: "https://wa.link/c2ke7a",
+    label: "WhatsApp",
+    icon: FaWhatsapp,
   },
 ];
 
@@ -78,7 +88,7 @@ export default function FooterHS({
           {/* Column 1: Logo + description */}
           <div className="md:col-span-4">
             <div className="flex items-center gap-4">
-              <div className="relative h-32 w-[300px] md:h-36 md:w-[340px]">
+              <div className="relative h-40 w-[380px] md:h-44 md:w-[420px]">
                 <Image src={logoSrc} alt={`${schoolName} Logo`} fill className="object-contain" />
               </div>
             </div>
@@ -116,7 +126,7 @@ export default function FooterHS({
                     target="_blank"
                     rel="noreferrer"
                     aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/85 transition hover:bg-white/10 hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-white/85 transition hover:bg-[var(--hs-yellow)] hover:text-[var(--hs-blue)]"
                   >
                     <Icon size={18} />
                   </a>

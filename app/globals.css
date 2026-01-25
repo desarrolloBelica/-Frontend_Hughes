@@ -1,4 +1,4 @@
-/* Tailwind v4 + animaciones */
+﻿/* Tailwind v4 + animaciones */
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -19,6 +19,7 @@
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+
 
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
@@ -66,8 +67,8 @@
 
   --background: oklch(1 0 0);
 
-  /* 🔵 Texto por defecto en HS azul */
-  --foreground: #110631;
+  /* ðŸ”µ Texto por defecto en HS azul */
+  --foreground: #223a5e;
 
   --card: oklch(1 0 0);
   --card-foreground: var(--foreground);
@@ -161,30 +162,509 @@
   body { @apply bg-background text-foreground; }
 }
 
-/* ===== Colores corporativos HS y helpers ===== */
+/* ===== Sistema de Diseño Hughes Schools ===== */
 
-/* Variables HS */
+/* ============================================
+   🎨 PALETA DE COLORES HUGHES SCHOOLS
+   ============================================ */
+
 :root {
-  --hs-blue: #0b1229;
+  /* Azul Hughes - 4 tonalidades */
+  --hs-blue-darker: #0d1f38;
+  --hs-blue: #223a5e;
+  --hs-blue-medium: #3d5a7f;
+  --hs-blue-light: #5a7ba0;
+  --hs-bluenavy: #110631;
+  
+  /* Amarillo Hughes - 4 tonalidades */
+  --hs-yellow-darker: #e6a800;
   --hs-yellow: #FFBB00;
+  --hs-yellow-medium: #ffc933;
+  --hs-yellow-light: #ffe680;
+  
+  /* Grises de soporte */
+  --hs-gray-50: #f9f9fb;
+  --hs-gray-100: #f5f6fb;
+  --hs-gray-200: #ececf4;
+  --hs-gray-300: #D7D7D7;
 }
 
-/* Refuerzo de herencia (opcional) */
 html, body { color: var(--hs-blue); }
 
-/* Helpers */
+/* ============================================
+   📦 UTILIDADES DE COLOR
+   ============================================ */
+
+.text-hs-blue { color: var(--hs-blue) !important; }
+.text-hs-blue-dark { color: var(--hs-blue-darker) !important; }
+.text-hs-blue-medium { color: var(--hs-blue-medium) !important; }
+.text-hs-yellow { color: var(--hs-yellow) !important; }
+.text-hs-bluenavy { color: var(--hs-bluenavy) !important; }
+
+.bg-hs-blue { background-color: var(--hs-blue) !important; }
+.bg-hs-blue-dark { background-color: var(--hs-blue-darker) !important; }
+.bg-hs-yellow { background-color: var(--hs-yellow) !important; }
+.bg-hs-yellow-light { background-color: var(--hs-yellow-light) !important; }
+.bg-hs-bluenavy { background-color: var(--hs-bluenavy) !important; }
+
+/* Legacy - mantener para compatibilidad */
 .text-hughes-blue { color: var(--hs-blue) !important; }
+.text-hughes-yellow { color: var(--hs-yellow) !important; }
 .bg-hughes-yellow { background-color: var(--hs-yellow) !important; }
 
-/* Tabs estilo HS (usar className="tab-pill" en <TabsTrigger/>) */
-.tab-pill { color: var(--hs-blue) !important; }
+/* ============================================
+   🎭 FONDOS DE SECCIÓN
+   ============================================ */
+
+.section-white { background-color: #ffffff; }
+
+.section-blue { background-color: var(--hs-blue); color: #ffffff; }
+.section-blue-deep { background-color: var(--hs-blue-darker); color: #ffffff; }
+.section-yellow { background-color: var(--hs-yellow-light); color: var(--hs-blue); }
+.section-cloud { background-color: var(--hs-gray-300); color: var(--hs-blue); }
+.section-hero {
+  background:
+    radial-gradient(80rem 50rem at 90% -10%, rgba(61, 90, 127, 0.18), transparent 60%),
+    radial-gradient(40rem 30rem at 0% 20%, rgba(255, 230, 128, 0.22), transparent 60%),
+    var(--hs-gray-50);
+}
+
+.section-accent {
+  background-color: var(--hs-yellow-darker);
+  color: var(--hs-blue);
+}
+
+.section-gradient {
+  background:
+    radial-gradient(
+      60rem 40rem at 10% -10%,
+      var(--hs-blue),
+      transparent 195%
+    ),
+    radial-gradient(
+      40rem 30rem at 90% 110%,
+      var(--hs-yellow),
+      transparent 195%
+    ),
+    #ffffff;
+}
+.section-gradient-softly {
+  background:
+    radial-gradient(
+      60rem 40rem at 10% -10%,
+      rgba(34, 58, 94, 0.592),
+      transparent 195%
+    ),
+    radial-gradient(
+      40rem 30rem at 90% 110%,
+      rgba(255, 187, 0, 0.619),
+      transparent 195%
+    ),
+    #ffffff;
+}
+.section-gradient-reverse {
+  background:
+    radial-gradient(
+      60rem 40rem at 10% -10%,
+      var(--hs-yellow),
+      transparent 195%
+    ),
+    radial-gradient(
+      60rem 40rem at 90% 110%,
+      var(--hs-blue),
+      transparent 195%
+    ),
+
+    #ffffff;
+}
+.section-gradient-strong {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(14, 54, 114, 0.771) 0%,
+      rgb(239, 178, 11) 100%
+    ),
+    #ffffff;
+}
+
+.section-gradient-soft {
+  background:
+    linear-gradient(
+      180deg,
+      var(--hs-blue),
+      transparent 60%
+    ),
+    #ffffff;
+}
+
+.section-gradient-soft-yellow {
+  background:
+    linear-gradient(
+      180deg,
+      var(--hs-yellow),
+      transparent 60%
+    ),
+    #ffffff;
+}
+
+.bg-card-premium {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(34, 58, 94, 0.16),
+      rgba(255, 187, 0, 0.10)
+    ),
+    #ffffff;
+  border: 1px solid rgba(34, 58, 94, 0.08);
+  border-radius: 1rem;
+}
+
+.bg-academic-grid {
+  background:
+    linear-gradient(rgba(34,58,94,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,58,94,0.04) 1px, transparent 1px),
+    #ffffff;
+  background-size: 40px 40px;
+}
+
+.bg-soft-dots {
+  background:
+    radial-gradient(rgba(34, 58, 94, 0.616) 1px, transparent 1px),
+    #ffffff;
+  background-size: 28px 28px;
+}
+
+.bg-blueprint {
+  background:
+    linear-gradient(rgba(34, 58, 94, 0.149) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 58, 94, 0.142) 1px, transparent 2px),
+    #f8fafc;
+  background-size: 24px 24px;
+}
+
+@keyframes breathe {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+
+
+.bg-scroll-layer {
+  background:
+    radial-gradient(
+      60rem 40rem at 100% -10%,
+      rgb(26, 108, 232),
+      transparent 60%
+    ),
+    #ffffff;
+}
+
+
+
+/* ============================================
+   ✨ ANIMACIONES
+   ============================================ */
+
+@keyframes lift {
+  to { transform: translateY(-12px); }
+}
+
+.hover-lift {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  will-change: transform, box-shadow;
+}
+.hover-lift:hover {
+  animation: lift 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  box-shadow: 0 24px 48px -12px rgba(34, 58, 94, 0.4);
+}
+
+.hover-scale {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.3s ease;
+  will-change: transform, box-shadow;
+}
+.hover-scale:hover {
+  transform: scale(1.12) rotate(2deg);
+  box-shadow: 0 20px 40px -10px rgba(34, 58, 94, 0.35);
+}
+
+.hover-underline {
+  position: relative;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+.hover-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--hs-yellow-darker), var(--hs-yellow));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  border-radius: 2px;
+}
+.hover-underline:hover {
+  transform: translateY(-2px);
+}
+.hover-underline:hover::after {
+  transform: scaleX(1);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.2s ease, filter 0.3s ease;
+  will-change: transform, box-shadow, filter;
+}
+.hover-glow:hover {
+  box-shadow: 
+    0 0 30px rgba(255, 187, 0, 0.6),
+    0 0 60px rgba(255, 187, 0, 0.4),
+    0 15px 40px -8px rgba(255, 187, 0, 0.8);
+  transform: translateY(-4px) scale(1.05);
+  filter: brightness(1.1);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(36px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.9s ease-out forwards;
+}
+
+@keyframes pulse-soft {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 0.85; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 1000px 0; }
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--hs-gray-200) 25%,
+    #ffffff 50%,
+    var(--hs-gray-200) 75%
+  );
+  background-size: 1200px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.animate-marquee { animation: marquee 18s linear infinite; }
+@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============================================
+   📝 FORMULARIOS
+   ============================================ */
+
+.hs-input {
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  border: 2px solid var(--hs-gray-200);
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  color: var(--hs-blue);
+  background-color: #ffffff;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.hs-input::placeholder {
+  color: var(--hs-blue-medium);
+  opacity: 0.5;
+}
+
+.hs-input:focus {
+  border-color: var(--hs-yellow);
+  background-color: #fffef8;
+  box-shadow: 0 0 0 3px rgba(255, 187, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.hs-input:disabled {
+  background-color: var(--hs-gray-50);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.hs-input-error {
+  border-color: #ef4444;
+}
+.hs-input-error:focus {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.hs-input-success {
+  border-color: #10b981;
+}
+.hs-input-success:focus {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.hs-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hs-blue);
+  letter-spacing: 0.02em;
+}
+
+.hs-label-required::after {
+  content: " *";
+  color: #ef4444;
+}
+
+.hs-helper {
+  margin-top: 0.375rem;
+  font-size: 0.8125rem;
+  color: var(--hs-blue-medium);
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.hs-error {
+  color: #ef4444;
+  font-weight: 500;
+}
+
+.hs-success {
+  color: #10b981;
+  font-weight: 500;
+}
+
+.hs-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%23223a5e' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.75rem;
+}
+
+.hs-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.hs-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--hs-gray-200);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.hs-checkbox:checked {
+  background-color: var(--hs-yellow);
+  border-color: var(--hs-yellow);
+}
+
+.hs-checkbox:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--hs-blue);
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.hs-checkbox:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 187, 0, 0.2);
+}
+
+.hs-radio {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--hs-gray-200);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.hs-radio:checked {
+  border-color: var(--hs-yellow);
+  border-width: 6px;
+}
+
+.hs-radio:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(255, 187, 0, 0.2);
+}
+
+.hs-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.hs-form-group-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hs-file {
+  display: none;
+}
+
+.hs-file-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  border: 2px dashed var(--hs-gray-200);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: var(--hs-blue);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.hs-file-label:hover {
+  border-color: var(--hs-yellow);
+  background-color: rgba(255, 187, 0, 0.05);
+}
+
+/* ============================================
+   🎯 COMPONENTES
+   ============================================ */
+
+.tab-pill {
+  color: var(--hs-blue) !important;
+  transition: all 0.25s ease;
+}
+
 [data-state="active"].tab-pill {
   background-color: var(--hs-yellow) !important;
   color: var(--hs-blue) !important;
-  box-shadow: 0 10px 24px -12px rgba(255,187,0,.55);
+  box-shadow: 0 6px 20px -8px rgba(255, 187, 0, 0.5);
+  transform: translateY(-1px);
 }
 
-/* Badge/Tag HS (ej. “Event Recaps”) */
 .tag-hs {
   background-color: var(--hs-yellow) !important;
   color: var(--hs-blue) !important;
@@ -192,10 +672,318 @@ html, body { color: var(--hs-blue); }
   padding: 0.25rem 0.75rem;
   font-weight: 600;
   font-size: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
 }
 
-/* globals.css */
-.animate-marquee { animation: marquee 18s linear infinite; }
-@keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.hs-card {
+  background-color: #ffffff;
+  border: 2px solid var(--hs-gray-200);
+  border-radius: 24px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  will-change: transform, box-shadow, border-color;
+}
+
+.hs-card:hover {
+  border-color: var(--hs-yellow);
+  box-shadow: 0 18px 40px -12px rgba(34, 58, 94, 0.25);
+  transform: translateY(-4px) scale(1.01);
+}
+
+/* Cuando se combina con hover classes, deshabilitar el hover por defecto */
+.hs-card.hover-lift:hover,
+.hs-card.hover-scale:hover,
+.hs-card.hover-glow:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-hs-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  background-color: var(--hs-yellow);
+  color: var(--hs-blue);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-hs-primary:hover {
+  background-color: var(--hs-yellow-darker);
+  box-shadow: 0 14px 34px -10px rgba(255, 187, 0, 0.6);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.btn-hs-primary:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-hs-primary:focus-visible {
+  outline: 3px solid var(--hs-yellow-darker);
+  outline-offset: 2px;
+}
+
+.btn-hs-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-hs-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.75rem;
+  background-color: var(--hs-blue);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-hs-secondary:hover {
+  background-color: var(--hs-blue-darker);
+  box-shadow: 0 14px 34px -10px rgba(34, 58, 94, 0.35);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.btn-hs-secondary:active {
+  transform: translateY(0) scale(0.99);
+}
+
+.btn-hs-secondary:focus-visible {
+  outline: 3px solid var(--hs-blue-light);
+  outline-offset: 2px;
+}
+
+.btn-hs-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.hs-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--hs-gray-200) 20%,
+    var(--hs-gray-200) 80%,
+    transparent 100%
+  );
+  margin: 2rem 0;
+}
+
+/* ============================================
+   🔘 BOTONES DE LINK (Sin animación)
+   ============================================ */
+
+/* Botón estilo 1: Borde amarillo, texto azul, hover fondo amarillo claro */
+.btn-link-yellow-border {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--hs-yellow);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hs-blue);
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+  text-decoration: none;
+}
+
+.btn-link-yellow-border:hover {
+  background-color: #fef3c7;
+}
+
+/* Botón estilo 2: Borde azul, texto amarillo, hover fondo azul claro */
+.btn-link-blue-border {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--hs-blue);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--hs-yellow);
+  background-color: transparent;
+  transition: background-color 0.25s ease;
+  text-decoration: none;
+}
+
+.btn-link-blue-border:hover {
+  background-color: rgba(34, 58, 94, 0.1);
+}
+
+/* ============================================
+   🎬 BOTONES ANIMADOS (Motion Button)
+   ============================================ */
+
+/* Botón motion 1: Fondo azul oscuro, texto blanco, hover fondo amarillo con texto azul */
+.btn-motion-dark {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding: 0 1.75rem;
+  border: 2px solid var(--hs-yellow);
+  border-radius: 9999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-motion-dark .btn-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: #110631;
+  transition: background-color 0.2s ease;
+}
+
+.btn-motion-dark:hover .btn-bg {
+  background-color: var(--hs-yellow);
+}
+
+.btn-motion-dark .btn-text {
+  position: relative;
+  z-index: 10;
+  color: white;
+  transition: color 0.2s ease;
+}
+
+.btn-motion-dark:hover .btn-text {
+  color: #110631 !important;
+}
+
+/* Botón motion 2: Fondo blanco, texto azul, hover fondo azul con texto blanco */
+.btn-motion-light {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding: 0 1.75rem;
+  border: 2px solid var(--hs-blue);
+  border-radius: 9999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-motion-light .btn-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: white;
+  transition: background-color 0.2s ease;
+}
+
+.btn-motion-light:hover .btn-bg {
+  background-color: var(--hs-blue);
+}
+
+.btn-motion-light .btn-text {
+  position: relative;
+  z-index: 10;
+  color: var(--hs-blue);
+  transition: color 0.2s ease;
+}
+
+.btn-motion-light:hover .btn-text {
+  color: white !important;
+}
+
+/* Botón motion hero: Fondo blanco, texto azul, hover fondo desaparece y texto blanco */
+.btn-motion-hero {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem;
+  padding: 0 2.5rem;
+  border: 2px solid var(--hs-yellow);
+  border-radius: 9999px;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-motion-hero .btn-bg {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background-color: white;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.btn-motion-hero:hover .btn-bg {
+  opacity: 0;
+}
+
+.btn-motion-hero .btn-text {
+  position: relative;
+  z-index: 10;
+  color: #110631 !important;
+  transition: color 0.2s ease;
+}
+
+.btn-motion-hero:hover .btn-text {
+  color: white !important;
+}
+
+/* ============================================
+   🔗 LINKS DE TEXTO
+   ============================================ */
+
+/* Link de texto: Azul a amarillo */
+.link-blue-to-yellow {
+  color: var(--hs-blue);
+  transition: color 0.25s ease;
+  text-decoration: none;
+}
+
+.link-blue-to-yellow:hover {
+  color: var(--hs-yellow);
+}
+
+/* Link de texto: Amarillo a azul */
+.link-yellow-to-blue {
+  color: var(--hs-yellow);
+  transition: color 0.25s ease;
+  text-decoration: none;
+}
+
+.link-yellow-to-blue:hover {
+  color: var(--hs-blue);
+}
+
 
 

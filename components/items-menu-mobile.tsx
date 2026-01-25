@@ -16,49 +16,49 @@ type Group = { label: string; items: Item[] };
 
 const GROUPS: Group[] = [
   {
-    label: "Alumni",
+    label: "Schools",
     items: [
-      { label: "Alumni Network", href: "/alumni" },
       { label: "Academic Programs", href: "/academics/programs" },
+      { label: "Performing Arts", href: "/arts/artprograms" },
       { label: "Our Learning Environment", href: "/academics/learning-env" },
       { label: "Where Our Graduates Go", href: "/academics/graduates" },
+      { label: "Hughes Schools Robotics", href: "/academics/hs-robot" },
       { label: "Hughes Space School", href: "/academics/hughes-space" },
-      { label: "Art Programs", href: "/arts/artprograms" },
-      { label: "HS Robot", href: "/arts/hs-robot" },
-      { label: "Events Recap", href: "/events" },
-      { label: "Events Calendar", href: "/events/calendar" },
-    ],
-  },
-  {
-    label: "Admissions",
-    items: [
-      { label: "Apply Now", href: "/admissions" },
-      { label: "Resources", href: "/resources" },
     ],
   },
   {
     label: "About Us",
     items: [
-      { label: "Our Story", href: "/about" },
-      { label: "Why Choose Hughes Schools?", href: "/academics/undergraduate" },
+      { label: "Who We Are", href: "/about" },
+      { label: "Why Decide For Hughes Schools?", href: "/academics/undergraduate" },
       { label: "Academic Staff", href: "/academics/academic-staff" },
-      { label: "Art Staff", href: "/arts/art-staff" },
+      { label: "Administrative Staff", href: "/academics/administrative-staff" },
+      { label: "Performing Arts Staff", href: "/arts/art-staff" },
       { label: "News & Updates", href: "/news" },
       { label: "FAQs", href: "/faqs" },
     ],
   },
   {
-    label: "Portal Login",
+    label: "Events",
     items: [
-      { label: "Student Portal", href: "/academics/login", newTab: true },
-      { label: "Parent Portal", href: "/parents/login", newTab: true },
+      { label: "Events Calendar", href: "/events/calendar" },
+      { label: "Events Recap", href: "/events" },
+      { label: "Alumni Network", href: "/alumni" },
+    ],
+  },
+  {
+    label: "Portal Log In",
+    items: [
+      { label: "Log in Student Portal", href: "/academics/login", newTab: true },
+      { label: "Log in Parent Portal", href: "/parents/login", newTab: true },
     ],
   },
 ];
 
 const SINGLES: Item[] = [
-  { label: "Donation", href: "/donation" },
-  { label: "Contact" }, // se completará con onClick
+  { label: "Admissions", href: "/admissions" },
+  { label: "Donations", href: "/donation" },
+  { label: "Contact Us" }, // se completará con onClick
 ];
 
 export default function MobileMenu() {
@@ -81,7 +81,7 @@ export default function MobileMenu() {
   }, []);
 
   const singlesWithActions = SINGLES.map((it) =>
-    it.label === "Contact" ? { ...it, onClick: handleContact } : it
+    it.label === "Contact Us" ? { ...it, onClick: handleContact } : it
   );
 
   const toggleGroup = (label: string) => {
@@ -166,7 +166,7 @@ export default function MobileMenu() {
                         className="flex w-full items-center justify-between py-2"
                         style={{ color: BRAND.blue }}
                       >
-                        <span className="text-base font-bold">{group.label}</span>
+                        <span className="text-lg font-bold">{group.label}</span>
                         <motion.span
                           animate={{ rotate: expanded ? 90 : 0 }}
                           transition={{ duration: 0.2 }}
@@ -195,7 +195,7 @@ export default function MobileMenu() {
                                     target={item.newTab ? "_blank" : undefined}
                                     rel={item.newTab ? "noopener noreferrer" : undefined}
                                     onClick={() => setIsOpen(false)}
-                                    className="block font-semibold tracking-wide text-[15px] px-1 py-1"
+                                    className="block font-semibold tracking-wide text-base px-1 py-1"
                                     style={{ color: BRAND.blue }}
                                   >
                                     {item.label}
@@ -222,7 +222,7 @@ export default function MobileMenu() {
                         target={item.newTab ? "_blank" : undefined}
                         rel={item.newTab ? "noopener noreferrer" : undefined}
                         onClick={() => setIsOpen(false)}
-                        className="block font-semibold tracking-wide text-base px-1 py-1"
+                        className="block font-semibold tracking-wide text-lg px-1 py-1"
                         style={{ color: BRAND.blue }}
                       >
                         {item.label}
@@ -231,7 +231,7 @@ export default function MobileMenu() {
                       <button
                         type="button"
                         onClick={item.onClick}
-                        className="font-semibold tracking-wide text-base px-1 py-1"
+                        className="font-semibold tracking-wide text-lg px-1 py-1"
                         style={{ color: BRAND.blue }}
                       >
                         {item.label}

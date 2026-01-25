@@ -16,6 +16,7 @@ import {
 const BRAND = {
   blue: "var(--hs-blue)",
   yellow: "var(--hs-yellow)",
+  white: "white",
 };
 
 type SimpleItemProps = {
@@ -63,7 +64,7 @@ function TriggerLabel({ children }: { children: React.ReactNode }) {
       initial="rest"
       animate="rest"
       whileHover="hover"
-      className="relative inline-block text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
+      className="relative inline-block text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
       style={{ color: BRAND.blue }}
     >
       {children}
@@ -85,16 +86,26 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
           href={href}
           target={newTab ? "_blank" : undefined}
           rel={newTab ? "noopener noreferrer" : undefined}
-          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-blue-900 text-white hover:bg-blue-800 hover:shadow-md"
+          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 text-white hover:shadow-md"
+          style={{ backgroundColor: BRAND.blue }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = BRAND.yellow;
+            e.currentTarget.style.color = BRAND.blue;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = BRAND.blue;
+            e.currentTarget.style.color = BRAND.white;
+          }}
         >
           {label}
           
-          {/* Línea animada (ahora en blanco) */}
+          {/* Línea animada */}
           <motion.span
             initial={{ width: 0 }}
             whileHover={{ width: "100%" }}
             transition={{ duration: 0.28 }}
-            className="absolute left-0 bottom-0 h-[2px] bg-white"
+            className="absolute left-0 bottom-0 h-[2px]"
+            style={{ backgroundColor: BRAND.yellow }}
           />
         </Link>
       </NavigationMenuLink>
@@ -113,20 +124,24 @@ function ColLink({
   desc?: string;
   newTab?: boolean;
 }) {
+  const [isHovered, setIsHovered] = React.useState(false);
   return (
     <Link
       href={href}
       target={newTab ? "_blank" : undefined}
       rel={newTab ? "noopener noreferrer" : undefined}
-      className="block rounded-xl p-3 transition-colors hover:bg-yellow-100 focus:bg-yellow-100"
+      className="block rounded-xl p-3 transition-all duration-200"
+      style={{ backgroundColor: isHovered ? "rgba(255, 187, 0, 0.15)" : "transparent" }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="flex items-center gap-2">
         <span className="text-lg font-bold" style={{ color: BRAND.yellow }}>•</span>
-        <div className="text-sm font-semibold" style={{ color: BRAND.blue }}>
+        <div className="text-base font-semibold" style={{ color: BRAND.blue }}>
           {title}
         </div>
       </div>
-      {desc && <p className="mt-1 ml-6 text-xs text-gray-600 leading-snug">{desc}</p>}
+      {desc && <p className="mt-1 ml-6 text-sm text-gray-600 leading-snug">{desc}</p>}
     </Link>
   );
 }
@@ -148,8 +163,16 @@ function ContactScrollItem({ label = "📲" }: { label?: string }) {
           type="button"
           onClick={onClick}
           aria-label="Contact"
-          className="relative text-sm font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 bg-yellow-300 hover:bg-yellow-400 hover:shadow-md"
-          style={{ color: BRAND.blue }}
+          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 hover:shadow-md"
+          style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = BRAND.blue;
+            e.currentTarget.style.color = BRAND.white;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = BRAND.yellow;
+            e.currentTarget.style.color = BRAND.blue;
+          }}
         >
           {label}
           <motion.span
@@ -168,31 +191,32 @@ function ContactScrollItem({ label = "📲" }: { label?: string }) {
 export default function MenuList() {
   const academicsLinks: MenuEntry[] = [
     { href: "/academics/programs", title: "Academic Programs" },
+    { href: "/arts/artprograms", title: "Performing Arts" },
     { href: "/academics/learning-env", title: "Our Learning Environment" },
     { href: "/academics/graduates", title: "Where Our Graduates Go" },
-    { href: "/academics/hs-robot", title: "HS Robot" },
+    { href: "/academics/hs-robot", title: "Hughes Schools Robotics" },
     { href: "/academics/hughes-space", title: "Hughes Space School" },
-    { href: "/arts/artprograms", title: "Art Programs" },
   ];
 
   const aboutLinks: MenuEntry[] = [
-    { href: "/about", title: "Our Story" },
-    { href: "/academics/undergraduate", title: "Why Choose Hughes Schools?" },
-    { href: "/news", title: "News & Updates" },
+    { href: "/about", title: "Who We Are" },
+    { href: "/academics/undergraduate", title: "Why Decide For Hughes Schools?" },
     { href: "/academics/academic-staff", title: "Academic Staff" },
-    { href: "/arts/art-staff", title: "Art Staff" },
+    { href: "/academics/administrative-staff", title: "Administrative Staff" },
+    { href: "/arts/art-staff", title: "Performing Arts Staff" },
+    { href: "/news", title: "News & Updates" },
     { href: "/faqs", title: "FAQs" },
   ];
 
   const eventsLinks: MenuEntry[] = [
+     { href: "/events/calendar", title: "Events Calendar" },
     { href: "/events", title: "Events Recap" },
-    { href: "/events/calendar", title: "Events Calendar" },
     { href: "/alumni", title: "Alumni Network" },
   ];
 
   const portalLinks: MenuEntry[] = [
-    { href: "/academics/login", title: "Student Portal", newTab: true },
-    { href: "/parents/login", title: "Parent Portal", newTab: true },
+    { href: "/academics/login", title: "Log in Student Portal", newTab: true },
+    { href: "/parents/login", title: "Log in Parent Portal", newTab: true },
   ];
 
   return (
@@ -203,7 +227,7 @@ export default function MenuList() {
         {/* Academics */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:shadow-none">
-            <TriggerLabel>Academics</TriggerLabel>
+            <TriggerLabel>Schools</TriggerLabel>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[520px] max-w-[820px]">
@@ -245,7 +269,7 @@ export default function MenuList() {
         {/* Portal */}
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:shadow-none">
-            <TriggerLabel>Portal</TriggerLabel>
+            <TriggerLabel>Portal Log In</TriggerLabel>
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[360px] max-w-[600px]">

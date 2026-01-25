@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import React from "react";
+import { CountingNumber } from "@/components/CountingNumber";
 
 /**
  * About — streamlined
@@ -129,7 +130,7 @@ const Chip = ({ children }: { children: React.ReactNode }) => (
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-white text-lg md:text-xl leading-relaxed">
       {/* HERO */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">
@@ -140,7 +141,7 @@ export default function AboutPage() {
           <motion.h1 initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6}} className="text-4xl md:text-6xl font-extrabold tracking-tight">
             About Hughes Schools
           </motion.h1>
-          <motion.p initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6, delay:0.1}} className="mt-4 max-w-2xl text-base md:text-lg text-white/90">
+          <motion.p initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6, delay:0.1}} className="mt-4 max-w-2xl text-white/90 text-justify">
             A bilingual, independent PK–12 institution delivering rigorous academics, a robust Performing Arts program, and a culture of character, leadership, and community.
           </motion.p>
           <div className="mt-6 flex flex-wrap gap-2">
@@ -153,7 +154,7 @@ export default function AboutPage() {
       </section>
 
       {/* VISION */}
-      <section className="bg-white">
+      <section className="section-gradient-softly">
         <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-10 px-6 py-14 md:py-20 items-center">
           <div className="relative h-64 md:h-96 rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
             <Image src="/37.JPG" alt="Vision" fill className="object-cover" />
@@ -161,7 +162,7 @@ export default function AboutPage() {
           <div>
             <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Vision</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Excellence with Purpose</h2>
-            <p className="mt-3 text-muted-foreground">{VISION}</p>
+            <p className="mt-3 text-muted-foreground text-justify">{VISION}</p>
             <div className="mt-4 flex gap-2 flex-wrap">
               <Badge variant="secondary" className="rounded-full">Quality</Badge>
               <Badge variant="secondary" className="rounded-full">Values</Badge>
@@ -177,7 +178,7 @@ export default function AboutPage() {
           <div>
             <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Mission</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Integrity, Safety, Well-being</h2>
-            <p className="mt-3 text-muted-foreground">{MISSION}</p>
+            <p className="mt-3 text-muted-foreground text-justify">{MISSION}</p>
             <ul className="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-hughes-blue/80">
               <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Bilingual PK–12</li>
               <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Mastery-based advancement</li>
@@ -192,13 +193,13 @@ export default function AboutPage() {
       </section>
 
       {/* WHO WE ARE */}
-      <section className="bg-white">
+      <section className="section-gradient-softly">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Who We Are</div>
               <h3 className="mt-2 text-2xl font-bold text-hughes-blue">Cochabamba • PK–12 • Accredited</h3>
-              <p className="mt-3 text-muted-foreground">
+              <p className="mt-3 text-muted-foreground text-justify">
                 Hughes Schools is accredited by the Bolivian Ministry of Education and the Cochabamba District Department of Education.
                 The school year runs February–November, with summer break in December–January and winter break the first two weeks of July.
                 ~{META.englishPct}% of instruction is in English.
@@ -206,7 +207,7 @@ export default function AboutPage() {
             </div>
             <div className="rounded-2xl border p-6">
               <div className="text-sm font-semibold text-hughes-blue mb-2">Community</div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-base text-muted-foreground leading-relaxed text-justify">
                 Located in Cochabamba, Bolivia (population ~1.9M). Student body: 95% Bolivian, 5% international (North America & Europe).
               </p>
             </div>
@@ -215,25 +216,33 @@ export default function AboutPage() {
       </section>
 
       {/* BY THE NUMBERS */}
-      <section className="relative isolate bg-[var(--hs-yellow)]/10">
+      <section className="relative isolate bg-[var(--hs-yellow-darker)]/50">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">By the Numbers</h2>
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Stat value={`${META.enrollment}`} label="Students (PK–12)" />
-            <Stat value={`${META.englishPct}%`} label="Instruction in English" />
-            <Stat value={`100%`} label="4-year college matriculation" />
-            <Stat value={`${META.scholarships5y}`} label="Scholarships (last 5 yrs)" />
+            <Stat value={<CountingNumber target={META.enrollment} />} label="Students (PK–12)" />
+            <Stat value={<CountingNumber target={META.englishPct} suffix="%" />} label="Instruction in English" />
+            <Stat value={<CountingNumber target={100} suffix="%" />} label="4-year college matriculation" />
+            <Stat
+              value={
+                <span className="inline-flex items-baseline gap-1">
+                  <span className="text-2xl font-semibold">$</span>
+                  <CountingNumber target={3.1} decimals={1} suffix="M+" />
+                </span>
+              }
+              label="Scholarships (last 5 yrs)"
+            />
           </div>
         </div>
       </section>
 
       {/* ACADEMICS */}
-      <section className="bg-white">
+      <section className="section-gradient-softly">
         <div className="mx-auto max-w-7xl px-6 py-14 md:py-20 grid lg:grid-cols-5 gap-10">
           <div className="lg:col-span-2">
             <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Academics (PK–12)</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Rigorous. Structured. Mastery-Based.</h2>
-            <p className="mt-3 text-muted-foreground">Daily schedule of six 45-minute classes. Science includes labs each year. AP is not currently offered. Advancement requires mastery.</p>
+            <p className="mt-3 text-muted-foreground text-justify">Daily schedule of six 45-minute classes. Science includes labs each year. AP is not currently offered. Advancement requires mastery.</p>
             <div className="mt-6 rounded-2xl bg-[#0b1229] text-white p-5">
               <div className="text-sm/6 text-white/80">Honors Pathway</div>
               <div className="mt-1 text-lg font-semibold">{HONORS}</div>
@@ -244,14 +253,14 @@ export default function AboutPage() {
               <table className="w-full text-sm">
                 <thead className="bg-[#f7f9fd] text-hughes-blue/80">
                   <tr>
-                    <th className="text-left font-semibold px-4 py-3 w-[180px]">Area</th>
-                    <th className="text-left font-semibold px-4 py-3">Courses</th>
+                    <th className="text-left font-extrabold px-4 py-3 w-[180px]">Area</th>
+                    <th className="text-left font-extrabold px-4 py-3">Courses</th>
                   </tr>
                 </thead>
                 <tbody>
                   {CORE_CREDITS.map((row) => (
                     <tr key={row.area} className="border-t" style={{borderColor:'#ececf4'}}>
-                      <td className="px-4 py-3 font-medium text-hughes-blue">{row.area}</td>
+                      <td className="px-4 py-3 font-bold text-hughes-blue">{row.area}</td>
                       <td className="px-4 py-3 text-muted-foreground">{row.list.join(", ")}</td>
                     </tr>
                   ))}
@@ -269,7 +278,7 @@ export default function AboutPage() {
             <Music className="h-5 w-5 text-[var(--hs-yellow)]"/>
             <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">Performing Arts</h2>
           </div>
-          <p className="mt-3 text-muted-foreground max-w-3xl">
+          <p className="mt-3 text-muted-foreground max-w-3xl text-justify">
             All students (1–12) participate across two levels. {ARTS.footprint}
           </p>
 
@@ -299,14 +308,14 @@ export default function AboutPage() {
       </section>
 
       {/* RESULTS & AWARDS */}
-      <section className="bg-white">
+      <section className="section-gradient-softly">
         <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
           <div className="grid lg:grid-cols-3 gap-10 items-start">
             <div className="lg:col-span-1">
               <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Outcomes</div>
               <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Results & Placement</h2>
-              <p className="mt-3 text-muted-foreground"><strong>Placement:</strong> {RESULTS.placement}</p>
-              <p className="mt-1 text-muted-foreground"><strong>Scholarships:</strong> {RESULTS.scholarships}</p>
+              <p className="mt-3 text-muted-foreground text-justify"><strong>Placement:</strong> {RESULTS.placement}</p>
+              <p className="mt-1 text-muted-foreground text-justify"><strong>Scholarships:</strong> {RESULTS.scholarships}</p>
             </div>
             <div className="lg:col-span-2">
               <Accordion type="single" collapsible>
@@ -341,7 +350,7 @@ export default function AboutPage() {
               <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">
                 An ordinary person who does extraordinary things.
               </h2>
-              <p className="mt-3 text-muted-foreground">{GRADUATE_PROFILE}</p>
+              <p className="mt-3 text-muted-foreground text-justify">{GRADUATE_PROFILE}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Leadership</span>
                 <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Critical Thinking</span>
@@ -356,7 +365,7 @@ export default function AboutPage() {
                 <Sparkles className="h-5 w-5" /> Student Life & Extracurriculars
               </div>
               <h3 className="mt-2 text-xl md:text-2xl font-bold text-hughes-blue">Beyond the classroom</h3>
-              <p className="mt-3 text-muted-foreground">
+              <p className="mt-3 text-muted-foreground text-justify">
                 Rich academic & service-oriented activities: math, acting, science, volunteering; science & math fairs;
                 academic olympiads; extensive performance opportunities in dance and music; and independent academic
                 and artistic projects with faculty mentorship.

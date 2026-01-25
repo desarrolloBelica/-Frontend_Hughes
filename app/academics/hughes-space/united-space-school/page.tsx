@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Rocket, Globe, Users, BookCheck, FileText, Calendar, ArrowLeft } from "lucide-react";
+import { Rocket, Globe, Users, BookCheck, FileText, Calendar, ArrowLeft, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
+import { CountingNumber } from "@/components/CountingNumber";
 
 const BRAND = {
   blue: "var(--hs-blue)",
@@ -17,17 +18,33 @@ export default function UnitedSpaceSchoolPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-[520px] sm:min-h-[600px]">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
+        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
         
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow">
               United Space School Selection
             </h1>
-            <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-white/90">
+            <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-hs-yellow">
               How to represent Bolivia at United Space School?
             </p>
-            {/* CTA moved below hero to test clickability */}
+            <div className="flex justify-center gap-4 pt-4">
+              <a
+                href="https://www.hughesspace.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-110 hover:shadow-2xl animate-pulse border-2 border-white/30"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Rocket className="w-6 h-6" />
+                Go Up Into Space!
+                <Sparkles className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
         {/* wave */}
@@ -41,7 +58,7 @@ export default function UnitedSpaceSchoolPage() {
       {/* Intro */}
       <section className="py-16 sm:py-20 bg-white">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-8">
+          <div className="text-center mb-12">
             <a
               href={APPLICATION_URL}
               target="_blank"
@@ -53,19 +70,30 @@ export default function UnitedSpaceSchoolPage() {
               Apply Now
             </a>
           </div>
-          <div className="mx-auto max-w-4xl space-y-6 text-lg text-gray-700 leading-relaxed">
-            <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
-              Hughes Space School is the largest space education organization in Bolivia.
-            </p>
-            <p>
-              We develop and promote space science culture through our rigorous and dedicated preparation in the field.
-            </p>
-            <p>
-              We prepare, select, and send students from all over Latin America to international camps thanks to our association with the International Foundation for Space Education (FISE).
-            </p>
-            <p>
-              This is accomplished through our selection program: <strong>Space Week</strong>.
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
+            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+              <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
+                Hughes Space School is the largest space education organization in Bolivia.
+              </p>
+              <p>
+                We develop and promote space science culture through our rigorous and dedicated preparation in the field.
+              </p>
+              <p>
+                We prepare, select, and send students from all over Latin America to international camps thanks to our association with the International Foundation for Space Education (FISE).
+              </p>
+              <p>
+                This is accomplished through our selection program: <strong>Space Week</strong>.
+              </p>
+            </div>
+            <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-500">
+              <Image
+                src="/17.jpg"
+                alt="Hughes Space School Program"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+            </div>
           </div>
         </div>
       </section>
@@ -73,10 +101,19 @@ export default function UnitedSpaceSchoolPage() {
       {/* What is FISE */}
       <section className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <Globe className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>What is FISE?</h2>
+          <div className="flex items-center justify-center gap-3 mb-12">
+            <Globe className="w-10 h-10" style={{ color: BRAND.blue }} />
+            <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>What is FISE?</h2>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
+            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-500">
+              <Image
+                src="/space2.jpeg"
+                alt="FISE Foundation"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
             </div>
             <div className="rounded-3xl p-8 sm:p-10 border-2" style={{ borderColor: BRAND.blue, backgroundColor: "rgba(var(--hs-blue-rgb), 0.05)" }}>
               <p className="text-lg text-gray-700 leading-relaxed">
@@ -88,13 +125,26 @@ export default function UnitedSpaceSchoolPage() {
       </section>
 
       {/* Space Week */}
-      <section className="py-16 sm:py-24 bg-white">
+      <section className="py-16 sm:py-24 section-gradient">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <Users className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>Space Week</h2>
+          <div className="flex items-center justify-center gap-3 mb-12">
+            <Users className="w-10 h-10" style={{ color: BRAND.blue }} />
+            <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>Space Week</h2>
+          </div>
+          {/* Featured Image */}
+          <div className="mb-12 max-w-5xl mx-auto">
+            <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500">
+              <Image
+                src="/15.png"
+                alt="Space Week Program"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent" />
             </div>
+          </div>
+          
+          <div className="mx-auto max-w-6xl">
             <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
               <p>
                 <strong>Space Week</strong> is a highly selective one-week program. Participants are selected from a pool of students who apply nationwide, and undergo a rigorous week of hard work developing a project in the space sector. The event is a simulation of the United Space School camp.
@@ -102,10 +152,10 @@ export default function UnitedSpaceSchoolPage() {
               <p>
                 At the end of the program, two of the most outstanding candidates are chosen to represent Bolivia at the camp.
               </p>
-              <div className="mt-8 rounded-2xl border-2 p-6" style={{ borderColor: BRAND.yellow, backgroundColor: "rgba(var(--hs-yellow-rgb), 0.05)" }}>
+              <div className="mt-8 rounded-2xl border-2 p-6 shadow-lg hover:shadow-2xl transition-all duration-300" style={{ borderColor: BRAND.yellow, backgroundColor: "rgba(var(--hs-yellow-rgb), 0.05)" }}>
                 <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND.blue }}>United Space School</h3>
                 <p className="mb-4">
-                  United Space School is an interdisciplinary program that annually brings together up to 50 students from 25 different nations to study at the University of Clear Lake. Under the mentorship of engineers, scientists, and leaders from the aerospace industry, students collaborate to design their own mission to Mars.
+                  United Space School is an interdisciplinary program that annually brings together up to <span className="text-2xl font-bold" style={{ color: BRAND.blue }}><CountingNumber target={50} duration={2000} /></span> students from <span className="text-2xl font-bold" style={{ color: BRAND.blue }}><CountingNumber target={25} duration={2000} /></span> different nations to study at the University of Clear Lake. Under the mentorship of engineers, scientists, and leaders from the aerospace industry, students collaborate to design their own mission to Mars.
                 </p>
                 <p className="mb-4">
                   United Space School organizes its curriculum to train students in designing a crewed mission to Mars. Qualified instructors, including civilian aerospace professionals and contractors, provide training in key disciplines. In addition, students have access to research resources in libraries and online platforms at the University of Houston Clear Lake.

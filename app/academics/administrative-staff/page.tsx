@@ -2,6 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { User, ClipboardList } from "lucide-react";
+
+
+
 
 /**********************
  * Types (Strapi v4/v5)
@@ -135,82 +139,63 @@ function normalizeStaff(raw?: string | null): string {
  **********************/
 
 function Badge({ children }: { children: React.ReactNode }) {
-return (
-<span
-className="inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-semibold uppercase tracking-wider"
-style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
->
-{children}
-</span>
-);
+  return (
+    <span
+      className="inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-semibold uppercase tracking-wider"
+      style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
+    >
+      {children}
+    </span>
+  );
 }
-
 
 function SubjectTag({ children }: { children: React.ReactNode }) {
-return (
-<span className="rounded-full border px-3 py-1 text-sm" style={{ borderColor: "#e6e6f0" }}>
-{children}
-</span>
-);
+  return (
+    <span className="rounded-full border px-3 py-1 text-sm" style={{ borderColor: "#e6e6f0" }}>
+      {children}
+    </span>
+  );
 }
-
 
 function Card({ children }: { children: React.ReactNode }) {
-return (
-<div
-className="h-full rounded-3xl border bg-white p-8 md:p-10 shadow-[0_20px_70px_-35px_rgba(17,6,49,0.35)]"
-style={{ borderColor: "#ececf4" }}
->
-{children}
-</div>
-);
+  return (
+    <div
+      className="h-full rounded-3xl border bg-white p-8 md:p-10 shadow-[0_20px_70px_-35px_rgba(17,6,49,0.35)]"
+      style={{ borderColor: "#ececf4" }}
+    >
+      {children}
+    </div>
+  );
 }
-
 
 function Header({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <section className="relative w-full py-10 md:py-14 text-center overflow-hidden">
+    <section
+      className="relative w-full py-10 md:py-14 text-center overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(70rem 40rem at 100% -10%, rgba(17,6,49,0.06), transparent 60%)",
+      }}
+    >
       <div className="mx-auto max-w-6xl px-4">
-        {/* 🎓 Birrete (Hughes) — base azul y más cerca del título */}
-        <div className="inline-flex items-center justify-center -mb-1 md:-mb-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 64 64"
-            aria-hidden
-          >
-            {/* Ala del birrete */}
-            <path d="M32 10 6 20l26 10 26-10-26-10z" fill="var(--hs-blue)" />
-            <path
-              d="M6 20l26 10 26-10"
-              fill="none"
-              stroke="rgba(10,35,66,0.25)"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* Base/cinta del birrete (ahora azul) */}
-            <path d="M18 24h28v7c0 4.5-6.7 8-14 8s-14-3.5-14-8v-7z" fill="var(--hs-blue)" />
-            {/* Sutil brillo en el borde de la base */}
-            <path
-              d="M18 26h28"
-              stroke="rgba(255,255,255,.25)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            {/* Borla */}
-            <path
-              d="M50 22v11"
-              fill="none"
-              stroke="var(--hs-yellow)"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-            <circle cx="50" cy="35" r="3.5" fill="var(--hs-yellow)" />
-          </svg>
-        </div>
+        <div className="inline-flex items-center justify-center -mb-6 md:-mb-8">
+  <div className="relative flex items-center justify-center w-20 h-20 rounded-full bg-blue-50">
+    {/* Persona */}
+    <User
+      className="w-12 h-12"
+      style={{ color: "var(--hs-blue)" }}
+    />
 
-        <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+    {/* Documento administrativo */}
+    <ClipboardList
+      className="w-6 h-6 absolute -bottom-1 -right-1"
+      style={{ color: "var(--hs-yellow)" }}
+    />
+  </div>
+</div>
+
+
+        <h1 className="mt-7 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
           {title}
         </h1>
         <p className="text-sm md:text-base mt-2 text-hughes-blue/80">{subtitle}</p>
@@ -219,23 +204,18 @@ function Header({ title, subtitle }: { title: string; subtitle: string }) {
   );
 }
 
-
-
 /**********************
  * Page
  **********************/
 
-const PAGE_SIZE = 8; // bigger cards, fewer per page
+const PAGE_SIZE = 8;
 
-export default function AcademicStaffPage() {
+export default function AdministrativeStaffPage() {
   const [rows, setRows] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Search filter
   const [q, setQ] = useState<string>("");
-
-  // Pagination
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -268,13 +248,13 @@ export default function AcademicStaffPage() {
     };
   }, []);
 
-  // Derived filtering: show only Academic staff, exclude Art always
+  // Only Academic coordination staff; exclude Art always
   const filtered = useMemo(() => {
     return rows
       .filter((r) => {
         const sNorm = normalizeStaff(getAttr<string>(r, "staff") ?? "").toLowerCase();
-        if (sNorm === "art") return false; // never show Art staff
-        if (sNorm !== "academic") return false; // only Academic staff on this page
+        if (sNorm === "art") return false;
+        if (sNorm !== "academic coordination") return false;
         if (q.trim()) {
           const name = fullName(r).toLowerCase();
           const email = (getAttr<string>(r, "email") ?? "").toLowerCase();
@@ -298,10 +278,10 @@ export default function AcademicStaffPage() {
   }, [filtered, page]);
 
   return (
-    <main className="min-h-screen section-gradient-strong">
-      <Header title="Academic Staff" subtitle="Meet our teachers and coordinators." />
+    <main className="min-h-screen" style={{ background: "#f9f9fb" }}>
+      <Header title="Administrative Staff" subtitle="Meet our academic coordinators." />
 
-      <section className="pb-16">
+      <section className="pb-16" style={{ background: "#f9f9fb" }}>
         <div className="mx-auto max-w-7xl px-4">
           {/* Search */}
           <div className="mb-8 flex items-center justify-end">
@@ -314,7 +294,6 @@ export default function AcademicStaffPage() {
             />
           </div>
 
-          {/* Grid / Content (bigger cards, two columns) */}
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 auto-rows-fr">
               {Array.from({ length: PAGE_SIZE }).map((_, i) => (
@@ -403,7 +382,6 @@ export default function AcademicStaffPage() {
                 })}
               </div>
 
-              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="mt-10 flex items-center justify-center gap-2">
                   <button

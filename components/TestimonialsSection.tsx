@@ -192,7 +192,7 @@ const picks = useMemo(() => {
   const seeAllLink = "/testimonials";
 
   return (
-    <section className="relative w-full py-20 bg-[#110631] overflow-hidden">
+    <section className="relative w-full py-20 bg-hs-bluenavy overflow-hidden">
       {/* decor suave */}
       <div
         aria-hidden

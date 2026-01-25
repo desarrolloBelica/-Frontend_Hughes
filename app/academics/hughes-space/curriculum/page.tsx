@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Rocket, Sparkles, Brain, FlaskConical, Stars, ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { Rocket, Sparkles, Brain, FlaskConical, Stars, ArrowLeft, Zap } from "lucide-react";
+import { CountingNumber } from "@/components/CountingNumber";
 
 const BRAND = {
   blue: "var(--hs-blue)",
@@ -31,17 +33,33 @@ export default function SpaceCurriculumPage() {
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-[520px] sm:min-h-[600px]">
         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-40" />
+        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
         
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow">
               Space Curriculum
             </h1>
-            <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-white/90">
+            <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-white/90 text-hs-yellow">
               How can I represent Bolivia on the international stage?
             </p>
-            {/* CTA moved below hero to test clickability */}
+            <div className="flex justify-center gap-4 pt-4">
+              <a
+                href="https://www.hughesspace.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-110 hover:shadow-2xl animate-pulse border-2 border-white/30"
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  backdropFilter: 'blur(10px)'
+                }}
+              >
+                <Rocket className="w-6 h-6" />
+                Go Up Into Space!
+                <Sparkles className="w-5 h-5" />
+              </a>
+            </div>
           </div>
         </div>
         {/* wave */}
@@ -58,31 +76,51 @@ export default function SpaceCurriculumPage() {
           <div className="text-center mb-8">
             <EnrollButton />
           </div>
+          {/* Text with Image Layout */}
+          <div className="mx-auto max-w-7xl mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+              <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+                <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
+                  Hughes Space School is the first space education organization in Bolivia.
+                </p>
+                <p>
+                  We develop a space science culture in all our students — we are completely focused on the future!
+                </p>
+                <p>
+                  Since 2019, we have prepared, selected, and sent students from all over Bolivia to FISE (International Space Education Foundation) camps, where they work alongside engineers and specialists.
+                </p>
+              </div>
+              <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-500">
+                <Image
+                  src="/space1.jpg"
+                  alt="Hughes Space School"
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              </div>
+            </div>
+          </div>
           <div className="mx-auto max-w-4xl space-y-6 text-lg text-gray-700 leading-relaxed">
-            <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
-              Hughes Space School is the first space education organization in Bolivia.
-            </p>
-            <p>
-              We develop a space science culture in all our students — we are completely focused on the future!
-            </p>
-            <p>
-              Since 2019, we have prepared, selected, and sent students from all over Bolivia to FISE (International Space Education Foundation) camps, where they work alongside engineers and specialists.
-            </p>
             <p>
               Thanks to our partnership with FISE, we annually select Bolivian students to represent the country at the prestigious <strong>United Space School (USS)</strong> camp.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
-              <div className="rounded-2xl p-6 border" style={{ borderColor: BRAND.blue }}>
+              <div className="rounded-2xl p-6 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1" style={{ borderColor: BRAND.blue, backgroundColor: 'rgba(var(--hs-blue-rgb), 0.03)' }}>
                 <div className="flex items-center gap-3">
-                  <Stars className="w-6 h-6" style={{ color: BRAND.yellow }} />
-                  <p className="text-lg font-bold" style={{ color: BRAND.blue }}>87.5% of our students</p>
+                  <Stars className="w-6 h-6 animate-pulse" style={{ color: BRAND.yellow }} />
+                  <p className="text-lg font-bold" style={{ color: BRAND.blue }}>
+                    <CountingNumber target={87.5} duration={1500} suffix="%" className="text-3xl" /> of our students
+                  </p>
                 </div>
                 <p className="mt-2 text-gray-700">received a full scholarship.</p>
               </div>
-              <div className="rounded-2xl p-6 border" style={{ borderColor: BRAND.blue }}>
+              <div className="rounded-2xl p-6 border-2 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 hover:-translate-y-1" style={{ borderColor: BRAND.blue, backgroundColor: 'rgba(var(--hs-blue-rgb), 0.03)' }}>
                 <div className="flex items-center gap-3">
-                  <Stars className="w-6 h-6" style={{ color: BRAND.yellow }} />
-                  <p className="text-lg font-bold" style={{ color: BRAND.blue }}>100% of our students</p>
+                  <Stars className="w-6 h-6 animate-pulse" style={{ color: BRAND.yellow, animationDelay: '0.5s' }} />
+                  <p className="text-lg font-bold" style={{ color: BRAND.blue }}>
+                    <CountingNumber target={100} duration={1500} suffix="%" className="text-3xl" /> of our students
+                  </p>
                 </div>
                 <p className="mt-2 text-gray-700">received a full educational scholarship.</p>
               </div>
@@ -92,7 +130,7 @@ export default function SpaceCurriculumPage() {
       </section>
 
       {/* Camino al éxito */}
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-16 sm:py-20 bg-gradient-to-b section-gradient-softly">
         <div className="mx-auto max-w-7xl px-6">
           <div className="mx-auto max-w-5xl">
             <div className="rounded-3xl p-8 sm:p-10 text-center border-2" style={{ borderColor: BRAND.blue, backgroundColor: "rgba(var(--hs-blue-rgb), 0.05)" }}>
@@ -112,15 +150,17 @@ export default function SpaceCurriculumPage() {
       </section>
 
       {/* Metodología Educativa */}
-      <section className="py-16 sm:py-24 bg-white">
+      <section className="py-16 sm:py-24 ">
         <div className="mx-auto max-w-7xl px-6">
           <div className="text-center mb-12">
             <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>Educational Methodology</h2>
             <p className="text-lg text-gray-600 mt-3">How we teach to achieve excellence</p>
           </div>
+          {/* Featured Image */}
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Ambiente */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow border-2 border-transparent hover:border-[var(--hs-blue)]">
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2x1 transition-all duration-300 hover:scale-105 hover:-translate-y-2 border-2 border-transparent hover:border-[var(--hs-blue)] hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: "rgba(var(--hs-blue-rgb), 0.1)" }}>
                 <Sparkles className="w-8 h-8" style={{ color: BRAND.blue }} />
               </div>
@@ -130,7 +170,7 @@ export default function SpaceCurriculumPage() {
               </p>
             </div>
             {/* Autodidacta */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow border-2 border-transparent hover:border-[var(--hs-blue)]">
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2x1 transition-all duration-300 hover:scale-105 hover:-translate-y-2 border-2 border-transparent hover:border-[var(--hs-blue)] hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: "rgba(var(--hs-blue-rgb), 0.1)" }}>
                 <Brain className="w-8 h-8" style={{ color: BRAND.blue }} />
               </div>
@@ -140,7 +180,7 @@ export default function SpaceCurriculumPage() {
               </p>
             </div>
             {/* Dinámico */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-shadow border-2 border-transparent hover:border-[var(--hs-blue)]">
+            <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-2x1 transition-all duration-300 hover:scale-105 hover:-translate-y-2 border-2 border-transparent hover:border-[var(--hs-blue)] hover:shadow-[0_0_30px_rgba(59,130,246,0.3)]">
               <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6" style={{ backgroundColor: "rgba(var(--hs-blue-rgb), 0.1)" }}>
                 <FlaskConical className="w-8 h-8" style={{ color: BRAND.yellow }} />
               </div>
@@ -148,6 +188,18 @@ export default function SpaceCurriculumPage() {
               <p className="text-gray-700 leading-relaxed">
                 Through experiments, activities, and projects, our students enter a dynamic and passionate environment where learning is fun and simple.
               </p>
+            </div>
+            
+          </div>
+          <div className="mb-16 max-w-5xl mx-auto">
+            <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500 mt-6">
+              <Image
+                src="/FuturoSpace.png"
+                alt="Future of Space Education"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent" />
             </div>
           </div>
         </div>

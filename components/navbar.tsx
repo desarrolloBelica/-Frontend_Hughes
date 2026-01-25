@@ -59,7 +59,7 @@ const Navbar = () => {
               width={240}
               height={240}
               priority
-              className="h-[110px] w-auto object-contain object-center"
+              className="h-[140px] w-auto"
               sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 110px"
             />
           </Link>

@@ -222,26 +222,26 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
   }, [slides.length]);
 
   const current = slides[index] ?? null;
-  const bg = "radial-gradient(circle at 15% 20%, #fff6d4 0, #f6f7fb 35%, #f6f7fb 100%)";
 
   return (
-    <section className="w-full py-14" style={{ background: bg }}>
+    <section className="w-full py-14 section-gradient">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-sm" style={{ border: "1px solid var(--hs-yellow)" }}>
-              <Sparkles className="h-4 w-4" /> Last Recaps
+            <div className="inline-flex items-center gap-2 text-hs-yellow font-bold uppercase tracking-wider">
+              Latest Events
             </div>
-            <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+            <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hs-blue-dark">
               See what's new and dive into the event recap
             </h2>
           </div>
 
           <Link
             href={viewAllHref}
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--hs-yellow)] px-4 py-2 text-sm font-semibold text-hughes-blue transition hover:bg-yellow-100"
-          >
-            View All
+            className="btn-motion-dark"
+            >
+            <span className="btn-bg" />
+            <span className="btn-text">View All</span>
           </Link>
         </div>
 
@@ -290,13 +290,11 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
                 <div className="mt-4 flex items-center gap-3 flex-wrap">
                   <Link
                     href={current.href}
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-hughes-blue shadow-md transition hover:-translate-y-0.5 hover:shadow-lg"
+                    className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hughes-blue"
                   >
                     Read Recap
                   </Link>
-                  <span className="text-xs font-semibold uppercase tracking-wide bg-white/20 px-3 py-1 rounded-full">
-                    Last Recaps
-                  </span>
+                  
                 </div>
               </div>
 

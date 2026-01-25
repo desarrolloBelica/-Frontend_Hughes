@@ -85,7 +85,7 @@ export default function AcademicProgramsPage() {
   return (
     <main className="min-h-screen">
       {/* HERO estilo BASIS (texto izq + imagen der) */}
-      <section className="bg-white">
+      <section className="section-gradient-soft relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
           {/* Texto */}
           <div className="md:col-span-6">
@@ -130,13 +130,15 @@ export default function AcademicProgramsPage() {
             />
           </div>
         </div>
+        {/* Bottom fade to white to blend with next section */}
+        <div className="pointer-events-none absolute inset-x-0 -bottom-px h-10 bg-gradient-to-b from-transparent to-white" />
       </section>
 
       {/* Intro académico (texto más corto y legible) */}
       <section className="bg-white">
         <div className="mx-auto max-w-7xl px-6 pb-2">
           <div
-            className="rounded-3xl border bg-[#f9fafc] p-6 md:p-8 text-hughes-blue leading-relaxed"
+            className="rounded-3xl border bg-[#f9fafc] p-6 md:p-8 text-hughes-blue leading-relaxed relative -top-4"
             style={{ borderColor: "var(--hs-yellow)" }}
           >
             <div className="prose prose-slate max-w-none">
@@ -162,7 +164,12 @@ export default function AcademicProgramsPage() {
       </section>
 
       {/* Secciones por programa (una imagen por bloque, alternando) */}
-      <section className="bg-white">
+      <section className="section-gradient-reverse relative overflow-hidden">
+        {/* Top fade from white to section background to hide hard edge */}
+        <div
+          className="pointer-events-none absolute inset-x-0 -top-px h-10"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,1), rgba(255,255,255,0))" }}
+        />
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 pb-24 md:pb-36 space-y-16 md:space-y-24">
           {tiers.map((tier) => (
             <article
@@ -182,15 +189,7 @@ export default function AcademicProgramsPage() {
 
               {/* Texto (sin botones internos) */}
               <div className={tier.flipped ? "md:col-span-6 md:order-1" : "md:col-span-6 md:order-2"}>
-                <div className="mb-2 inline-flex items-center gap-2">
-                  <span
-                    className="inline-block h-2.5 w-2.5 rounded-full"
-                    style={{ background: "var(--hs-yellow)" }}
-                  />
-                  <span className="text-[12px] tracking-[0.18em] font-semibold text-hughes-blue">
-                    PROGRAM TIER
-                  </span>
-                </div>
+                
 
                 <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">{tier.title}</h2>
                 {tier.subtitle && (

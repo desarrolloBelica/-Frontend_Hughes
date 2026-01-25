@@ -181,7 +181,7 @@ export default function OurLearningEnvironmentPage() {
   return (
     <main className="min-h-screen">
       {/* HERO */}
-      <section className="bg-white">
+      <section className="section-gradient-soft">
         <div className="mx-auto max-w-4xl px-6 py-12 md:py-16 text-center">
           <div className="mb-6 flex items-center justify-center gap-3">
             <span
@@ -209,7 +209,7 @@ export default function OurLearningEnvironmentPage() {
       </section>
 
       {/* BLOQUES */}
-      <section className="bg-white">
+      <section className="bg-blueprint">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 pb-24 md:pb-36 space-y-16 md:space-y-24">
           {blocks.map((b) => (
             <article
