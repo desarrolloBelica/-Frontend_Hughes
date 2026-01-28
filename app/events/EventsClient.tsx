@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 /* ───────── Tipos ───────── */
-export const TYPES = ["All", "Academic", "Artistic", "Extracurricular"] as const;
+export const TYPES = ["All", "Academic", "Performing Arts", "Other"] as const;
 export type EventType = (typeof TYPES)[number];
 
 type Media = {
@@ -208,7 +208,7 @@ export default function EventsClient({ initialType, initialPage }: Props) {
           <div className="mx-auto inline-flex items-center gap-2 tag-hs">Event Recaps</div>
           <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">All Events</h1>
           <p className="text-sm md:text-base mt-2 text-hughes-blue">
-            Browse our academic, artistic, and extracurricular moments.
+            Browse our academic, performing arts, and other moments.
           </p>
         </div>
 

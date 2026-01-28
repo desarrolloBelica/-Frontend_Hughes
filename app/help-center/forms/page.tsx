@@ -231,8 +231,13 @@ function SeatReservationForm() {
         // ¿Ya existe reserva 2026 para este estudiante?
         const stId = st.id ?? (st as any).documentId;
         if (stId) {
-          const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
-          setExisting(ex);
+          try {
+            const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
+            setExisting(ex);
+          } catch (err) {
+            // Silently handle 403 - permissions issue, allow form to display
+            console.warn("Could not fetch existing reservation:", err);
+          }
         }
       } catch (e: any) { setError(e?.message || String(e)); }
       finally { setLoading(false); }
@@ -263,8 +268,12 @@ function SeatReservationForm() {
       // refrescar "existing" para bloquear luego del envío
       const stId = student.id ?? (student as any).documentId;
       if (stId) {
-        const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
-        setExisting(ex);
+        try {
+          const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
+          setExisting(ex);
+        } catch (err) {
+          console.warn("Could not fetch existing reservation after submit:", err);
+        }
       }
     } catch (e: any) {
       setDone("err");

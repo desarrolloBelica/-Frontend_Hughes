@@ -79,12 +79,12 @@ function formatDate(iso = new Date().toISOString()) {
    ========================= */
 type Day = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday';
 const DAYS: Day[] = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
-const DAY_ES: Record<Day, string> = {
-  monday: 'Lunes',
-  tuesday: 'Martes',
-  wednesday: 'Miércoles',
-  thursday: 'Jueves',
-  friday: 'Viernes',
+const DAY_LABELS: Record<Day, string> = {
+  monday: 'Monday',
+  tuesday: 'Tuesday',
+  wednesday: 'Wednesday',
+  thursday: 'Thursday',
+  friday: 'Friday',
 };
 
 /* =========================
@@ -209,21 +209,41 @@ function buildSlotsAndGrid(entries: UnknownRecord[]) {
 }
 
 function SubjectCell({ cell, height }: { cell: GridCell | null; height: number }) {
+  // CASO VACÍO: Ajuste de contraste para que la caja sea visible
   if (!cell) {
     return (
-      <div className="rounded-md px-2 py-1 text-hughes-blue/60 flex items-center justify-center" style={{ height }}>
-        —
+      <div
+        className="w-full rounded-lg px-3 py-3 flex flex-col justify-center items-center border subject-cell"
+        style={{ 
+          height, 
+          background: '#f9fafb',   // Un gris un poco más visible (Slate-50)
+          borderColor: '#e2e8f0',  // Borde gris visible (Slate-200)
+          borderStyle: 'dashed',   // Estilo discontinuo para denotar "vacío"
+          color: '#94a3b8',        // Color del guion (Slate-400)
+          boxSizing: 'border-box' 
+        }} 
+      >
+        <span className="font-semibold text-sm leading-snug text-center">—</span>
       </div>
     );
   }
+
+  // CASO LLENO (CON MATERIA) - Sin cambios, ya funciona bien
   return (
     <div
-      className="rounded-lg px-3 py-3 flex flex-col justify-center subject-cell"
-      style={{ height, background: cell.color || 'var(--hs-yellow, #ffeb99)', color: '#0b1b2b' }}
+      className="w-full rounded-lg px-3 py-3 flex flex-col justify-center border subject-cell overflow-hidden"
+      style={{ 
+          height, 
+          background: cell.color || '#ffeb99', 
+          color: '#0b1b2b', 
+          borderColor: 'rgba(0,0,0,0.05)',
+          boxSizing: 'border-box'
+      }}
     >
-      <span className="font-semibold text-sm leading-snug">{cell.subject || '—'}</span>
+      <span className="font-semibold text-sm leading-snug truncate">{cell.subject || '—'}</span>
+      
       {(cell.teacher || cell.extra) && (
-        <span className="text-[11px] opacity-85 mt-1 leading-tight">
+        <span className="text-[11px] opacity-85 mt-1 leading-tight truncate">
           {[cell.teacher, cell.extra].filter(Boolean).join(' • ')}
         </span>
       )}
@@ -251,7 +271,7 @@ export default function StudentHomePage() {
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#f9f9fb' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--hs-blue)' }} />
-          <p className="text-hughes-blue">Verificando autenticación...</p>
+          <p className="text-hughes-blue">Checking authentication...</p>
         </div>
       </div>
     );
@@ -289,7 +309,7 @@ export default function StudentHomePage() {
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-hughes-blue">Student Portal</h1>
               <p className="mt-1 text-hughes-blue/70 text-sm md:text-base">
-                Consulte su horario académico y artístico.
+                View your academic and artistic schedules.
               </p>
             </div>
 
@@ -298,10 +318,10 @@ export default function StudentHomePage() {
                 onClick={handleExportPDF}
                 className="inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold shadow-sm border bg-white hover:bg-slate-50"
                 style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)' }}
-                aria-label="Exportar horario a PDF"
+                aria-label="Export timetable to PDF"
               >
                 <Download size={16} />
-                Exportar PDF
+                Export PDF
               </button>
 
               <Link
@@ -313,11 +333,11 @@ export default function StudentHomePage() {
               </Link>
 
               <Link
-                href="/"
+                href="/events/calendar"
                 className="inline-flex items-center rounded-xl border px-3 py-2 text-sm font-semibold bg-white hover:bg-slate-50"
                 style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)' }}
               >
-                Volver al inicio
+                See Events
               </Link>
               
               {/* Separador */}
@@ -339,7 +359,7 @@ export default function StudentHomePage() {
                     : 'text-hughes-blue/80 hover:text-hughes-blue'
                 }`}
               >
-                Académico
+                Academic
               </button>
               <button
                 onClick={() => setActiveTab('artistic')}
@@ -349,7 +369,7 @@ export default function StudentHomePage() {
                     : 'text-hughes-blue/80 hover:text-hughes-blue'
                 }`}
               >
-                Artístico
+                Artistic
               </button>
             </div>
           </div>
@@ -391,7 +411,7 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
       setLoading(true); setError(null);
       try {
         const studentRow = await fetchStudentMe();
-        if (!studentRow) { setError('No se encontró sesión del estudiante.'); setLoading(false); return; }
+        if (!studentRow) { setError('No student session found.'); setLoading(false); return; }
         const sb = body(studentRow);
         setStudentName([sb.firstName, sb.lastName].filter(Boolean).join(' '));
 
@@ -399,7 +419,7 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
         const secBody = secRel ? body(secRel) : null;
         const sectionId = (secRel as AnyObj)?.id ?? (secRel as AnyObj)?.documentId ?? null;
         setSectionName((secBody as AnyObj)?.name || '');
-        if (!sectionId) { setError('El estudiante no tiene sección asignada.'); setLoading(false); return; }
+        if (!sectionId) { setError('The student has no assigned section.'); setLoading(false); return; }
 
         const entries = await fetchTimetableBySectionId(Number(sectionId));
         const { slots: s, grid: g } = buildSlotsAndGrid(entries);
@@ -426,7 +446,7 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
 
         setSlots(s); setGrid(g);
       } catch (e: unknown) {
-        setError(`No se pudo cargar el horario. ${(e as Error)?.message || e}`);
+        setError(`Could not load timetable. ${(e as Error)?.message || e}`);
       } finally {
         setLoading(false);
       }
@@ -439,7 +459,7 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
       {!printMode && (
         <div className="mb-6 rounded-2xl border bg-white p-5 shadow-sm" style={{ borderColor: '#ececf4' }}>
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="font-semibold text-hughes-blue">{studentName || 'Estudiante'}</span>
+            <span className="font-semibold text-hughes-blue">{studentName || 'Student'}</span>
             {sectionName && (
               <span
                 className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
@@ -455,7 +475,7 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
 
       {loading && (
         <div className="rounded-xl border p-6 text-center text-hughes-blue bg-white" style={{ borderColor: '#ececf4' }}>
-          Cargando…
+          Loading…
         </div>
       )}
       {!loading && error && (
@@ -467,18 +487,23 @@ function AcademicGrid({ printMode = false }: { printMode?: boolean }) {
       {!loading && !error && (
         <div className="overflow-x-auto rounded-2xl border bg-white shadow-sm">
           <table className="w-full min-w-[920px] border-collapse text-sm print-table">
-            <thead>
-              <tr className="bg-slate-100 text-hughes-blue">
-                <th className="border-b border-slate-200 p-2 text-left w-[160px]">Hora</th>
-                <th className="border-b border-slate-200 p-2 text-center w-[64px]">Min</th>
-                <th className="border-b border-slate-200 p-2 text-center w-[76px]">Periodo</th>
-                {DAYS.map(d => (
-                  <th key={d} className="border-b border-slate-200 p-2 text-left">
-                    {DAY_ES[d]}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+          <thead>
+  <tr className="bg-slate-100 text-hughes-blue">
+    <th className="border-b border-slate-200 p-2 text-left w-[160px]">Time</th>
+    <th className="border-b border-slate-200 p-2 text-center w-[64px]">Min</th>
+    <th className="border-b border-slate-200 p-2 text-center w-[76px]">Period</th>
+    
+    {/* AQUÍ ESTÁ EL CAMBIO: Agregamos w-[14%] para forzar igualdad */}
+    {DAYS.map(d => (
+      <th 
+        key={d} 
+        className="border-b border-slate-200 p-2 text-left w-[14%]" 
+      >
+        {DAY_LABELS[d]}
+      </th>
+    ))}
+  </tr>
+</thead>
             <tbody>
               {slots.map((slot, idx) => {
                 const start = hhmm(slot.startTime);
@@ -536,7 +561,7 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
       setLoading(true); setError(null);
       try {
         const studentRow = await fetchStudentMe();
-        if (!studentRow) { setError('No se encontró sesión del estudiante.'); setLoading(false); return; }
+        if (!studentRow) { setError('No student session found.'); setLoading(false); return; }
         const sb = body(studentRow);
         setStudentName([sb.firstName, sb.lastName].filter(Boolean).join(' '));
 
@@ -544,7 +569,7 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
         const agBody = agRel ? body(agRel) : null;
         const groupId = (agRel as AnyObj)?.id ?? (agRel as AnyObj)?.documentId ?? null;
         setGroupName((agBody as AnyObj)?.name || '');
-        if (!groupId) { setError('El estudiante no tiene grupo artístico asignado.'); setLoading(false); return; }
+        if (!groupId) { setError('The student has no assigned art group.'); setLoading(false); return; }
 
         const entries = await fetchArtTimetableByGroupId(Number(groupId));
         const { slots: s, grid: g } = buildSlotsAndGrid(entries);
@@ -571,7 +596,7 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
 
         setSlots(s); setGrid(g);
       } catch (e: unknown) {
-        setError(`No se pudo cargar el horario artístico. ${(e as Error)?.message || e}`);
+        setError(`Could not load art timetable. ${(e as Error)?.message || e}`);
       } finally {
         setLoading(false);
       }
@@ -584,7 +609,7 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
       {!printMode && (
         <div className="mb-6 rounded-2xl border bg-white p-5 shadow-sm" style={{ borderColor: '#ececf4' }}>
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="font-semibold text-hughes-blue">{studentName || 'Estudiante'}</span>
+            <span className="font-semibold text-hughes-blue">{studentName || 'Student'}</span>
             {groupName && (
               <span
                 className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[12px] font-semibold"
@@ -600,7 +625,7 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
 
       {loading && (
         <div className="rounded-xl border p-6 text-center text-hughes-blue bg-white" style={{ borderColor: '#ececf4' }}>
-          Cargando…
+          Loading…
         </div>
       )}
       {!loading && error && (
@@ -613,17 +638,22 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
         <div className="overflow-x-auto rounded-2xl border bg-white shadow-sm">
           <table className="w-full min-w-[920px] border-collapse text-sm print-table">
             <thead>
-              <tr className="bg-slate-100 text-hughes-blue">
-                <th className="border-b border-slate-200 p-2 text-left w-[160px]">Hora</th>
-                <th className="border-b border-slate-200 p-2 text-center w-[64px]">Min</th>
-                <th className="border-b border-slate-200 p-2 text-center w-[76px]">Periodo</th>
-                {DAYS.map(d => (
-                  <th key={d} className="border-b border-slate-200 p-2 text-left">
-                    {DAY_ES[d]}
-                  </th>
-                ))}
-              </tr>
-            </thead>
+  <tr className="bg-slate-100 text-hughes-blue">
+                <th className="border-b border-slate-200 p-2 text-left w-[160px]">Time</th>
+    <th className="border-b border-slate-200 p-2 text-center w-[64px]">Min</th>
+                <th className="border-b border-slate-200 p-2 text-center w-[76px]">Period</th>
+    
+    {/* AQUÍ ESTÁ EL CAMBIO: Agregamos w-[14%] para forzar igualdad */}
+    {DAYS.map(d => (
+      <th 
+        key={d} 
+        className="border-b border-slate-200 p-2 text-left w-[14%]" 
+      >
+                    {DAY_LABELS[d]}
+      </th>
+    ))}
+  </tr>
+</thead>
             <tbody>
               {slots.map((slot, idx) => {
                 const start = hhmm(slot.startTime);

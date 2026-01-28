@@ -224,7 +224,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
   const current = slides[index] ?? null;
 
   return (
-    <section className="w-full py-14 section-gradient">
+    <section className="w-full py-14 section-gradient-softly">
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>

@@ -76,11 +76,12 @@ const TIPO_COLORS: Record<
   string,
   { bg: string; text: string; border: string; soft: string }
 > = {
-  Academic: { bg: "#cde36a", text: "#0b1229", border: "#b4cc55", soft: "rgba(205,227,106,0.12)" },
+  Academic: { bg: "#223a5e", text: "#ffffff", border: "#1a2d47", soft: "rgba(34,58,94,0.12)" },
   Administrative: { bg: "#ffd966", text: "#0b1229", border: "#f2c84f", soft: "rgba(255,217,102,0.12)" },
   Holiday: { bg: "#ff4b4b", text: "#ffffff", border: "#e14444", soft: "rgba(255,75,75,0.10)" },
   Dance: { bg: "#22c1f1", text: "#0b1229", border: "#16a7d3", soft: "rgba(34,193,241,0.12)" },
   Music: { bg: "#f2f542", text: "#0b1229", border: "#dbde34", soft: "rgba(242,245,66,0.12)" },
+  Theater: { bg: "#ff8c00", text: "#0b1229", border: "#e67e00", soft: "rgba(255,140,0,0.12)" },
   Trimester: { bg: "#5dd39e", text: "#0b1229", border: "#49bb8a", soft: "rgba(93,211,158,0.12)" },
   Other: { bg: "#cfcfd9", text: "#0b1229", border: "#bdbdc9", soft: "rgba(207,207,217,0.12)" },
 };
@@ -468,9 +469,9 @@ function MonthView({
                           <span
                             className="inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold shrink-0"
                             style={{
-                              background: "rgba(255,255,255,0.9)",
-                              color: c.text,
-                              border: `1px solid ${c.border}`,
+                              background: c.text === "#ffffff" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.9)",
+                              color: c.text === "#ffffff" ? "#ffffff" : c.text,
+                              border: `1px solid ${c.text === "#ffffff" ? "rgba(255,255,255,0.3)" : c.border}`,
                             }}
                           >
                             {ev.tipo ?? "Other"}

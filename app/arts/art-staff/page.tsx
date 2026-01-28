@@ -253,10 +253,10 @@ export default function ArtStaffPage() {
   }, [filtered, page]);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f9f9fb" }}>
+    <main className="min-h-screen section-gradient-strong">
       <Header title="Performing Arts Staff" subtitle="Meet our arts teachers and coordinators." />
 
-      <section className="section-gradient-strong">
+      <section className="pb-16">
         <div className="mx-auto max-w-7xl px-4">
           {/* Controls */}
           <div className="mb-8 flex items-center justify-end gap-2">

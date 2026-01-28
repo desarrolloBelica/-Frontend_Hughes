@@ -278,10 +278,10 @@ export default function AdministrativeStaffPage() {
   }, [filtered, page]);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f9f9fb" }}>
+    <main className="min-h-screen section-gradient-strong">
       <Header title="Administrative Staff" subtitle="Meet our academic coordinators." />
 
-      <section className="pb-16" style={{ background: "#f9f9fb" }}>
+      <section className="pb-16">
         <div className="mx-auto max-w-7xl px-4">
           {/* Search */}
           <div className="mb-8 flex items-center justify-end">

@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { cache } from "react";
+import OpinionsSection from "../../components/opinions/OpinionsSection";
 
 const HS_YELLOW = "var(--hs-yellow)";
 const HS_BLUE = "var(--hs-blue)";
+const HS_NAVY = "var(--hs-bluenavy)";
+const HS_BLUE_MEDIUM = "var(--hs-blue-medium)";
 
 const missionPoints = [
 	"Celebrate the accomplishments of our graduates",
@@ -31,7 +34,7 @@ type SpotlightV5 = {
 	profession?: string;
 	graduationYear?: string; // date string
 	artisticPath?: string;
-	accomplishments?: string;
+	biography?: string;
 	hughesImpact?: string;
 	messageForStudents?: string;
 	approved?: boolean;
@@ -73,19 +76,71 @@ const fetchLatestSpotlight = cache(async (): Promise<Spotlight | null> => {
 	}
 });
 
+type Opinion = {
+	id: number | string;
+	rateStars?: number;
+	comment?: string;
+	approved?: boolean;
+	createdAt?: string;
+};
+
+type OpinionV4 = {
+	id: number | string;
+	attributes?: Opinion;
+};
+
+function oAttr<T = unknown>(row: Opinion | OpinionV4, key: keyof Opinion): T | undefined {
+	const root = row as Record<string, unknown>;
+	if (root[key as string] !== undefined) return root[key as string] as T; // v5
+	const attrs = (row as OpinionV4).attributes as Record<string, unknown> | undefined; // v4
+	if (attrs && attrs[key as string] !== undefined) return attrs[key as string] as T;
+	return undefined;
+}
+
+const fetchOpinionsSummary = cache(async (): Promise<{ average: number; count: number }> => {
+	try {
+		const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+		const qs = new URLSearchParams();
+		qs.set("filters[approved][$eq]", "true");
+		qs.set("pagination[page]", "1");
+		qs.set("pagination[pageSize]", "200");
+		qs.set("sort[0]", "createdAt:desc");
+		const res = await fetch(`${base}/api/opinions?${qs.toString()}`, { cache: "no-store" });
+		if (!res.ok) return { average: 0, count: 0 };
+		const json: unknown = await res.json();
+		const rows = Array.isArray(json)
+			? (json as Opinion[])
+			: ((json as { data?: Opinion[] }).data ?? []);
+		const approved = rows.filter((row) => Boolean(oAttr<boolean>(row, "approved")));
+		const count = approved.length;
+		if (!count) return { average: 0, count: 0 };
+		const sum = approved.reduce((acc, row) => acc + Number(oAttr<number>(row, "rateStars") ?? 0), 0);
+		return { average: Number((sum / count).toFixed(1)), count };
+	} catch {
+		return { average: 0, count: 0 };
+	}
+});
+
 export default async function AlumniPage() {
+	const opinionSummary = await fetchOpinionsSummary();
 	const latest = await fetchLatestSpotlight();
 	return (
 		<main className="min-h-screen bg-white text-hughes-blue">
 			<Hero />
 
-			<section className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12 md:py-16">
-				<IntroBlock />
+			<section className="mx-auto flex max-w-6xl flex-col gap-12 px-6 py-14 md:py-18">
+				<Pillars />
 				<NetworkBlock />
 				<SpotlightHero spotlight={latest} />
 				<SuccessStories />
+				<EngageGrid />
 				<DirectorsMessage />
 				<ClosingStatement />
+				<OpinionsSection
+					initialAverage={opinionSummary.average}
+					initialCount={opinionSummary.count}
+					backendBase={process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337"}
+				/>
 			</section>
 		</main>
 	);
@@ -93,25 +148,31 @@ export default async function AlumniPage() {
 
 function Hero() {
 	return (
-		<section className="relative overflow-hidden bg-[#0b1220] text-white">
-			<div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,187,0,0.12),transparent_40%),radial-gradient(circle_at_80%_30%,rgba(255,187,0,0.08),transparent_38%),linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0))]" />
-			<div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-16 md:py-20 relative">
-				<div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold tracking-[0.18em] uppercase">
+		<section className="relative overflow-hidden" style={{ background: `linear-gradient(120deg, ${HS_NAVY} 0%, ${HS_BLUE} 55%, ${HS_BLUE_MEDIUM} 100%)` }}>
+			<div className="absolute inset-0 opacity-60" style={{ background: "radial-gradient(80rem 40rem at 15% 10%, rgba(255,187,0,0.18), transparent 50%), radial-gradient(60rem 30rem at 90% 20%, rgba(255,187,0,0.12), transparent 55%)" }} />
+			<div className="mx-auto flex max-w-6xl flex-col gap-7 px-6 py-16 md:py-20 relative text-white">
+				<div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-xs font-semibold tracking-[0.18em] uppercase">
 					Hughes Schools Alumni
 				</div>
 				<h1 className="text-4xl font-extrabold leading-tight md:text-5xl">
-					Welcome, Hughes Schools Alumni
+					Once a Hughes student, always family.
 				</h1>
 				<p className="max-w-3xl text-base text-white/85 md:text-lg">
-					Our alumni are the living legacy of Hughes Schools. They are creators, innovators, scholars, performers, and global citizens who carry forward the values of excellence, discipline, creativity, and community. Whether they pursued the arts, sciences, education, technology, business, or public service, our alumni continue to make an impact in Bolivia and around the world.
+					Creators, innovators, scholars, performers, and global citizens who carry forward our values of excellence, discipline, creativity, and community across Bolivia and the world.
 				</p>
-				<p className="max-w-3xl text-base text-white/80 md:text-lg">
-					At Hughes Schools, we are proud to see our graduates thrive in universities, artistic programs, and professional fields—representing the spirit and commitment that define our institution. Once a Hughes student, always a member of the Hughes family.
-				</p>
-				<div className="h-px w-full bg-white/15" />
-				<div className="grid gap-4 text-base md:grid-cols-2 md:text-base lg:grid-cols-4">
+				<div className="flex flex-wrap items-center gap-3">
+					<Link href="/alumni/spotlights" className="btn-hs-primary" aria-label="See all alumni spotlights">
+						See Alumni Spotlights
+					</Link>
+					<Link href="/alumni/spotlights/submit" className="btn-hs-secondary" aria-label="Submit your alumni spotlight">
+						Share Your Story
+					</Link>
+				</div>
+				<div className="grid gap-4 text-base md:grid-cols-2 lg:grid-cols-4">
 					<StatCard title="Global Impact" body="Alumni thriving across Bolivia, Latin America, North America, and Europe." />
 					<StatCard title="Disciplines" body="Arts, science, education, business, technology, and public service." />
+					<StatCard title="Mentorship" body="Graduates guiding students through careers, university access, and arts programs." />
+					<StatCard title="Legacy" body="Traditions of respect, rigor, creativity, and community since Hughes Schools began." />
 				</div>
 			</div>
 		</section>
@@ -120,31 +181,52 @@ function Hero() {
 
 function StatCard({ title, body }: { title: string; body: string }) {
 	return (
-		<div className="rounded-2xl border border-white/15 bg-white/05 p-4 backdrop-blur">
+		<div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur">
 			<h3 className="text-white font-semibold">{title}</h3>
-			<p className="mt-1 text-white/80 text-sm">{body}</p>
+			<p className="mt-1 text-white/85 text-sm leading-relaxed">{body}</p>
 		</div>
 	);
 }
 
-function Separator() {
-	return <div className="h-px w-full bg-[#e8ebf3]" />;
-}
-
-function IntroBlock() {
+function Pillars() {
 	return (
-		<div className="space-y-4">
-			<h2 className="text-2xl font-bold md:text-3xl" style={{ color: HS_BLUE }}>
-				Alumni Network & Community
-			</h2>
-			<p className="text-hughes-blue/80 leading-relaxed">
-				The Hughes Schools Alumni Network connects former students with one another and with current generations of Hughes students. Through this community, alumni receive updates, invitations, and opportunities to participate in school events, mentorships, collaborations, and outreach projects.
-			</p>
-			<p className="text-hughes-blue/80 leading-relaxed">
-				Our alumni continue to contribute to the growth of our school community, sharing their experiences, supporting student aspirations, and modeling leadership rooted in respect and integrity.
-			</p>
+		<div className="grid gap-6 rounded-3xl border border-[#e6e8f2] bg-[#f9fafc] p-6 shadow-sm md:grid-cols-3">
+			<div className="space-y-2">
+				<h2 className="text-2xl font-bold md:text-3xl" style={{ color: HS_BLUE }}>
+					Alumni Network & Community
+				</h2>
+				<p className="text-hughes-blue/80 leading-relaxed">
+					Connect with fellow graduates, current students, and faculty to mentor, collaborate, and create new opportunities.
+				</p>
+			</div>
+			<div className="space-y-3">
+				<h4 className="text-sm font-semibold uppercase tracking-wide text-hughes-blue/70">What moves us</h4>
+				<ul className="space-y-2 text-hughes-blue/85">
+					<li className="flex gap-2"><Dot /> Global citizenship with local roots</li>
+					<li className="flex gap-2"><Dot /> Excellence in arts, sciences, and leadership</li>
+					<li className="flex gap-2"><Dot /> Service, mentorship, and community impact</li>
+				</ul>
+			</div>
+			<div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+				<CtaCard
+					title="Share your spotlight"
+					description="Tell your story to inspire students and fellow alumni."
+					href="/alumni/spotlights/submit"
+					label="Submit now"
+				/>
+				<CtaCard
+					title="Explore stories"
+					description="See how Hughes alumni are shaping their fields."
+					href="/alumni/spotlights"
+					label="View spotlights"
+				/>
+			</div>
 		</div>
 	);
+}
+
+function Dot() {
+	return <span className="mt-2 inline-block h-2 w-2 rounded-full" style={{ background: HS_YELLOW }} />;
 }
 
 function NetworkBlock() {
@@ -167,7 +249,6 @@ function NetworkBlock() {
 		</div>
 	);
 }
-
 
 
 function CtaCard({ title, description, href, label }: { title: string; description: string; href: string; label: string }) {
@@ -200,24 +281,26 @@ function SpotlightHero({ spotlight }: { spotlight: Spotlight | null }) {
 	const grad = spotlight ? (sAttr<string>(spotlight, "graduationYear") ?? "") : "";
 	const year = grad ? new Date(grad).getFullYear() : undefined;
 	const artisticPath = spotlight ? (sAttr<string>(spotlight, "artisticPath") ?? "") : "";
-	const accomplishments = spotlight ? (sAttr<string>(spotlight, "accomplishments") ?? "") : "";
+	const biography = spotlight ? (sAttr<string>(spotlight, "biography") ?? "") : "";
 	const impact = spotlight ? (sAttr<string>(spotlight, "hughesImpact") ?? "") : "";
 	const message = spotlight ? (sAttr<string>(spotlight, "messageForStudents") ?? "") : "";
 	const docId = spotlight ? (sAttr<string>(spotlight, "documentId") ?? String((spotlight as { id?: unknown }).id ?? "")) : "";
 
 	return (
-		<section className="rounded-3xl border border-[#e6e8f2] bg-[#0b1220] px-6 py-10 text-white shadow-sm">
+		<section className="rounded-3xl border border-[#e6e8f2] bg-gradient-to-br from-[#0b1220] via-[#13203a] to-[#0b1220] px-6 py-10 text-white shadow-sm">
 			<div className="flex items-center justify-between gap-4 flex-wrap">
-				<h3 className="text-2xl font-bold">{title}</h3>
+				<div>
+					<h3 className="text-2xl font-bold">{title}</h3>
+					<p className="mt-2 text-white/80 max-w-2xl">{paragraph}</p>
+				</div>
 				<div className="flex items-center gap-3">
-					<Link href="/alumni/spotlights/submit" className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15">Submit your spotlight →</Link>
-					<Link href="/alumni/spotlights" className="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold" style={{ borderColor: "#e6e8f2", color: "white" }}>See all spotlights →</Link>
+					<Link href="/alumni/spotlights/submit" className="inline-flex items-center rounded-full bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15">Submit spotlight →</Link>
+					<Link href="/alumni/spotlights" className="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold" style={{ borderColor: "#e6e8f2", color: "white" }}>View all →</Link>
 				</div>
 			</div>
-			<p className="mt-3 text-white/85 max-w-3xl">{paragraph}</p>
-			<div className="mt-5 inline-flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold">
+			<div className="mt-4 inline-flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold">
 				<span className="h-2 w-2 rounded-full" style={{ background: HS_YELLOW }} />
-				Once a Hughes student, always family.
+				We rise higher together.
 			</div>
 
 			{spotlight && (
@@ -225,41 +308,41 @@ function SpotlightHero({ spotlight }: { spotlight: Spotlight | null }) {
 					<div className="rounded-2xl bg-white/05 border border-white/15 text-white p-6">
 						<div className="flex items-center justify-between gap-4 flex-wrap">
 							<div>
-								<div className="text-sm font-semibold tracking-widest uppercase text-white/80">Latest Spotlight</div>
+								<div className="text-sm font-semibold tracking-widest uppercase text-white/75">Latest Spotlight</div>
 								<h4 className="mt-2 text-2xl font-bold">{fullName}{year ? ` · ${year}` : ""}</h4>
 								<p className="mt-2 text-white/80 text-sm">{[city, university, profession].filter(Boolean).join(" · ")}</p>
 							</div>
+							<Link href={`/alumni/spotlights/${encodeURIComponent(docId)}`} className="text-sm font-semibold underline hover:text-hughes-yellow">
+								Read spotlight
+							</Link>
 						</div>
 					</div>
 					<div className="grid gap-4 md:grid-cols-2">
 						{artisticPath && (
-							<div className="rounded-xl bg-white/05 border border-white/15 p-4 text-white">
-								<div className="text-xs font-semibold uppercase tracking-wider text-white/70">Career or Artistic Path</div>
-								<div className="mt-2 text-white/90 whitespace-pre-line">{artisticPath}</div>
-							</div>
+							<InfoCard label="Career or Artistic Path" value={artisticPath} />
 						)}
-						{accomplishments && (
-							<div className="rounded-xl bg-white/05 border border-white/15 p-4 text-white">
-								<div className="text-xs font-semibold uppercase tracking-wider text-white/70">Proud Accomplishments</div>
-								<div className="mt-2 text-white/90 whitespace-pre-line">{accomplishments}</div>
-							</div>
+						{biography && (
+							<InfoCard label="Biography" value={biography} />
 						)}
 						{impact && (
-							<div className="rounded-xl bg-white/05 border border-white/15 p-4 text-white">
-								<div className="text-xs font-semibold uppercase tracking-wider text-white/70">How Hughes Schools Impacted Me</div>
-								<div className="mt-2 text-white/90 whitespace-pre-line">{impact}</div>
-							</div>
+							<InfoCard label="How Hughes Impacted Me" value={impact} />
 						)}
 						{message && (
-							<div className="rounded-xl bg-white/05 border border-white/15 p-4 text-white">
-								<div className="text-xs font-semibold uppercase tracking-wider text-white/70">Message for Current Students</div>
-								<div className="mt-2 text-white/90 whitespace-pre-line">{message}</div>
-							</div>
+							<InfoCard label="Message for Students" value={message} />
 						)}
 					</div>
 				</div>
 			)}
 		</section>
+	);
+}
+
+function InfoCard({ label, value }: { label: string; value: string }) {
+	return (
+		<div className="rounded-xl bg-white/05 border border-white/15 p-4 text-white">
+			<div className="text-xs font-semibold uppercase tracking-wider text-white/70">{label}</div>
+			<div className="mt-2 text-white/90 whitespace-pre-line leading-relaxed">{value}</div>
+		</div>
 	);
 }
 
@@ -284,6 +367,46 @@ function SuccessStories() {
 			<p className="text-sm text-hughes-blue/70">
 				Their success is a reflection of the strong foundation built at Hughes Schools.
 			</p>
+		</div>
+	);
+}
+
+function EngageGrid() {
+	return (
+		<div className="grid gap-4 md:grid-cols-3">
+			<EngageCard
+				title="Mentor a student"
+				description="Offer guidance on careers, auditions, portfolios, or university access."
+				action="Become a mentor"
+				href="/contact"
+			/>
+			<EngageCard
+				title="Host a talk"
+				description="Share your journey in arts, science, business, tech, or public service."
+				action="Schedule a session"
+				href="/events"
+			/>
+			<EngageCard
+				title="Support initiatives"
+				description="Back scholarships, cultural exchanges, and community projects."
+				action="Explore ways to help"
+				href="/donation"
+			/>
+		</div>
+	);
+}
+
+function EngageCard({ title, description, action, href }: { title: string; description: string; action: string; href: string }) {
+	return (
+		<div className="rounded-2xl border border-[#e6e8f2] bg-white p-5 shadow-sm">
+			<h4 className="text-lg font-semibold" style={{ color: HS_BLUE }}>
+				{title}
+			</h4>
+			<p className="mt-2 text-sm text-hughes-blue/80 leading-relaxed">{description}</p>
+			<Link href={href} className="mt-3 inline-flex items-center gap-2 text-sm font-semibold" style={{ color: HS_BLUE }}>
+				{action}
+				<span aria-hidden className="text-[#9aa4b5]">→</span>
+			</Link>
 		</div>
 	);
 }

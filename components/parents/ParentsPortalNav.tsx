@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Calendar, Home, FileText, Users } from "lucide-react";
+import { Calendar, Home, FileText, Users, CalendarDays } from "lucide-react";
 import { LogoutButton } from "@/components/parents/LogoutButton";
 
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
@@ -11,6 +11,7 @@ const links = [
   { href: "/help-center", label: "Inicio", icon: Home },
   { href: "/help-center/timetables", label: "Horarios", icon: Calendar },
   { href: "/help-center/forms", label: "Formularios", icon: FileText },
+  { href: "/events/calendar", label: "See Events", icon: CalendarDays },
 ];
 
 export default function ParentsPortalNav() {

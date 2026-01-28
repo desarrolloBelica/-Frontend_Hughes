@@ -9,6 +9,17 @@ import { StudentLogoutButton } from '@/components/parents/LogoutButton';
 
 const API = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:1337';
 
+/* ───────── Sesión de estudiante ───────── */
+function getStudentFromStorage(): { email?: string; tokenU?: string } | null {
+  try {
+    const raw = localStorage.getItem('hs_student_session');
+    if (!raw) return null;
+    return JSON.parse(raw) as { email?: string; tokenU?: string };
+  } catch {
+    return null;
+  }
+}
+
 /* ───────── Helpers v4/v5 ───────── */
 type URec = Record<string, unknown>;
 type AnyObj = Record<string, any>;
@@ -82,15 +93,14 @@ export default function LibraryPage() {
 
   // filtros
   const [q, setQ] = React.useState('');
-  const [gradeId, setGradeId] = React.useState<string>('');
   const [subjectId, setSubjectId] = React.useState<string>('');
   // const [sectionId, setSectionId] = React.useState<string>(''); // si luego quieres filtrar por sección
 
   // datos
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [studentGrade, setStudentGrade] = React.useState<{ id: string; name: string } | null>(null);
   const [items, setItems] = React.useState<URec[]>([]);
-  const [grades, setGrades] = React.useState<Array<{ id: string; name: string }>>([]);
   const [subjects, setSubjects] = React.useState<Array<{ id: string; name: string }>>([]);
   // const [sections, setSections] = React.useState<Array<{ id: string; name: string }>>([]);
 
@@ -102,39 +112,55 @@ export default function LibraryPage() {
     (async () => {
       setLoading(true); setError(null);
       try {
+        // 1) Obtener grado del estudiante autenticado
+        const sess = getStudentFromStorage();
+        if (!sess?.email) {
+          setError('Student session not found.');
+          setItems([]);
+          return;
+        }
+
+        const qp = new URLSearchParams();
+        qp.set('filters[email][$eq]', sess.email);
+        qp.set('populate[grade]', 'true');
+        qp.set('pagination[pageSize]', '1');
+        const stuUrl = `${API}/api/students?${qp.toString()}`;
+        const stuJson = await fetchJSON(stuUrl, sess.tokenU);
+        const stuList = parseList(stuJson);
+        const stuRow = stuList[0];
+        const gradeRel = stuRow ? relOne(body<any>(stuRow).grade) : null;
+        const gradeId = gradeRel ? String((gradeRel as any).id ?? (gradeRel as any).documentId) : '';
+        const gradeName = gradeRel ? body<any>(gradeRel).name || '' : '';
+        if (!gradeId) {
+          setError('The student has no assigned grade.');
+          setItems([]);
+          return;
+        }
+        setStudentGrade({ id: gradeId, name: gradeName || 'Grade' });
+
+        // 2) Fetch textbooks only for that grade
         const p = new URLSearchParams();
         p.set('populate[file]', 'true');
         p.set('populate[grade]', 'true');
         p.set('populate[section]', 'true');
         p.set('populate[subject]', 'true');
-        p.set('pagination[pageSize]', '200'); // trae lote amplio
+        p.set('filters[grade][id][$eq]', gradeId);
+        p.set('pagination[pageSize]', '200');
         const url = `${API}/api/textbooks?${p.toString()}`;
-        const json = await fetchJSON(url);
+        const json = await fetchJSON(url, sess.tokenU);
         const list = parseList(json);
         setItems(list);
 
-        // construir catálogos desde los propios textbooks
-        const gMap = new Map<string, string>();
+        // build subject catalog from textbooks
         const sMap = new Map<string, string>();
-        // const secMap = new Map<string, string>();
-
         for (const it of list) {
           const b = body<any>(it);
-
-          const g = relOne(b.grade);
-          if (g) gMap.set(String((g as any).id ?? (g as any).documentId), body<any>(g).name ?? '—');
-
           const s = relOne(b.subject);
           if (s) sMap.set(String((s as any).id ?? (s as any).documentId), body<any>(s).name ?? '—');
-
-          // const sec = relOne(b.section);
-          // if (sec) secMap.set(String((sec as any).id ?? (sec as any).documentId), body<any>(sec).name ?? '—');
         }
-        setGrades(Array.from(gMap.entries()).map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name)));
         setSubjects(Array.from(sMap.entries()).map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name)));
-        // setSections(Array.from(secMap.entries()).map(([id, name]) => ({ id, name })).sort((a, b) => a.name.localeCompare(b.name)));
       } catch (e: unknown) {
-        setError((e as Error)?.message || 'Error al cargar el catálogo.');
+        setError((e as Error)?.message || 'Could not load the catalog.');
       } finally {
         setLoading(false);
       }
@@ -145,13 +171,16 @@ export default function LibraryPage() {
   const filtered = React.useMemo(() => {
     let out = items.slice();
 
-    if (gradeId) {
+    if (studentGrade?.id) {
       out = out.filter(it => {
         const b = body<any>(it);
         const g = relOne(b.grade);
         const id = g ? String((g as any).id ?? (g as any).documentId) : '';
-        return id === gradeId;
+        return id === studentGrade.id;
       });
+    } else {
+      // If no grade, show nothing
+      return [];
     }
 
     if (subjectId) {
@@ -182,24 +211,24 @@ export default function LibraryPage() {
       });
     }
     return out;
-  }, [items, gradeId, subjectId, q]);
+  }, [items, studentGrade, subjectId, q]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize);
-  React.useEffect(() => { setPage(1); }, [q, gradeId, subjectId]);
+  React.useEffect(() => { setPage(1); }, [q, subjectId]);
 
   const onExport = React.useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'instant' as any });
     window.print();
   }, []);
 
-  // Mostrar loader mientras se verifica autenticación
+  // Show loader while auth is being verified
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#f9f9fb' }}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: 'var(--hs-blue)' }} />
-          <p className="text-hughes-blue">Verificando autenticación...</p>
+          <p className="text-hughes-blue">Checking authentication...</p>
         </div>
       </div>
     );
@@ -251,7 +280,7 @@ export default function LibraryPage() {
                 className="inline-flex items-center rounded-xl border px-3 py-2 text-sm font-semibold bg-white hover:bg-slate-50"
                 style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)' }}
               >
-                Volver al portal
+                Back to portal
               </Link>
               
               {/* Separador */}
@@ -263,58 +292,39 @@ export default function LibraryPage() {
           </div>
 
           {/* Filtros */}
-          <div className="mt-6 grid gap-3 sm:grid-cols-3 print-hide">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2 print-hide">
             <div className="sm:col-span-1">
-              <label className="block text-sm font-semibold text-hughes-blue">Buscar</label>
+              <label className="block text-sm font-semibold text-hughes-blue">Search</label>
               <div className="mt-2 flex items-center rounded-xl border bg-white px-3 ring-1 ring-slate-200">
                 <Search size={16} className="text-slate-500" />
                 <input
                   value={q}
                   onChange={(e) => setQ(e.target.value)}
-                  placeholder="Título, autor, materia…"
+                  placeholder="Title, author, subject…"
                   className="ml-2 w-full py-2 outline-none"
                 />
               </div>
             </div>
 
             <div className="sm:col-span-1">
-              <label className="block text-sm font-semibold text-hughes-blue">Grado</label>
-              <select
-                value={gradeId}
-                onChange={(e) => setGradeId(e.target.value)}
-                className="mt-2 w-full rounded-xl border bg-white px-3 py-2 ring-1 ring-slate-200"
-              >
-                <option value="">Todos</option>
-                {grades.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
-              </select>
-            </div>
-
-            <div className="sm:col-span-1">
-              <label className="block text-sm font-semibold text-hughes-blue">Asignatura</label>
+              <label className="block text-sm font-semibold text-hughes-blue">Subject</label>
               <select
                 value={subjectId}
                 onChange={(e) => setSubjectId(e.target.value)}
                 className="mt-2 w-full rounded-xl border bg-white px-3 py-2 ring-1 ring-slate-200"
               >
-                <option value="">Todas</option>
+                <option value="">All</option>
                 {subjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
             </div>
 
-            {/* Si luego quieres por sección:
-            <div className="sm:col-span-1">
-              <label className="block text-sm font-semibold text-hughes-blue">Sección</label>
-              <select value={sectionId} onChange={(e)=>setSectionId(e.target.value)} className="mt-2 w-full rounded-xl border bg-white px-3 py-2 ring-1 ring-slate-200">
-                <option value="">Todas</option>
-                {sections.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-              </select>
-            </div> */}
+            {/* Si luego quieres por sección: ... */}
           </div>
 
           {/* Estados */}
           {loading && (
             <div className="mt-6 rounded-2xl border bg-white p-6 text-center text-hughes-blue shadow-sm" style={{ borderColor: '#ececf4' }}>
-              Cargando catálogo…
+              Loading catalog…
             </div>
           )}
           {!loading && error && (
@@ -327,9 +337,9 @@ export default function LibraryPage() {
           {!loading && !error && (
             <>
               <div className="mt-4 text-sm text-hughes-blue/70">
-                {filtered.length} libro{filtered.length === 1 ? '' : 's'} encontrado{filtered.length === 1 ? '' : 's'}
-                {gradeId && <> • Grado: <span className="font-semibold">{grades.find(g => g.id === gradeId)?.name}</span></>}
-                {subjectId && <> • Asignatura: <span className="font-semibold">{subjects.find(s => s.id === subjectId)?.name}</span></>}
+                {filtered.length} book{filtered.length === 1 ? '' : 's'} found
+                {studentGrade && <> • Grade: <span className="font-semibold">{studentGrade.name}</span></>}
+                {subjectId && <> • Subject: <span className="font-semibold">{subjects.find(s => s.id === subjectId)?.name}</span></>}
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
@@ -393,7 +403,7 @@ export default function LibraryPage() {
                               className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold hover:bg-slate-50"
                               style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)' }}
                             >
-                              <ExternalLink size={14} /> Ver recurso
+                              <ExternalLink size={14} /> View resource
                             </a>
                           )}
                           {fileUrl && (
@@ -403,7 +413,7 @@ export default function LibraryPage() {
                               style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)' }}
                               download
                             >
-                              <Download size={14} /> Descargar
+                              <Download size={14} /> Download
                             </a>
                           )}
                         </div>
@@ -422,16 +432,16 @@ export default function LibraryPage() {
                     className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
                     style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)', background: 'white' }}
                   >
-                    Anterior
+                    Previous
                   </button>
-                  <span className="text-sm text-hughes-blue/80">Página {page} de {totalPages}</span>
+                  <span className="text-sm text-hughes-blue/80">Page {page} of {totalPages}</span>
                   <button
                     disabled={page >= totalPages}
                     onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     className="rounded-md border px-3 py-1 text-sm disabled:opacity-50"
                     style={{ borderColor: '#e2e8f0', color: 'var(--hs-blue)', background: 'white' }}
                   >
-                    Siguiente
+                    Next
                   </button>
                 </div>
               )}

@@ -25,7 +25,7 @@ export function LogoutButton() {
       // 3. Redirigir al login
       router.push('/parents/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error signing out:', error);
       // Aún así redirigir
       router.push('/parents/login');
     } finally {
@@ -40,7 +40,7 @@ export function LogoutButton() {
       className="rounded-full border px-4 py-2 text-sm font-semibold transition hover:bg-gray-100 disabled:opacity-50"
       style={{ borderColor: 'var(--hs-blue)', color: 'var(--hs-blue)' }}
     >
-      {loading ? 'Cerrando sesión...' : 'Cerrar sesión'}
+      {loading ? 'Signing out...' : 'Sign out'}
     </button>
   );
 }
@@ -62,10 +62,10 @@ export function StudentLogoutButton() {
         localStorage.removeItem('hs_student_session');
       }
 
-      router.push('/student/login');
+      router.push('/academics/login');
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      router.push('/student/login');
+      console.error('Error signing out:', error);
+      router.push('/academics/login');
     } finally {
       setLoading(false);
     }
@@ -78,7 +78,7 @@ export function StudentLogoutButton() {
       className="rounded-full border px-4 py-2 text-sm font-semibold transition hover:bg-gray-100 disabled:opacity-50"
       style={{ borderColor: 'var(--hs-blue)', color: 'var(--hs-blue)' }}
     >
-      {loading ? 'Cerrando sesión...' : 'Cerrar sesión'}
+      {loading ? 'Logging out...' : 'Log out'}
     </button>
   );
 }

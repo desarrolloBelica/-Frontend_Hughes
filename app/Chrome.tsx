@@ -9,6 +9,7 @@ const HIDE_CHROME = new Set<string>([
   '/help-center',
   '/academics/login',
   '/help-center/timetables',
+  '/help-center/forms',
   '/student/help-center',
   '/student/library',     // ← agregar
 ]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   GraduationCap,
@@ -47,7 +47,6 @@ export default function DonationPage() {
       <WhyWeGive />
       <DonationWidget />
       <ImpactStories />
-      <MatchingChallenge />
       <Stewardship />
     </main>
   );
@@ -339,7 +338,9 @@ function DonationWidget() {
             <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
               Donation Amount
             </label>
-            <div className="grid grid-cols-5 gap-3 mb-4">
+            
+            {/* Preset Amounts */}
+            <div className="grid grid-cols-4 gap-3 mb-4">
               {presets.map((preset) => (
                 <button
                   key={preset}
@@ -353,17 +354,41 @@ function DonationWidget() {
                   ${preset}
                 </button>
               ))}
-              <div className="flex items-center gap-2 px-4 rounded-xl bg-gray-50 border-2 border-gray-200">
-                <span className="text-gray-600 font-semibold">$</span>
+            </div>
+
+            {/* Custom Amount Input */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-2 text-gray-600">
+                Or enter a custom amount
+              </label>
+              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-200 focus-within:border-[var(--hs-blue)] transition-colors">
+                <span className="text-gray-600 font-semibold text-lg">$</span>
                 <input
                   inputMode="numeric"
-                  value={amount}
+                  value={presets.includes(amount) ? "" : amount}
                   onChange={(e) => setAmount(formatAmount(e.target.value))}
-                  className="w-full bg-transparent outline-none font-semibold"
+                  className="w-full bg-transparent outline-none font-semibold text-lg"
                   style={{ color: BRAND.blue }}
                   placeholder="Other"
                 />
               </div>
+            </div>
+
+            {/* Total Display */}
+            <div className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-[var(--hs-blue)]">
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-medium text-gray-700">
+                  Your {frequency === "monthly" ? "Monthly" : "One-Time"} Donation:
+                </span>
+                <span className="text-3xl font-bold" style={{ color: BRAND.blue }}>
+                  ${Number(amount || 0).toLocaleString()}
+                </span>
+              </div>
+              {frequency === "monthly" && (
+                <p className="text-sm text-gray-600 mt-2">
+                  Annual impact: ${(Number(amount || 0) * 12).toLocaleString()}
+                </p>
+              )}
             </div>
           </div>
 
@@ -495,26 +520,63 @@ function DonationWidget() {
 
 // Impact Stories
 function ImpactStories() {
-  const stories = [
-    {
-      name: "María González",
-      role: "Class of 2024",
-      quote: "Thanks to Hughes help, I'll apply to university in the U.S. and pursue my dream of studying engineering.",
-      image: "/38.JPG",
-    },
-    {
-      name: "Prof. Carlos Mendoza",
-      role: "Science Teacher",
-      quote: "Your gift helped me attend a training workshop abroad, bringing cutting-edge techniques back to our students.",
-      image: "/38.JPG",
-    },
-    {
-      name: "Ana Rodríguez",
-      role: "Class of 2023",
-      quote: "The travel fund made it possible for me to visit universities and find the perfect fit for my future.",
-      image: "/38.JPG",
-    },
-  ];
+  const [stories, setStories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+        
+        const attempts = [
+          `${base}/api/donation-stories?populate[representativeImages]=*&populate[student]=*&pagination[pageSize]=3&sort[0]=testimonialDate:desc`,
+          `${base}/api/donation-stories?populate[representativeImages]=true&populate[student]=true&pagination[pageSize]=3`,
+          `${base}/api/donation-stories?populate=*&pagination[pageSize]=3`,
+          `${base}/api/donation-stories?pagination[pageSize]=3`,
+        ];
+
+        let data = null;
+        for (const url of attempts) {
+          try {
+            const res = await fetch(url);
+            if (!res.ok) continue;
+            const json = await res.json();
+            data = Array.isArray(json) ? json : (json.data ?? []);
+            if (data) break;
+          } catch {
+            continue;
+          }
+        }
+
+        if (data) {
+          setStories(data.slice(0, 3));
+        }
+      } catch (err) {
+        console.error("Failed to load donation stories:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    load();
+  }, []);
+
+  function getImageUrl(story: any): string {
+    const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+    const images = story.representativeImages?.data ?? story.representativeImages ?? [];
+    const first = Array.isArray(images) ? images[0] : images;
+    if (!first) return "/38.JPG";
+    const url = first.url ?? first.attributes?.url;
+    if (!url) return "/38.JPG";
+    return url.startsWith("http") ? url : `${base}${url}`;
+  }
+
+  function getStudentName(story: any): string {
+    const student = story.student?.data ?? story.student;
+    if (!student) return "Anonymous";
+    const firstName = student.firstName ?? student.attributes?.firstName ?? "";
+    const lastName = student.lastName ?? student.attributes?.lastName ?? "";
+    return `${firstName} ${lastName}`.trim() || "Anonymous";
+  }
 
   return (
     <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
@@ -528,84 +590,70 @@ function ImpactStories() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {stories.map((story, i) => (
-            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-              <div className="relative h-64">
-                <Image
-                  src={story.image}
-                  alt={story.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-6">
-                <blockquote className="text-gray-700 italic mb-4">
-                  &quot;{story.quote}&quot;
-                </blockquote>
-                <div>
-                  <div className="font-bold" style={{ color: BRAND.blue }}>
-                    {story.name}
-                  </div>
-                  <div className="text-sm text-gray-600">{story.role}</div>
+        {loading ? (
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
+                <div className="h-64 bg-gray-200" />
+                <div className="p-6">
+                  <div className="h-20 bg-gray-200 rounded mb-4" />
+                  <div className="h-4 bg-gray-200 rounded mb-2" />
+                  <div className="h-4 bg-gray-200 rounded w-2/3" />
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : stories.length === 0 ? (
+          <p className="text-center text-gray-600">No stories available yet.</p>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8">
+            {stories.map((story) => {
+              const docId = story.documentId ?? story.id;
+              const title = story.title ?? "Untitled";
+              const description = story.description ?? "";
+              const studentName = getStudentName(story);
+              const imageUrl = getImageUrl(story);
+
+              return (
+                <div key={docId} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
+                  <div className="relative h-64">
+                    <Image
+                      src={imageUrl}
+                      alt={studentName}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-bold text-lg mb-2" style={{ color: BRAND.blue }}>
+                      {title}
+                    </h3>
+                    <blockquote className="text-gray-700 italic mb-4 line-clamp-3">
+                      &quot;{description}&quot;
+                    </blockquote>
+                    <div>
+                      <div className="font-bold" style={{ color: BRAND.blue }}>
+                        {studentName}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
 
         <div className="text-center mt-8">
-          <button className="text-[var(--hs-blue)] font-semibold hover:underline">
+          <a href="/donation/stories" className="text-[var(--hs-blue)] font-semibold hover:underline">
             Read More Stories →
-          </button>
+          </a>
         </div>
       </div>
     </section>
   );
 }
 
-// Matching Challenge
-function MatchingChallenge() {
-  const currentAmount = 45000;
-  const goalAmount = 100000;
-  const percentage = (currentAmount / goalAmount) * 100;
 
-  return (
-    <section className="py-16 sm:py-24 bg-gradient-to-br from-blue-900 to-blue-800 text-white">
-      <div className="mx-auto max-w-5xl px-6">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-400 text-blue-900 font-bold mb-4">
-            <TrendingUp className="w-5 h-5" />
-            MATCHING CHALLENGE
-          </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Double Your Impact!
-          </h2>
-          <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            A generous sponsor will match your donation 1:1 to help us reach our goal 
-            of $100,000 for travel scholarships
-          </p>
-        </div>
-
-        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-2xl font-bold">${currentAmount.toLocaleString()}</span>
-            <span className="text-2xl font-bold">${goalAmount.toLocaleString()}</span>
-          </div>
-          <div className="h-6 bg-white/20 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-yellow-400 transition-all duration-1000"
-              style={{ width: `${percentage}%` }}
-            />
-          </div>
-          <p className="text-center mt-4 text-white/90">
-            {percentage.toFixed(0)}% to our goal
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 
 // Stewardship & Transparency

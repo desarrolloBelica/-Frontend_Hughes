@@ -257,25 +257,25 @@ export default function AdmissionsPage() {
     const errors: Record<string, string> = {};
 
     // Required fields
-    if (!form.studentName?.trim()) errors.studentName = "Student name is required";
-    if (!form.incomingCourse) errors.incomingCourse = "Grade/course is required";
+    if (!form.studentName?.trim()) errors.studentName = "El nombre del estudiante es obligatorio";
+    if (!form.incomingCourse) errors.incomingCourse = "El curso es obligatorio";
     if (!form.parentsEmail?.trim()) {
-      errors.parentsEmail = "Parents' email is required";
+      errors.parentsEmail = "El correo de los padres es obligatorio";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.parentsEmail)) {
-      errors.parentsEmail = "Please enter a valid email address";
+      errors.parentsEmail = "Ingresa un correo electrónico válido";
     }
 
     // Phone validation (optional but should be valid if provided)
     if (form.fatherPhone && !/^\+?[0-9\s-()]+$/.test(form.fatherPhone)) {
-      errors.fatherPhone = "Please enter a valid phone number";
+      errors.fatherPhone = "Ingresa un número de teléfono válido";
     }
     if (form.motherPhone && !/^\+?[0-9\s-()]+$/.test(form.motherPhone)) {
-      errors.motherPhone = "Please enter a valid phone number";
+      errors.motherPhone = "Ingresa un número de teléfono válido";
     }
 
     // Sibling validation
     if (form.hasSiblingsHS === "yes" && !form.siblingNames?.trim()) {
-      errors.siblingNames = "Please provide sibling names";
+      errors.siblingNames = "Ingresa los nombres de los hermanos";
     }
 
     setFieldErrors(errors);
@@ -292,7 +292,7 @@ export default function AdmissionsPage() {
     try {
       // Run validation
       if (!validateForm()) {
-        setError("Please fix the errors above before submitting.");
+        setError("Corrige los errores antes de enviar.");
         setSubmitting(false);
         return;
       }
@@ -312,7 +312,7 @@ export default function AdmissionsPage() {
       if (!res.ok || !okFlag) {
         setOk(false);
         // Extract detailed error message
-        let errorMsg = "There was a problem submitting your application.";
+        let errorMsg = "Hubo un problema al enviar tu solicitud.";
         if (typeof json === "object" && json !== null) {
           const jsonObj = json as Record<string, unknown>;
           if (jsonObj.error && typeof jsonObj.error === "object") {
@@ -324,7 +324,7 @@ export default function AdmissionsPage() {
           }
         }
         if (res.status === 401) {
-          errorMsg = "Authentication error. Please contact support or try again later.";
+          errorMsg = "Error de autenticación. Contacta soporte o inténtalo más tarde.";
         }
         setError(errorMsg);
       } else {
@@ -333,7 +333,7 @@ export default function AdmissionsPage() {
       }
     } catch {
       setOk(false);
-      setError("Unexpected error. Please try again later.");
+      setError("Error inesperado. Inténtalo de nuevo más tarde.");
     } finally {
       setSubmitting(false);
     }
@@ -367,30 +367,30 @@ export default function AdmissionsPage() {
             </p>
 
             {/* HOW TO APPLY */}
-            <h3 className="mt-6 text-xl font-semibold text-hughes-blue">How to apply</h3>
+            <h3 className="mt-6 text-xl font-semibold text-hughes-blue">Cómo postular</h3>
             <ol className="mt-3 space-y-3 text-hughes-blue">
               <li className="flex gap-3">
                 <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
                 <span>
-                  <strong>Fill out the Interview Request Form.</strong> Tell us about the student and how to contact you.
+                  <strong>Completa el formulario de solicitud de entrevista.</strong> Cuéntanos sobre el estudiante y cómo contactarte.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
                 <span>
-                  <strong>We contact you</strong> to schedule your campus visit and interview.
+                  <strong>Te contactamos</strong> para agendar la visita al campus y la entrevista.
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
                 <span>
-                  <strong>Bring required documents</strong> (ID, birth certificate, transcripts).
+                  <strong>Trae los documentos requeridos</strong> (CI, certificado de nacimiento, libretas).
                 </span>
               </li>
               <li className="flex gap-3">
                 <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
                 <span>
-                  <strong>Receive next steps</strong> and finalize your enrollment if admitted.
+                  <strong>Recibe los siguientes pasos</strong> y finaliza tu inscripción si eres admitido.
                 </span>
               </li>
             </ol>
@@ -399,7 +399,7 @@ export default function AdmissionsPage() {
               href="#apply"
               className="group mt-6 inline-flex items-center rounded-full border-2 px-6 py-2 font-semibold text-hughes-blue border-hughes-blue hover:bg-hughes-blue hover:text-white transition"
             >
-              Start My Application
+              Iniciar mi solicitud
             </a>
           </div>
 
@@ -496,22 +496,22 @@ export default function AdmissionsPage() {
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10">
           {/* Lado izquierdo: por qué aplicar */}
           <div className="lg:col-span-6">
-            <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">Why apply to Hughes Schools?</h3>
+            <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">¿Por qué postular a Hughes Schools?</h3>
             <p className="mt-3 text-hughes-blue/80">
-              Our admissions process is designed to get to know your child and guide your family through a smooth transition.
+              Nuestro proceso de admisión está diseñado para conocer a tu hijo y guiar a tu familia en una transición sin contratiempos.
             </p>
             <div
               className="mt-6 p-5 rounded-2xl border bg-white text-sm md:text-base text-hughes-blue/90 leading-relaxed"
               style={{ borderColor: "var(--hs-yellow)" }}
             >
-              <p className="font-semibold mb-2">Benefits of joining Hughes Schools:</p>
+              <p className="font-semibold mb-2">Beneficios de unirte a Hughes Schools:</p>
               <ul className="list-disc ml-5 space-y-2">
-                <li><strong>Rigorous academics</strong> with modern methodologies and high expectations.</li>
-                <li><strong>Holistic development</strong>: character, arts, sports and leadership.</li>
-                <li><strong>Safe, caring community</strong> and a culture of respect.</li>
-                <li><strong>Modern facilities</strong> designed for learning and innovation.</li>
-                <li><strong>Bilingual/global focus</strong> to open opportunities beyond the classroom.</li>
-                <li><strong>Limited seats</strong>: applying early improves your chances of securing a place.</li>
+                <li><strong>Rigor académico</strong> con metodologías modernas y altas expectativas.</li>
+                <li><strong>Desarrollo integral</strong>: carácter, artes, deportes y liderazgo.</li>
+                <li><strong>Comunidad segura y cálida</strong> con una cultura de respeto.</li>
+                <li><strong>Instalaciones modernas</strong> diseñadas para aprender e innovar.</li>
+                <li><strong>Enfoque bilingüe/global</strong> que abre oportunidades más allá del aula.</li>
+                <li><strong>Cupos limitados</strong>: postular temprano mejora tus posibilidades de asegurar una plaza.</li>
               </ul>
             </div>
           </div>
@@ -527,10 +527,9 @@ export default function AdmissionsPage() {
                 {/* Datos del estudiante */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-hughes-blue">
-                    Student name *
+                    Nombre del estudiante *
                   </label>
                   <input
-                    required
                     value={form.studentName}
                     onChange={(e) => {
                       setForm({ ...form, studentName: e.target.value });
@@ -549,22 +548,21 @@ export default function AdmissionsPage() {
 
                 <div>
                   <label className="block text-sm font-semibold text-hughes-blue">
-                    ID number (N.º C.I.)
+                    Número de CI
                   </label>
                   <input
                     value={form.studentIdNumber}
                     onChange={(e) => setForm({ ...form, studentIdNumber: e.target.value })}
                     className="mt-2 w-full rounded-xl border px-3 py-2"
-                    placeholder="e.g., 12345678"
+                    placeholder="Ej.: 12345678"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-semibold text-hughes-blue">
-                    Incoming grade/course *
+                    Curso al que postula *
                   </label>
                   <select
-                    required
                     value={form.incomingCourse}
                     onChange={(e) => {
                       setForm({ ...form, incomingCourse: e.target.value });
@@ -576,7 +574,7 @@ export default function AdmissionsPage() {
                       fieldErrors.incomingCourse ? "border-red-500" : ""
                     }`}
                   >
-                    <option value="">Select a grade</option>
+                    <option value="">Selecciona un curso</option>
                     {GRADE_OPTIONS.map((grade) => (
                       <option key={grade} value={grade}>
                         {grade}
@@ -589,7 +587,7 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Birth date</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Fecha de nacimiento</label>
                   <input
                     type="date"
                     value={form.birthDate}
@@ -599,7 +597,7 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Current school</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Colegio actual</label>
                   <input
                     value={form.currentSchool}
                     onChange={(e) => setForm({ ...form, currentSchool: e.target.value })}
@@ -609,17 +607,17 @@ export default function AdmissionsPage() {
 
                 {/* Contacto de padres */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Parents’ full names</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Nombres completos de los padres</label>
                   <input
                     value={form.parentsFullNames}
                     onChange={(e) => setForm({ ...form, parentsFullNames: e.target.value })}
                     className="mt-2 w-full rounded-xl border px-3 py-2"
-                    placeholder="e.g., Jane Doe & John Doe"
+                    placeholder="Ej.: Ana Pérez & Carlos Pérez"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Father’s phone</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Teléfono del padre</label>
                   <input
                     value={form.fatherPhone}
                     onChange={(e) => {
@@ -639,7 +637,7 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Mother’s phone</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Teléfono de la madre</label>
                   <input
                     value={form.motherPhone}
                     onChange={(e) => {
@@ -659,10 +657,8 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Parents’ email *</label>
+                  <label className="block text-sm font-semibold text-hughes-blue">Correo de los padres *</label>
                   <input
-                    required
-                    type="email"
                     value={form.parentsEmail}
                     onChange={(e) => {
                       setForm({ ...form, parentsEmail: e.target.value });
@@ -673,7 +669,7 @@ export default function AdmissionsPage() {
                     className={`mt-2 w-full rounded-xl border px-3 py-2 ${
                       fieldErrors.parentsEmail ? "border-red-500" : ""
                     }`}
-                    placeholder="family@email.com"
+                    placeholder="familia@email.com"
                   />
                   {fieldErrors.parentsEmail && (
                     <p className="mt-1 text-xs text-red-600">{fieldErrors.parentsEmail}</p>
@@ -785,7 +781,7 @@ export default function AdmissionsPage() {
                 {/* Fecha de entrevista */}
                 <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-hughes-blue">
-                    Preferred interview date (optional)
+                    Fecha de entrevista preferida (opcional)
                   </label>
                   <input
                     type="date"
@@ -799,7 +795,7 @@ export default function AdmissionsPage() {
               {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
               {ok && (
                 <p className="mt-4 text-sm text-green-600">
-                  Thank you! Your application has been received.
+                  ¡Gracias! Hemos recibido tu solicitud.
                 </p>
               )}
 
@@ -808,7 +804,7 @@ export default function AdmissionsPage() {
                   disabled={submitting}
                   className="group inline-flex items-center rounded-full bg-[var(--hs-yellow)] px-6 py-3 font-semibold text-hughes-blue transition hover:opacity-90 disabled:opacity-50"
                 >
-                  {submitting ? "Submitting..." : "Submit Application"}
+                  {submitting ? "Enviando..." : "Enviar solicitud"}
                 </button>
               </div>
             </form>

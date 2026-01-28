@@ -15,7 +15,7 @@ export default async function Page({
 
   const rawType = Array.isArray(sp?.type) ? sp.type[0] : sp?.type;
   const initialType: EventType =
-    rawType === "Academic" || rawType === "Artistic" || rawType === "Extracurricular"
+    rawType === "Academic" || rawType === "Performing Arts" || rawType === "Other"
       ? rawType
       : "All";
 

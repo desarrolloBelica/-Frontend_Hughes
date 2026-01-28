@@ -97,29 +97,28 @@ const RESULTS = {
   scholarships: "$3,100,000+ in academic and artistic scholarships from U.S. universities in the last 5 years",
 };
 
-const AWARDS: string[] = [
-  "11 National Youth Science Foundation Scholars",
-  "10 United Space School (NASA) awardees",
-  "COMTECO Short Story Gold Medal (Writing)",
-  "C-tech2 scholarship winner at Virginia Tech University",
-  "11 National Physics Olympiad winners",
-  "9 National Mathematics Olympiad winners",
-  "1 National Geography Olympiad winner",
-  "20 State Physics Olympiad winners",
-  "11 State Mathematics Olympiad winners",
-  "2 Ibero-American Physics Olympiad (OIbF) winners",
-  "1 World Science Scholar",
-  "1 International Olympiad in Astronomy and Astrophysics (IOAA) winner",
-  "4 International Mathematical Olympiad (IMO) winners",
-  "2 Latin American Astronomy and Astronautics Olympiad (OLAA) winners",
-  "1 European Physics Olympiad (EuPhO) winner",
-  "1 State Geography Olympiad winner",
-  "8 State Olympics Champions in Chess",
-  "7 National Olympics Champions in Chess",
-  "54 State Science Fair Award winners",
-  "110 District Science Olympics Award winners",
-  "International folk & vocal distinctions in Bolivia, Chile, Italy, and the USA",
-];
+type Outcome = {
+  quantity: number;
+  event: string;
+  recognition: string;
+};
+
+const normalizeOutcomes = (payload: unknown): Outcome[] => {
+  const raw = Array.isArray(payload) ? payload : (payload as { data?: unknown })?.data;
+
+  if (!Array.isArray(raw)) return [];
+
+  return raw
+    .map((item: any) => {
+      const source = item?.attributes ?? item;
+      const quantity = Number(source?.quantity);
+      const event = String(source?.event ?? "");
+      const recognition = String(source?.recognition ?? "");
+
+      return { quantity, event, recognition };
+    })
+    .filter((item): item is Outcome => !Number.isNaN(item.quantity) && Boolean(item.recognition || item.event));
+};
 
 // Small UI pill
 const Chip = ({ children }: { children: React.ReactNode }) => (
@@ -129,6 +128,35 @@ const Chip = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function AboutPage() {
+  const [outcomes, setOutcomes] = React.useState<Outcome[]>([]);
+  const [loadingOutcomes, setLoadingOutcomes] = React.useState(true);
+  const [outcomesError, setOutcomesError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    const fetchOutcomes = async () => {
+      try {
+        setLoadingOutcomes(true);
+        const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
+        const res = await fetch(`${base}/api/outcomes/`);
+
+        if (!res.ok) {
+          throw new Error(`Request failed with status ${res.status}`);
+        }
+
+        const body = await res.json();
+        const parsed = normalizeOutcomes(body);
+        setOutcomes(parsed);
+      } catch (error) {
+        console.error("Failed to load outcomes", error);
+        setOutcomesError("No pudimos cargar los reconocimientos en este momento.");
+      } finally {
+        setLoadingOutcomes(false);
+      }
+    };
+
+    fetchOutcomes();
+  }, []);
+
   return (
     <main className="min-h-screen bg-white text-lg md:text-xl leading-relaxed">
       {/* HERO */}
@@ -162,7 +190,7 @@ export default function AboutPage() {
           <div>
             <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Vision</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Excellence with Purpose</h2>
-            <p className="mt-3 text-muted-foreground text-justify">{VISION}</p>
+            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">{VISION}</p>
             <div className="mt-4 flex gap-2 flex-wrap">
               <Badge variant="secondary" className="rounded-full">Quality</Badge>
               <Badge variant="secondary" className="rounded-full">Values</Badge>
@@ -178,7 +206,7 @@ export default function AboutPage() {
           <div>
             <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Mission</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Integrity, Safety, Well-being</h2>
-            <p className="mt-3 text-muted-foreground text-justify">{MISSION}</p>
+            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">{MISSION}</p>
             <ul className="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-hughes-blue/80">
               <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Bilingual PK–12</li>
               <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Mastery-based advancement</li>
@@ -199,7 +227,7 @@ export default function AboutPage() {
             <div>
               <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Who We Are</div>
               <h3 className="mt-2 text-2xl font-bold text-hughes-blue">Cochabamba • PK–12 • Accredited</h3>
-              <p className="mt-3 text-muted-foreground text-justify">
+              <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">
                 Hughes Schools is accredited by the Bolivian Ministry of Education and the Cochabamba District Department of Education.
                 The school year runs February–November, with summer break in December–January and winter break the first two weeks of July.
                 ~{META.englishPct}% of instruction is in English.
@@ -207,7 +235,7 @@ export default function AboutPage() {
             </div>
             <div className="rounded-2xl border p-6">
               <div className="text-sm font-semibold text-hughes-blue mb-2">Community</div>
-              <p className="text-base text-muted-foreground leading-relaxed text-justify">
+              <p className="text-base text-muted-foreground font-bold text-hs-blue-medium leading-relaxed text-justify">
                 Located in Cochabamba, Bolivia (population ~1.9M). Student body: 95% Bolivian, 5% international (North America & Europe).
               </p>
             </div>
@@ -242,7 +270,7 @@ export default function AboutPage() {
           <div className="lg:col-span-2">
             <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Academics (PK–12)</div>
             <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Rigorous. Structured. Mastery-Based.</h2>
-            <p className="mt-3 text-muted-foreground text-justify">Daily schedule of six 45-minute classes. Science includes labs each year. AP is not currently offered. Advancement requires mastery.</p>
+            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">Daily schedule of six 45-minute classes. Science includes labs each year. Advanced Placement(Pre-University courses) is not currently offered. Advancement requires mastery.</p>
             <div className="mt-6 rounded-2xl bg-[#0b1229] text-white p-5">
               <div className="text-sm/6 text-white/80">Honors Pathway</div>
               <div className="mt-1 text-lg font-semibold">{HONORS}</div>
@@ -260,8 +288,8 @@ export default function AboutPage() {
                 <tbody>
                   {CORE_CREDITS.map((row) => (
                     <tr key={row.area} className="border-t" style={{borderColor:'#ececf4'}}>
-                      <td className="px-4 py-3 font-bold text-hughes-blue">{row.area}</td>
-                      <td className="px-4 py-3 text-muted-foreground">{row.list.join(", ")}</td>
+                      <td className="px-4 py-3 font-bold text-hs-blue-medium">{row.area}</td>
+                      <td className="px-4 py-3 font-bold text-hs-blue-medium">{row.list.join(", ")}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -278,22 +306,22 @@ export default function AboutPage() {
             <Music className="h-5 w-5 text-[var(--hs-yellow)]"/>
             <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">Performing Arts</h2>
           </div>
-          <p className="mt-3 text-muted-foreground max-w-3xl text-justify">
+          <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium max-w-3xl text-justify">
             All students (1–12) participate across two levels. {ARTS.footprint}
           </p>
 
           <div className="mt-8 grid md:grid-cols-2 gap-6">
             <div className="rounded-2xl border p-5">
               <div className="text-sm font-semibold text-hughes-blue">Level One (Grades 1–4)</div>
-              <div className="mt-1 text-sm text-muted-foreground">{ARTS.level1.hours} hrs/week · {ARTS.level1.courses.join(", ")}</div>
-              <div className="text-xs text-muted-foreground mt-1">{ARTS.level1.note}</div>
+              <div className="mt-1 text-sm font-bold text-hs-blue-medium">{ARTS.level1.hours} hrs/week · {ARTS.level1.courses.join(", ")}</div>
+              <div className="text-xs font-bold text-hs-blue-medium mt-1">{ARTS.level1.note}</div>
             </div>
             <div className="rounded-2xl border p-5">
               <div className="text-sm font-semibold text-hughes-blue">Level Two (Grades 5–12)</div>
               {ARTS.level2.tracks.map((t) => (
-                <div key={t.name} className="mt-1 text-sm text-muted-foreground"><span className="font-medium text-hughes-blue">{t.name}:</span> {t.hours} hrs/week · {t.courses.join(", ")}</div>
+                <div key={t.name} className="mt-1 text-sm font-bold text-hs-blue-medium"><span className="font-medium text-hughes-blue">{t.name}:</span> {t.hours} hrs/week · {t.courses.join(", ")}</div>
               ))}
-              <div className="text-xs text-muted-foreground mt-2">{ARTS.level2.double}</div>
+              <div className="text-xs font-bold text-hs-blue-medium mt-2">{ARTS.level2.double}</div>
             </div>
           </div>
 
@@ -314,22 +342,40 @@ export default function AboutPage() {
             <div className="lg:col-span-1">
               <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Outcomes</div>
               <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Results & Placement</h2>
-              <p className="mt-3 text-muted-foreground text-justify"><strong>Placement:</strong> {RESULTS.placement}</p>
-              <p className="mt-1 text-muted-foreground text-justify"><strong>Scholarships:</strong> {RESULTS.scholarships}</p>
+              <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify"><strong>Placement:</strong> {RESULTS.placement}</p>
+              <p className="mt-1 text-muted-foreground font-bold text-hs-blue-medium text-justify"><strong>Scholarships:</strong> {RESULTS.scholarships}</p>
             </div>
             <div className="lg:col-span-2">
               <Accordion type="single" collapsible>
                 <AccordionItem value="awards">
                   <AccordionTrigger className="text-left">Major Awards & Distinctions (2006–2024)</AccordionTrigger>
                   <AccordionContent>
-                    <ul className="grid md:grid-cols-2 gap-2 text-sm text-muted-foreground">
-                      {AWARDS.map((a, i) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[var(--hs-yellow)]" />
-                          <span>{a}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    {loadingOutcomes && (
+                      <p className="text-sm font-semibold text-hughes-blue/70">Cargando reconocimientos...</p>
+                    )}
+
+                    {outcomesError && !loadingOutcomes && (
+                      <p className="text-sm font-semibold text-red-600">{outcomesError}</p>
+                    )}
+
+                    {!loadingOutcomes && !outcomesError && outcomes.length === 0 && (
+                      <p className="text-sm font-semibold text-hughes-blue/70">No hay reconocimientos disponibles por ahora.</p>
+                    )}
+
+                    {!loadingOutcomes && !outcomesError && outcomes.length > 0 && (
+                      <ul className="grid md:grid-cols-2 gap-2 text-sm font-bold text-hs-blue-medium">
+                        {outcomes.map((outcome, i) => (
+                          <li key={`${outcome.event ?? "outcome"}-${i}`} className="flex items-start gap-2">
+                            <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[var(--hs-yellow)]" />
+                            <span>
+                              <span className="font-semibold">{outcome.quantity}</span>{" "}
+                              {outcome.recognition}
+                              {outcome.event ? ` · ${outcome.event}` : ""}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>

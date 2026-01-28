@@ -6,8 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useParentAuth } from "@/hooks/useParentAuth";
 
-import ParentsNavbar from "@/components/parents/ParentsNavbar"; // ← navbar superior original
-// Si ya tienes un componente para este subnav, puedes reemplazar PortalSubnav por el tuyo.
+import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import {
   Headphones,
   Mail,
@@ -23,43 +22,6 @@ import {
 /* ───────────────────── Brand helpers ───────────────────── */
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 const EVENT_ROOM_URL = "http://hughesschools.org/eventos";
-
-/* ───────────────────── Sub‑navbar del portal ───────────────────── */
-function PortalSubnav() {
-  const pathname = usePathname();
-  const items = [
-    { href: "/help-center", label: "Inicio" },
-    { href: "/help-center/timetables", label: "Horarios" },
-    { href: "/help-center/forms", label: "Formularios" },
-  ];
-
-  return (
-    <div className="w-full border-b bg-white" style={{ borderColor: "#ececf4" }}>
-      <nav className="mx-auto max-w-7xl px-6">
-        <ul className="flex flex-wrap gap-2 py-3">
-          {items.map((it) => {
-            const active = pathname === it.href;
-            return (
-              <li key={it.href}>
-                <Link
-                  href={it.href}
-                  className="inline-flex items-center rounded-full px-4 py-2 text-sm font-semibold transition"
-                  style={{
-                    background: active ? BRAND.yellow : "#fff",
-                    border: `1px solid ${active ? BRAND.yellow : "#e6e6f0"}`,
-                    color: BRAND.blue,
-                  }}
-                >
-                  {it.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-    </div>
-  );
-}
 
 /* ───────────────────── Types & Data (cards de ayuda) ───────────────────── */
 type ContactCard = {
@@ -324,11 +286,7 @@ export default function HelpCenterPage() {
 
   return (
     <div className="min-h-screen" style={{ background: "#f9f9fb" }}>
-      {/* ✅ Navbar superior original del portal de padres */}
-      <ParentsNavbar />
-
-      {/* ✅ Segundo navbar (Inicio / Horarios / Formularios) */}
-      <PortalSubnav />
+      <ParentsPortalNav />
 
       {/* HERO */}
       <section className="relative w-full py-12 md:py-16 text-center overflow-hidden bg-white">
