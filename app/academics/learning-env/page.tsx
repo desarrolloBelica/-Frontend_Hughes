@@ -232,7 +232,7 @@ export default function OurLearningEnvironmentPage() {
                 )}
                 <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">{b.title}</h2>
 
-                <div className="prose prose-slate mt-4 max-w-none text-hughes-blue">
+                <div className="prose prose-slate mt-4 max-w-none text-hughes-blue text-justify">
                   {b.body}
                 </div>
 

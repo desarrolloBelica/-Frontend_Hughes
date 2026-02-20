@@ -367,7 +367,7 @@ export default function ArtProgramsPage() {
             className="rounded-3xl border bg-[#f9fafc] p-6 md:p-8 text-hughes-blue leading-relaxed relative -top-4"
             style={{ borderColor: "var(--hs-yellow)" }}
           >
-            <div className="prose prose-slate max-w-none">
+            <div className="prose prose-slate max-w-none text-justify">
               <p>
                 Hughes Schools’ Art Programs accompany students from their first steps in music to
                 advanced artistic goals. The program integrates choir, theory, and individual
@@ -417,7 +417,7 @@ export default function ArtProgramsPage() {
                       style={{ borderColor: "var(--hs-yellow)" }}
                     >
                       <h3 className="text-xl md:text-2xl font-bold text-hughes-blue mb-4">Vision</h3>
-                      <p className="text-hughes-blue/90 leading-relaxed">
+                      <p className="text-hughes-blue/90 leading-relaxed text-justify">
                         To be a dance program of artistic and academic excellence, recognized for the integral
                         formation of sensitive, creative, and technically prepared students, capable of expressing
                         themselves through movement, valuing cultural diversity—especially Bolivian dance—and
@@ -429,7 +429,7 @@ export default function ArtProgramsPage() {
                       style={{ borderColor: "var(--hs-yellow)" }}
                     >
                       <h3 className="text-xl md:text-2xl font-bold text-hughes-blue mb-4">Mission</h3>
-                      <p className="text-hughes-blue/90 leading-relaxed">
+                      <p className="text-hughes-blue/90 leading-relaxed text-justify">
                         To train students in dance from childhood to adolescence through a progressive, inclusive, and
                         systematic educational process that develops bodily, technical, musical, and expressive
                         skills. The program promotes discipline, creativity, cultural identity, and collaborative work,
@@ -455,7 +455,7 @@ export default function ArtProgramsPage() {
                         <h4 className="text-xl md:text-2xl font-bold text-hughes-blue mb-3">
                           First Study Cycle (1st to 4th Grade)
                         </h4>
-                        <p className="text-hughes-blue/90 leading-relaxed">
+                        <p className="text-hughes-blue/90 leading-relaxed text-justify">
                           This cycle builds psychomotor, expressive, and musical foundations during a key stage of
                           development. Movement is core for learning, communication, and exploration. Creative dance and
                           body expression foster body awareness, coordination, spatial awareness, rhythm, and
@@ -480,7 +480,7 @@ export default function ArtProgramsPage() {
                         <h4 className="text-xl md:text-2xl font-bold text-hughes-blue mb-3">
                           Second Specialty Cycle (5th Grade to 12th Grade)
                         </h4>
-                        <p className="text-hughes-blue/90 leading-relaxed">
+                        <p className="text-hughes-blue/90 leading-relaxed text-justify">
                           This cycle focuses on technical, artistic, and disciplinary formation, progressing from basic
                           to advanced. Level groupings (C1, C2, C3, D1, D2, E, and Workshop) support diverse abilities
                           and learning paces. Ballet, jazz, Bolivian dance, and contemporary dance provide an integral,
@@ -569,7 +569,7 @@ export default function ArtProgramsPage() {
                       style={{ borderColor: "var(--hs-yellow)" }}
                     >
                       <h3 className="text-xl md:text-2xl font-bold text-hughes-blue mb-4">Mission</h3>
-                      <p className="text-hughes-blue/90 leading-relaxed">
+                      <p className="text-hughes-blue/90 leading-relaxed text-justify">
                         We are a national benchmark, leaders in the educational field, recognized for the high quality of
                         our services, forming an educational community of people with high values and social sensitivity,
                         committed to a culture of excellence and success in life.
@@ -581,7 +581,7 @@ export default function ArtProgramsPage() {
                       style={{ borderColor: "var(--hs-yellow)" }}
                     >
                       <h3 className="text-xl md:text-2xl font-bold text-hughes-blue mb-4">Vision</h3>
-                      <p className="text-hughes-blue/90 leading-relaxed">
+                      <p className="text-hughes-blue/90 leading-relaxed text-justify">
                         Hughes Educational Unit is a bilingual education institution whose mission is to teach and form
                         integral, successful people through tools of academic and artistic excellence in a safe and
                         wellness environment. We have a committed team of specialized professionals in permanent updating
@@ -628,7 +628,7 @@ export default function ArtProgramsPage() {
                           >
                             <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">{tier.title}</h2>
                             {tier.subtitle && <p className="mt-1 text-hughes-blue/70">{tier.subtitle}</p>}
-                            <div className="prose prose-slate mt-4 max-w-none text-hughes-blue">{tier.body}</div>
+                            <div className="prose prose-slate mt-4 max-w-none text-hughes-blue text-justify">{tier.body}</div>
                           </div>
                         </article>
                       ))}

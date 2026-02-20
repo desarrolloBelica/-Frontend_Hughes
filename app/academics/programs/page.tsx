@@ -141,7 +141,7 @@ export default function AcademicProgramsPage() {
             className="rounded-3xl border bg-[#f9fafc] p-6 md:p-8 text-hughes-blue leading-relaxed relative -top-4"
             style={{ borderColor: "var(--hs-yellow)" }}
           >
-            <div className="prose prose-slate max-w-none">
+            <div className="prose prose-slate max-w-none text-justify">
               <p>
                 At Hughes Schools, the academic program is rigorous and consistent across all grade
                 levels. Students attend <strong>six 45‑minute classes per day</strong>.
@@ -196,7 +196,7 @@ export default function AcademicProgramsPage() {
                   <p className="mt-1 text-hughes-blue/70">{tier.subtitle}</p>
                 )}
 
-                <div className="prose prose-slate mt-4 max-w-none text-hughes-blue">
+                <div className="prose prose-slate mt-4 max-w-none text-hughes-blue text-justify">
                   {typeof tier.body === "string" ? <p>{tier.body}</p> : tier.body}
                 </div>
               </div>
