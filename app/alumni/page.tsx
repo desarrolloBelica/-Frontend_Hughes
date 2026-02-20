@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { cache } from "react";
+import { cache, Suspense } from "react";
 import OpinionsSection from "../../components/opinions/OpinionsSection";
 
 const HS_YELLOW = "var(--hs-yellow)";
@@ -136,11 +136,13 @@ export default async function AlumniPage() {
 				<EngageGrid />
 				<DirectorsMessage />
 				<ClosingStatement />
-				<OpinionsSection
-					initialAverage={opinionSummary.average}
-					initialCount={opinionSummary.count}
-					backendBase={process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337"}
-				/>
+				<Suspense fallback={<div className="animate-pulse bg-gray-100 rounded-lg h-32" />}>
+					<OpinionsSection
+						initialAverage={opinionSummary.average}
+						initialCount={opinionSummary.count}
+						backendBase={process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337"}
+					/>
+				</Suspense>
 			</section>
 		</main>
 	);
