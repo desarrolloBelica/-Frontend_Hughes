@@ -1,11 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Media = {
   url?: string;
@@ -141,21 +136,22 @@ export default async function DonationStoryDetailPage({
 
   if (!story) {
     return (
-      <main className="min-h-screen bg-white">
-        <section className="mx-auto max-w-4xl px-6 py-16 text-center">
-          <h1 className="text-3xl font-bold mb-4" style={{ color: BRAND.blue }}>
+      <main className="min-h-screen bg-hs-bluenavy flex items-center justify-center">
+        <section className="mx-auto max-w-2xl px-6 py-16 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow bg-hs-yellow/10 px-5 py-2 text-sm font-bold uppercase text-hs-yellow tracking-widest mb-6">
+            Not Found
+          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
             Story Not Found
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-lg text-white/70 mb-10">
             We couldn&apos;t find the story you&apos;re looking for.
           </p>
           <Link
             href="/donation/stories"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold"
-            style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
+            className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow px-8 py-3 font-bold text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Stories
+            <ArrowLeft className="w-5 h-5" /> Back to Stories
           </Link>
         </section>
       </main>
@@ -167,44 +163,44 @@ export default async function DonationStoryDetailPage({
   const testimonialDate = sAttr<string>(story, "testimonialDate");
   const studentName = getStudentName(story);
   const medias = extractMedias(story);
-  const date = testimonialDate ? new Date(testimonialDate).toLocaleDateString() : "";
+  const date = testimonialDate ? new Date(testimonialDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric'}) : "";
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-hs-bluenavy pb-24">
       {/* Header */}
-      <section className="relative py-12 bg-gradient-to-b from-blue-50 to-white">
-        <div className="mx-auto max-w-4xl px-6">
+      <section className="relative pt-16 md:pt-24 pb-12 border-b-2 border-white/10">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--hs-yellow)_0%,_transparent_50%)] blur-[80px]" />
+        <div className="relative mx-auto max-w-4xl px-6">
           <Link
             href="/donation/stories"
-            className="inline-flex items-center gap-2 text-[var(--hs-blue)] font-semibold mb-6 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-bold text-hs-yellow hover:opacity-80 transition-opacity mb-8"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to All Stories
           </Link>
 
           <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight">
               {title}
             </h1>
-            <div className="flex items-center gap-4 text-gray-600">
-              <span className="font-semibold" style={{ color: BRAND.blue }}>
-                {studentName}
-              </span>
-              {date && <span className="text-sm">•</span>}
-              {date && <span className="text-sm">{date}</span>}
+            <div className="flex items-center gap-4 text-hs-yellow font-bold text-lg uppercase tracking-widest">
+              <span>{studentName}</span>
+              {date && <span className="opacity-50">•</span>}
+              {date && <span>{date}</span>}
             </div>
           </div>
         </div>
       </section>
 
       {/* Content */}
-      <section className="py-12">
+      <section className="py-12 md:py-16">
         <div className="mx-auto max-w-4xl px-6">
+          
           {/* Images Gallery */}
           {medias.length > 0 && (
-            <div className="mb-10">
+            <div className="mb-16">
               {medias.length === 1 ? (
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden">
+                <div className="relative w-full aspect-video rounded-[32px] overflow-hidden shadow-2xl border-4 border-hs-yellow/50">
                   <Image
                     src={medias[0].url}
                     alt={medias[0].alt || studentName}
@@ -214,11 +210,11 @@ export default async function DonationStoryDetailPage({
                   />
                 </div>
               ) : (
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-6">
                   {medias.map((media, i) => (
                     <div
                       key={i}
-                      className="relative w-full aspect-video rounded-2xl overflow-hidden"
+                      className="relative w-full aspect-video rounded-3xl overflow-hidden shadow-lg border-2 border-white/10"
                     >
                       <Image
                         src={media.url}
@@ -234,42 +230,39 @@ export default async function DonationStoryDetailPage({
           )}
 
           {/* Story Content */}
-          <div className="prose prose-lg max-w-none">
-            <div
-              className="text-gray-700 leading-relaxed whitespace-pre-line"
-              style={{ fontSize: "1.125rem", lineHeight: "1.75" }}
-            >
+          <div className="prose prose-lg md:prose-xl max-w-none mb-20">
+            <p className="text-white/90 font-medium leading-relaxed whitespace-pre-line text-justify">
               {description}
-            </div>
+            </p>
           </div>
 
-          {/* CTA Section */}
-          <div className="mt-12 p-8 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-[var(--hs-blue)]">
-            <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND.blue }}>
-              Help More Students Like {studentName.split(" ")[0]}
-            </h3>
-            <p className="text-gray-700 mb-6">
-              Your donation can transform lives and open doors to world-class education. Every gift
-              makes a difference.
-            </p>
-            <div className="flex gap-4">
+          {/* CTA Section - Bloque Amarillo de Contraste Extremo */}
+          <div className="rounded-[40px] bg-hs-yellow p-10 md:p-14 text-hs-bluenavy shadow-2xl text-center md:text-left flex flex-col md:flex-row md:items-center justify-between gap-10">
+            <div className="max-w-xl">
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+                Help More Students Like {studentName.split(" ")[0]}
+              </h3>
+              <p className="text-lg font-bold opacity-80 leading-relaxed">
+                Your donation can transform lives and open doors to world-class education. Every gift makes a difference.
+              </p>
+            </div>
+            <div className="flex flex-col gap-4 flex-shrink-0">
               <Link
                 href="/donation#donate-section"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold transition-all hover:scale-105"
-                style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
+                className="inline-flex items-center justify-center px-8 py-4 rounded-full font-extrabold text-xl transition-all duration-300 hover:scale-105 shadow-xl bg-hs-bluenavy text-hs-yellow hover:bg-white hover:text-hs-bluenavy"
               >
                 Donate Now
               </Link>
               <Link
                 href="/donation/stories"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold border-2 transition-all hover:bg-gray-50"
-                style={{ borderColor: BRAND.blue, color: BRAND.blue }}
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full font-bold text-lg border-4 border-hs-bluenavy text-hs-bluenavy transition-all hover:bg-hs-bluenavy/10"
               >
                 <ArrowLeft className="w-5 h-5" />
                 More Stories
               </Link>
             </div>
           </div>
+          
         </div>
       </section>
     </main>

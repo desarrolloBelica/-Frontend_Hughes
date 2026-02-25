@@ -6,23 +6,15 @@ import {
   GraduationCap,
   Plane,
   Users,
-  BookOpen,
-  Award,
-  Heart,
   CheckCircle2,
-  Building2,
-  Receipt,
-  TrendingUp,
   Mail,
   Phone,
   ArrowRight,
+  HeartHandshake,
+  Link
 } from "lucide-react";
 
 const HERO_IMAGE = "/38.JPG";
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
 
 type DonationDesignation = 
   | "Student Application Fund"
@@ -42,7 +34,7 @@ interface DonorInfo {
 
 export default function DonationPage() {
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-hs-bluenavy">
       <Hero />
       <WhyWeGive />
       <DonationWidget />
@@ -55,7 +47,7 @@ export default function DonationPage() {
 // Hero Section
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden h-[70vh] min-h-[500px]">
+    <section className="relative isolate overflow-hidden min-h-[85vh] flex items-center bg-hs-yellow rounded-b-[40px] shadow-2xl z-20">
       <div className="absolute inset-0 -z-10">
         <Image
           src={HERO_IMAGE}
@@ -64,46 +56,37 @@ function Hero() {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/70 via-slate-900/60 to-slate-900/80" />
+        {/* Superposición fuerte Navy para que resalte el texto amarillo */}
+        <div className="absolute inset-0 bg-hs-bluenavy/80 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-t from-hs-bluenavy via-hs-bluenavy/40 to-transparent" />
       </div>
 
-      <div className="relative h-full flex items-center">
-        <div className="mx-auto max-w-7xl px-6 w-full">
-          <div className="max-w-3xl text-white">
-            <div className="mb-4 flex items-center gap-2">
-              <span
-                className="inline-block h-2.5 w-2.5 rounded-full"
-                style={{ background: BRAND.yellow }}
-              />
-              <span className="text-xs tracking-[0.2em] font-semibold">
-                HUGHES SCHOOLS FOUNDATION (501c3)
-              </span>
-            </div>
-
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-tight">
-              Your Gift Opens Doors to the World
-            </h1>
-            
-            <p className="mt-6 text-xl md:text-2xl text-white/90 leading-relaxed">
-              Support students and teachers as they chase their dreams of higher 
-              education abroad.
-            </p>
-
-            <button
-              onClick={() => {
-                const el = document.getElementById("donate-section");
-                el?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="mt-8 inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 hover:scale-105 shadow-xl"
-              style={{
-                backgroundColor: BRAND.yellow,
-                color: BRAND.blue,
-              }}
-            >
-              Donate Now
-              <ArrowRight className="w-5 h-5" />
-            </button>
+      <div className="relative mx-auto max-w-7xl px-6 w-full py-20 md:py-32">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow bg-hs-yellow/10 px-5 py-2 text-xs font-bold tracking-[0.2em] uppercase text-hs-yellow shadow-lg mb-6">
+            <HeartHandshake className="w-4 h-4" />
+            HUGHES SCHOOLS FOUNDATION (501c3)
           </div>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight leading-tight text-white mb-6 drop-shadow-xl">
+            Your Gift Opens <br/>
+            <span className="text-hs-yellow">Doors to the World</span>
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-white font-medium opacity-90 leading-relaxed mb-10 max-w-2xl">
+            Support our students and teachers as they chase their dreams of higher education abroad and transformative cultural exchanges.
+          </p>
+
+          <button
+            onClick={() => {
+              const el = document.getElementById("donate-section");
+              el?.scrollIntoView({ behavior: "smooth" });
+            }}
+            className="inline-flex items-center gap-3 px-10 py-5 rounded-full font-extrabold text-xl transition-all duration-300 hover:scale-105 shadow-[0_0_40px_rgba(255,187,0,0.3)] bg-hs-yellow text-hs-bluenavy hover:bg-white"
+          >
+            Donate Now
+            <ArrowRight className="w-6 h-6" />
+          </button>
         </div>
       </div>
     </section>
@@ -113,49 +96,50 @@ function Hero() {
 // Why We Give Section
 function WhyWeGive() {
   const stats = [
-    { icon: <GraduationCap className="w-8 h-8" />, label: "Application Fees", value: "85%" },
-    { icon: <Plane className="w-8 h-8" />, label: "Travel Costs", value: "70%" },
-    { icon: <Users className="w-8 h-8" />, label: "Teacher Development", value: "60%" },
+    { icon: <GraduationCap className="w-10 h-10" />, label: "Application Fees", value: "85%" },
+    { icon: <Plane className="w-10 h-10" />, label: "Travel Costs", value: "70%" },
+    { icon: <Users className="w-10 h-10" />, label: "Teacher Development", value: "60%" },
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-gray-50">
+    <section className="py-20 md:py-32 bg-hs-bluenavy relative z-10">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6" style={{ color: BRAND.blue }}>
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          
+          <div className="space-y-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-hs-yellow leading-tight">
               Why We Give
             </h2>
-            <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            <p className="text-lg md:text-xl text-white opacity-90 font-medium leading-relaxed">
               At <strong>Hughes Schools Foundation (501c3)</strong>, over <strong>70%</strong> of 
               our students and teachers rely on financial support to apply for universities, pay visa 
               fees, and travel abroad.
             </p>
-            <p className="text-lg text-gray-700 leading-relaxed">
+            <p className="text-lg md:text-xl text-white opacity-90 font-medium leading-relaxed">
               Your gift ensures these dreams can become reality, opening doors to world-class education 
               and transformative experiences that shape the next generation of global leaders.
             </p>
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {stats.map((stat, i) => (
               <div
                 key={i}
-                className="text-center p-6 rounded-2xl bg-white shadow-lg border border-gray-100"
+                className="text-center p-8 rounded-3xl bg-white/5 border-2 border-white/10 shadow-xl backdrop-blur-md hover:border-hs-yellow transition-all hover:-translate-y-2 group"
               >
-                <div
-                  className="inline-flex p-4 rounded-full mb-4"
-                  style={{ backgroundColor: "rgba(var(--hs-blue-rgb), 0.1)" }}
-                >
-                  <div style={{ color: BRAND.blue }}>{stat.icon}</div>
+                <div className="inline-flex p-4 rounded-2xl bg-hs-yellow/10 border border-hs-yellow/30 text-hs-yellow mb-6 group-hover:bg-hs-yellow group-hover:text-hs-bluenavy transition-colors">
+                  {stat.icon}
                 </div>
-                <div className="text-3xl font-bold mb-2" style={{ color: BRAND.blue }}>
+                <div className="text-4xl font-extrabold text-white mb-2">
                   {stat.value}
                 </div>
-                <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
+                <div className="text-sm font-bold uppercase tracking-widest text-hs-yellow opacity-90">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
+
         </div>
       </div>
     </section>
@@ -194,7 +178,6 @@ function DonationWidget() {
   }
 
   async function handleDonation() {
-    // Validación
     if (!donorInfo.firstName || !donorInfo.lastName || !donorInfo.email) {
       alert("Please fill in all required fields");
       return;
@@ -208,16 +191,12 @@ function DonationWidget() {
     setIsProcessing(true);
 
     try {
-      // 🔄 TEMPORAL: Usando controller de Strapi
-      // TODO: En producción, cambiar a webhook (ver /api/donations/webhook/route.ts)
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/donations/checkout`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           amount: Number(amount),
-          frecuency: frequency, // Nota: el backend usa "frecuency"
+          frecuency: frequency,
           donationDestiny: designation,
           donator: {
             firstName: donorInfo.firstName,
@@ -246,13 +225,11 @@ function DonationWidget() {
         return;
       }
 
-      // Redirigir a Stripe Checkout usando la URL que retorna Stripe
       if (data.stripeSession?.url) {
         window.location.href = data.stripeSession.url as string;
         return;
       }
 
-      // Fallback: construir URL si solo viene el sessionId (Stripe removió redirectToCheckout)
       if (data.stripeSession?.id) {
         window.location.href = `https://checkout.stripe.com/c/pay/${data.stripeSession.id}`;
         return;
@@ -265,21 +242,22 @@ function DonationWidget() {
   }
 
   return (
-    <section id="donate-section" className="py-16 sm:py-24 bg-white">
+    <section id="donate-section" className="py-20 md:py-32 bg-hs-yellow text-hs-bluenavy">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             Make Your Gift Today
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl font-bold opacity-80 max-w-3xl mx-auto">
             Choose how you&apos;d like to support our students and teachers
           </p>
         </div>
 
-        <div className="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl border border-gray-200 p-8 md:p-12">
+        <div className="max-w-4xl mx-auto bg-white rounded-[40px] shadow-2xl border-4 border-hs-bluenavy p-8 md:p-14">
+          
           {/* Gift Designation */}
-          <div className="mb-8">
-            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+          <div className="mb-10">
+            <label className="block text-xl font-extrabold mb-6 uppercase tracking-widest">
               Choose Your Gift Designation
             </label>
             <div className="grid md:grid-cols-3 gap-4">
@@ -287,16 +265,16 @@ function DonationWidget() {
                 <button
                   key={des}
                   onClick={() => setDesignation(des)}
-                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                  className={`p-6 rounded-2xl border-2 transition-all text-left flex flex-col justify-between ${
                     designation === des
-                      ? "border-[var(--hs-blue)] bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
+                      ? "border-hs-bluenavy bg-hs-bluenavy text-white shadow-lg scale-105"
+                      : "border-gray-200 bg-gray-50 hover:border-hs-bluenavy/50 text-hs-bluenavy"
                   }`}
                 >
-                  <div className="font-semibold mb-1" style={{ color: BRAND.blue }}>
+                  <div className="font-extrabold text-lg mb-3 leading-snug">
                     {des}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className={`text-sm font-medium ${designation === des ? 'text-white/80' : 'text-gray-500'}`}>
                     {designationDescriptions[des]}
                   </div>
                 </button>
@@ -304,106 +282,100 @@ function DonationWidget() {
             </div>
           </div>
 
-          {/* Frequency */}
-          <div className="mb-8">
-            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
-              Gift Frequency
-            </label>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setFrequency("once")}
-                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
-                  frequency === "once"
-                    ? "bg-[var(--hs-yellow)] text-[var(--hs-blue)]"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                One-Time
-              </button>
-              <button
-                onClick={() => setFrequency("monthly")}
-                className={`flex-1 py-3 px-6 rounded-xl font-semibold transition-all ${
-                  frequency === "monthly"
-                    ? "bg-[var(--hs-yellow)] text-[var(--hs-blue)]"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
-              >
-                Monthly
-              </button>
-            </div>
-          </div>
-
-          {/* Amount */}
-          <div className="mb-8">
-            <label className="block text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
-              Donation Amount
-            </label>
-            
-            {/* Preset Amounts */}
-            <div className="grid grid-cols-4 gap-3 mb-4">
-              {presets.map((preset) => (
+          <div className="grid md:grid-cols-2 gap-10 mb-10">
+            {/* Frequency */}
+            <div>
+              <label className="block text-xl font-extrabold mb-6 uppercase tracking-widest">
+                Gift Frequency
+              </label>
+              <div className="flex gap-4">
                 <button
-                  key={preset}
-                  onClick={() => setAmount(preset)}
-                  className={`py-3 px-4 rounded-xl font-semibold transition-all ${
-                    amount === preset
-                      ? "bg-[var(--hs-blue)] text-white"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  onClick={() => setFrequency("once")}
+                  className={`flex-1 py-4 px-6 rounded-2xl font-extrabold text-lg transition-all border-2 ${
+                    frequency === "once"
+                      ? "bg-hs-yellow border-hs-yellow text-hs-bluenavy shadow-md"
+                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
                   }`}
                 >
-                  ${preset}
+                  One-Time
                 </button>
-              ))}
+                <button
+                  onClick={() => setFrequency("monthly")}
+                  className={`flex-1 py-4 px-6 rounded-2xl font-extrabold text-lg transition-all border-2 ${
+                    frequency === "monthly"
+                      ? "bg-hs-yellow border-hs-yellow text-hs-bluenavy shadow-md"
+                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+                  }`}
+                >
+                  Monthly
+                </button>
+              </div>
             </div>
 
-            {/* Custom Amount Input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-2 text-gray-600">
-                Or enter a custom amount
+            {/* Amount */}
+            <div>
+              <label className="block text-xl font-extrabold mb-6 uppercase tracking-widest">
+                Donation Amount
               </label>
-              <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-gray-50 border-2 border-gray-200 focus-within:border-[var(--hs-blue)] transition-colors">
-                <span className="text-gray-600 font-semibold text-lg">$</span>
+              
+              <div className="grid grid-cols-4 gap-3 mb-4">
+                {presets.map((preset) => (
+                  <button
+                    key={preset}
+                    onClick={() => setAmount(preset)}
+                    className={`py-3 px-2 rounded-xl font-extrabold text-lg transition-all border-2 ${
+                      amount === preset
+                        ? "bg-hs-bluenavy border-hs-bluenavy text-white shadow-md"
+                        : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100"
+                    }`}
+                  >
+                    ${preset}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-gray-50 border-2 border-gray-200 focus-within:border-hs-bluenavy transition-colors">
+                <span className="text-gray-500 font-extrabold text-xl">$</span>
                 <input
                   inputMode="numeric"
                   value={presets.includes(amount) ? "" : amount}
                   onChange={(e) => setAmount(formatAmount(e.target.value))}
-                  className="w-full bg-transparent outline-none font-semibold text-lg"
-                  style={{ color: BRAND.blue }}
-                  placeholder="Other"
+                  className="w-full bg-transparent outline-none font-extrabold text-2xl text-hs-bluenavy"
+                  placeholder="Other Amount"
                 />
               </div>
             </div>
+          </div>
 
-            {/* Total Display */}
-            <div className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-[var(--hs-blue)]">
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-medium text-gray-700">
-                  Your {frequency === "monthly" ? "Monthly" : "One-Time"} Donation:
-                </span>
-                <span className="text-3xl font-bold" style={{ color: BRAND.blue }}>
-                  ${Number(amount || 0).toLocaleString()}
-                </span>
-              </div>
-              {frequency === "monthly" && (
-                <p className="text-sm text-gray-600 mt-2">
-                  Annual impact: ${(Number(amount || 0) * 12).toLocaleString()}
-                </p>
-              )}
+          {/* Total Display */}
+          <div className="p-8 rounded-3xl bg-hs-bluenavy/5 border-4 border-hs-bluenavy/10 mb-12">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <span className="text-xl font-extrabold uppercase tracking-widest opacity-80">
+                Your {frequency === "monthly" ? "Monthly" : "One-Time"} Donation:
+              </span>
+              <span className="text-5xl font-extrabold text-hs-bluenavy">
+                ${Number(amount || 0).toLocaleString()}
+              </span>
             </div>
+            {frequency === "monthly" && (
+              <p className="text-base font-bold text-hs-bluenavy/60 mt-2 sm:text-right">
+                Annual impact: ${(Number(amount || 0) * 12).toLocaleString()}
+              </p>
+            )}
           </div>
 
           {/* Donor Information */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+          <div className="mb-12">
+            <h3 className="text-2xl font-extrabold mb-6 border-b-2 border-gray-100 pb-4">
               Your Information
             </h3>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-5">
               <input
                 type="text"
                 placeholder="First Name *"
                 value={donorInfo.firstName}
                 onChange={(e) => setDonorInfo({ ...donorInfo, firstName: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
                 required
               />
               <input
@@ -411,7 +383,7 @@ function DonationWidget() {
                 placeholder="Last Name *"
                 value={donorInfo.lastName}
                 onChange={(e) => setDonorInfo({ ...donorInfo, lastName: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
                 required
               />
               <input
@@ -419,7 +391,7 @@ function DonationWidget() {
                 placeholder="Email *"
                 value={donorInfo.email}
                 onChange={(e) => setDonorInfo({ ...donorInfo, email: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
                 required
               />
               <input
@@ -427,14 +399,14 @@ function DonationWidget() {
                 placeholder="Phone"
                 value={donorInfo.phone}
                 onChange={(e) => setDonorInfo({ ...donorInfo, phone: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
               />
               <input
                 type="text"
                 placeholder="Address *"
                 value={donorInfo.address}
                 onChange={(e) => setDonorInfo({ ...donorInfo, address: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all md:col-span-2"
                 required
               />
               <input
@@ -442,44 +414,44 @@ function DonationWidget() {
                 placeholder="City *"
                 value={donorInfo.city}
                 onChange={(e) => setDonorInfo({ ...donorInfo, city: e.target.value })}
-                className="px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
                 required
               />
             </div>
           </div>
 
           {/* Tribute Gift */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold mb-4" style={{ color: BRAND.blue }}>
+          <div className="mb-10">
+            <h3 className="text-2xl font-extrabold mb-6 border-b-2 border-gray-100 pb-4">
               Tribute Gift (Optional)
             </h3>
-            <div className="flex gap-4 mb-4">
+            <div className="flex flex-wrap gap-4 mb-6">
               <button
                 onClick={() => setTributeType("none")}
-                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                className={`py-3 px-6 rounded-xl font-bold transition-all border-2 ${
                   tributeType === "none"
-                    ? "bg-[var(--hs-blue)] text-white"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-hs-bluenavy border-hs-bluenavy text-white shadow-md"
+                    : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
                 }`}
               >
                 No Tribute
               </button>
               <button
                 onClick={() => setTributeType("honor")}
-                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                className={`py-3 px-6 rounded-xl font-bold transition-all border-2 ${
                   tributeType === "honor"
-                    ? "bg-[var(--hs-blue)] text-white"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-hs-bluenavy border-hs-bluenavy text-white shadow-md"
+                    : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
                 }`}
               >
                 In Honor Of
               </button>
               <button
                 onClick={() => setTributeType("memory")}
-                className={`py-2 px-4 rounded-lg font-medium transition-all ${
+                className={`py-3 px-6 rounded-xl font-bold transition-all border-2 ${
                   tributeType === "memory"
-                    ? "bg-[var(--hs-blue)] text-white"
-                    : "bg-gray-100 text-gray-700"
+                    ? "bg-hs-bluenavy border-hs-bluenavy text-white shadow-md"
+                    : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
                 }`}
               >
                 In Memory Of
@@ -488,30 +460,27 @@ function DonationWidget() {
             {tributeType !== "none" && (
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="Name of the person"
                 value={tributeName}
                 onChange={(e) => setTributeName(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-[var(--hs-blue)] outline-none"
+                className="w-full px-5 py-4 rounded-xl border-2 bg-gray-50 border-gray-200 focus:border-hs-yellow focus:bg-white outline-none font-medium transition-all"
               />
             )}
           </div>
 
           {/* Submit Button */}
-          <button
-            onClick={handleDonation}
-            disabled={isProcessing}
-            className="w-full py-4 px-8 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            style={{
-              backgroundColor: BRAND.yellow,
-              color: BRAND.blue,
-            }}
-          >
-            {isProcessing ? "Processing..." : `Complete Donation - $${Number(amount || 0).toLocaleString()}`}
-          </button>
-
-          <p className="text-sm text-gray-500 text-center mt-4">
-            Secure payment processed by Stripe. Tax-deductible under 501(c)(3).
-          </p>
+          <div className="pt-8 border-t-2 border-gray-100">
+            <button
+              onClick={handleDonation}
+              disabled={isProcessing}
+              className="w-full py-5 px-8 rounded-full font-extrabold text-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_40px_rgba(255,187,0,0.4)] bg-hs-yellow text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow border-4 border-hs-yellow"
+            >
+              {isProcessing ? "Processing Securely..." : `Complete Donation - $${Number(amount || 0).toLocaleString()}`}
+            </button>
+            <p className="text-sm font-bold text-gray-400 text-center mt-6 uppercase tracking-widest">
+              Secure payment processed by Stripe. <br className="sm:hidden"/> Tax-deductible under 501(c)(3).
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -579,34 +548,35 @@ function ImpactStories() {
   }
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-20 md:py-32 bg-hs-bluenavy">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
-            Meet Our Scholars
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-6">
+            Meet Our <span className="text-hs-yellow">Scholars</span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Real stories from students and teachers whose lives have been transformed
+          <p className="text-xl md:text-2xl font-medium text-white/80 max-w-2xl mx-auto">
+            Real stories from students and teachers whose lives have been transformed by your generosity.
           </p>
         </div>
 
         {loading ? (
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-10">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
-                <div className="h-64 bg-gray-200" />
-                <div className="p-6">
-                  <div className="h-20 bg-gray-200 rounded mb-4" />
-                  <div className="h-4 bg-gray-200 rounded mb-2" />
-                  <div className="h-4 bg-gray-200 rounded w-2/3" />
+              <div key={i} className="bg-white/5 border-2 border-white/10 rounded-3xl overflow-hidden shadow-xl animate-pulse">
+                <div className="h-64 bg-white/10" />
+                <div className="p-8">
+                  <div className="h-8 bg-white/10 rounded mb-4 w-3/4" />
+                  <div className="h-4 bg-white/10 rounded mb-3 w-full" />
+                  <div className="h-4 bg-white/10 rounded mb-6 w-5/6" />
+                  <div className="h-6 bg-white/10 rounded w-1/2" />
                 </div>
               </div>
             ))}
           </div>
         ) : stories.length === 0 ? (
-          <p className="text-center text-gray-600">No stories available yet.</p>
+          <p className="text-center text-xl font-bold text-white/60">No stories available yet.</p>
         ) : (
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-10">
             {stories.map((story) => {
               const docId = story.documentId ?? story.id;
               const title = story.title ?? "Untitled";
@@ -615,24 +585,25 @@ function ImpactStories() {
               const imageUrl = getImageUrl(story);
 
               return (
-                <div key={docId} className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="relative h-64">
+                <div key={docId} className="group bg-white/5 border-2 border-white/10 rounded-[32px] overflow-hidden shadow-2xl hover:border-hs-yellow transition-all duration-300 hover:-translate-y-2 flex flex-col">
+                  <div className="relative h-64 md:h-72 overflow-hidden">
                     <Image
                       src={imageUrl}
                       alt={studentName}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-hs-bluenavy via-transparent to-transparent opacity-80" />
                   </div>
-                  <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2" style={{ color: BRAND.blue }}>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <h3 className="font-extrabold text-2xl text-hs-yellow mb-4 leading-tight">
                       {title}
                     </h3>
-                    <blockquote className="text-gray-700 italic mb-4 line-clamp-3">
+                    <blockquote className="text-base font-medium text-white/80 italic mb-8 line-clamp-4 flex-grow">
                       &quot;{description}&quot;
                     </blockquote>
-                    <div>
-                      <div className="font-bold" style={{ color: BRAND.blue }}>
+                    <div className="mt-auto border-t-2 border-white/10 pt-4">
+                      <div className="font-bold text-lg text-white uppercase tracking-widest">
                         {studentName}
                       </div>
                     </div>
@@ -643,9 +614,20 @@ function ImpactStories() {
           </div>
         )}
 
-        <div className="text-center mt-8">
-          <a href="/donation/stories" className="text-[var(--hs-blue)] font-semibold hover:underline">
-            Read More Stories →
+        {/* BOTÓN BLINDADO DEFINITIVO 🚀 */}
+        <div className="text-center mt-16 flex justify-center relative z-50">
+          <a 
+            href="/donation/stories" 
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-bold text-lg border-2 transition-transform hover:scale-105 shadow-xl"
+            style={{ 
+              borderColor: "var(--hs-yellow)", 
+              color: "var(--hs-yellow)",
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              pointerEvents: "auto" // Fuerza a que reciba clics sin importar qué haya encima
+            }}
+          >
+            See All Stories <ArrowRight className="w-5 h-5" />
           </a>
         </div>
       </div>
@@ -653,87 +635,75 @@ function ImpactStories() {
   );
 }
 
-
-
-
 // Stewardship & Transparency
 function Stewardship() {
   return (
-    <section className="py-16 sm:py-24 bg-gray-50">
+    <section className="py-20 md:py-32 bg-hs-yellow text-hs-bluenavy border-t-4 border-hs-bluenavy/10">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4" style={{ color: BRAND.blue }}>
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
             Stewardship & Transparency
           </h2>
-          <p className="text-xl text-gray-600">
-            Your trust matters. See how we steward every gift.
+          <p className="text-xl md:text-2xl font-bold opacity-80 max-w-2xl mx-auto">
+            Your trust matters. See how we steward every gift to maximize its impact.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-            <CheckCircle2 className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
-            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
-              Annual Impact Report
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Detailed breakdown of how every dollar makes a difference
+        <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="bg-white p-10 rounded-3xl shadow-xl text-center border-4 border-white hover:border-hs-bluenavy transition-colors duration-300">
+            <CheckCircle2 className="w-16 h-16 mx-auto mb-6 text-hs-bluenavy" />
+            <h3 className="text-2xl font-extrabold mb-4">Annual Impact Report</h3>
+            <p className="text-base font-medium opacity-80 mb-8 leading-relaxed">
+              Detailed breakdown of how every dollar makes a difference.
             </p>
-            <button className="text-[var(--hs-blue)] font-semibold hover:underline">
-              Download Report →
+            <button className="inline-flex items-center gap-2 font-bold text-lg text-hs-yellow bg-hs-bluenavy px-6 py-3 rounded-full hover:scale-105 transition-transform w-full justify-center">
+              Download Report
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-            <Users className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
-            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
-              Board of Directors
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Meet the dedicated leaders guiding our mission
+          <div className="bg-white p-10 rounded-3xl shadow-xl text-center border-4 border-white hover:border-hs-bluenavy transition-colors duration-300">
+            <Users className="w-16 h-16 mx-auto mb-6 text-hs-bluenavy" />
+            <h3 className="text-2xl font-extrabold mb-4">Board of Directors</h3>
+            <p className="text-base font-medium opacity-80 mb-8 leading-relaxed">
+              Meet the dedicated leaders guiding our 501(c)(3) mission.
             </p>
-            <button className="text-[var(--hs-blue)] font-semibold hover:underline">
-              Learn More →
+            <button className="inline-flex items-center gap-2 font-bold text-lg text-hs-yellow bg-hs-bluenavy px-6 py-3 rounded-full hover:scale-105 transition-transform w-full justify-center">
+              Learn More
             </button>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl shadow-lg text-center">
-            <Mail className="w-12 h-12 mx-auto mb-4" style={{ color: BRAND.yellow }} />
-            <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
-              Contact Us
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Development Office / Foundation Team
+          <div className="bg-white p-10 rounded-3xl shadow-xl text-center border-4 border-white hover:border-hs-bluenavy transition-colors duration-300">
+            <Mail className="w-16 h-16 mx-auto mb-6 text-hs-bluenavy" />
+            <h3 className="text-2xl font-extrabold mb-4">Contact Us</h3>
+            <p className="text-base font-medium opacity-80 mb-6 leading-relaxed">
+              Development Office & Foundation Team
             </p>
-            <div className="space-y-2 text-sm text-gray-600">
-              <div className="flex items-center justify-center gap-2">
-                <Mail className="w-4 h-4" />
-                donations@hughesschools.edu
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <Phone className="w-4 h-4" />
-                +591 4 123 4567
-              </div>
+            <div className="space-y-3 text-base font-bold">
+              <a href="mailto:donations@hughesschools.edu" className="flex items-center justify-center gap-3 hover:text-hs-yellow bg-gray-50 py-3 rounded-xl transition-colors">
+                <Mail className="w-5 h-5" /> donations@hughes...
+              </a>
+              <a href="tel:+59141234567" className="flex items-center justify-center gap-3 hover:text-hs-yellow bg-gray-50 py-3 rounded-xl transition-colors">
+                <Phone className="w-5 h-5" /> +591 4 123 4567
+              </a>
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl border-2 border-[var(--hs-yellow)]">
-          <div className="flex items-start gap-4">
-            <CheckCircle2 className="w-8 h-8 flex-shrink-0" style={{ color: BRAND.yellow }} />
-            <div>
-              <h3 className="text-xl font-bold mb-2" style={{ color: BRAND.blue }}>
-                Legal & Nonprofit Information
-              </h3>
-              <p className="text-gray-600">
-                <strong>EIN:</strong> 12-3456789<br />
-                <strong>Status:</strong> 501(c)(3) Tax-Exempt Organization<br />
-                <strong>Disclaimer:</strong> Hughes Schools Foundation is a registered nonprofit. 
-                All donations are tax-deductible to the fullest extent allowed by law.
-              </p>
-            </div>
+        <div className="bg-hs-bluenavy text-white p-8 md:p-10 rounded-3xl shadow-2xl flex flex-col md:flex-row items-center gap-8 border-4 border-hs-bluenavy">
+          <CheckCircle2 className="w-16 h-16 text-hs-yellow shrink-0" />
+          <div>
+            <h3 className="text-2xl font-extrabold text-hs-yellow mb-3">
+              Legal & Nonprofit Information
+            </h3>
+            <p className="text-lg font-medium opacity-90 leading-relaxed">
+              <strong className="text-white">EIN:</strong> 12-3456789<br />
+              <strong className="text-white">Status:</strong> 501(c)(3) Tax-Exempt Organization<br />
+              <strong className="text-hs-yellow">Disclaimer:</strong> Hughes Schools Foundation is a registered nonprofit. 
+              All donations are tax-deductible to the fullest extent allowed by law.
+            </p>
           </div>
         </div>
+
       </div>
     </section>
   );

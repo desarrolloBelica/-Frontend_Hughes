@@ -3,7 +3,7 @@
 
 import { FaGlobeAmericas } from "react-icons/fa"; // Ícono de mundo
 import ReactCountryFlag from "react-country-flag";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 // Backend rows (Strapi v4/v5 minimal)
 type RowV5 = { id: number | string; name?: string; country?: string; page?: string };
@@ -79,88 +79,96 @@ export default function WhereOurGraduatesGoPage() {
   }, []);
 
   return (
-    <main className="min-h-screen">
-      {/* HERO */}
-      <section className="section-gradient-soft-yellow">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <div className="flex items-center gap-3">
-            <FaGlobeAmericas className="text-[var(--hs-yellow)] text-4xl md:text-5xl" />
-            <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-hughes-blue">
+    <main className="min-h-screen bg-white">
+      {/* HERO - Actualizado a fondo Azul Institucional */}
+      <section className="bg-hs-bluenavy relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-24">
+          <div className="flex flex-wrap items-center gap-4 mb-6">
+            <FaGlobeAmericas className="text-hs-yellow text-4xl md:text-5xl lg:text-6xl" />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow leading-tight">
               Our Graduates Around the World
             </h1>
           </div>
 
-          <p className="mt-4 max-w-3xl text-lg text-hughes-blue/80">
+          <p className="mt-6 max-w-3xl text-lg md:text-xl leading-relaxed text-white opacity-90">
             Hughes Schools alumni are accepted to top universities worldwide and in
             Bolivia — a testament to the strength of our academic program.{" "}
-            <strong>100% matriculated to 4-year colleges and/or universities.</strong>
+            <strong className="text-hs-yellow font-bold">100% matriculated to 4-year colleges and/or universities.</strong>
           </p>
         </div>
       </section>
 
-      {/* LISTA COMPACTA EN TABLA */}
-      <section className="bg-[#f5f6fb]">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 pb-24 md:pb-36">
+      {/* LISTA DE UNIVERSIDADES */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 md:py-24 pb-24 md:pb-36">
           <div
-            className="overflow-hidden rounded-2xl border bg-white"
-            style={{ borderColor: "#ececf4" }}
+            className="overflow-hidden rounded-3xl border-2 shadow-xl"
+            style={{ borderColor: "var(--hs-bluenavy)" }}
           >
+            {/* Header de la Tabla - Fondo Amarillo */}
             <div
-              className="px-4 py-4 md:px-6 border-b"
-              style={{ borderColor: "#ececf4" }}
+              className="px-6 py-8 md:px-10 border-b-2 bg-hs-yellow"
+              style={{ borderColor: "var(--hs-bluenavy)" }}
             >
-              <h2 className="text-xl md:text-2xl font-bold text-hughes-blue">
+              <h2 className="text-3xl md:text-4xl font-bold text-hs-bluenavy mb-2">
                 Universities by Country
               </h2>
-              <p className="text-sm text-hughes-blue/70 mt-1">
+              <p className="text-lg md:text-xl font-medium text-hs-bluenavy opacity-90">
                 Compact list of institutions attended by our graduates.
               </p>
             </div>
 
-            <div className="overflow-x-auto">
+            {/* Contenedor de la Tabla */}
+            <div className="overflow-x-auto bg-white">
               {loading ? (
-                <div className="p-6 text-hughes-blue/70">Loading universities…</div>
+                <div className="p-10 text-lg text-hs-bluenavy/70 font-semibold animate-pulse">
+                  Loading universities…
+                </div>
               ) : error ? (
-                <div className="p-6 text-hughes-blue">Error: {error}</div>
+                <div className="p-10 text-lg text-red-600 font-semibold">
+                  Error: {error}
+                </div>
               ) : rows.length === 0 ? (
-                <div className="p-6 text-hughes-blue/70">No data available.</div>
+                <div className="p-10 text-lg text-hs-bluenavy/70 font-semibold">
+                  No data available.
+                </div>
               ) : (
-                <table className="min-w-full text-sm">
-                  <thead className="bg-[#fafbff] text-hughes-blue/80">
+                <table className="min-w-full text-base md:text-lg text-hs-bluenavy">
+                  <thead className="bg-hs-bluenavy text-hs-yellow">
                     <tr>
-                      <th className="text-left font-semibold px-4 py-3 md:px-6">Country</th>
-                      <th className="text-left font-semibold px-4 py-3 md:px-6">University</th>
+                      <th className="text-left font-bold px-6 py-5 md:px-10">Country</th>
+                      <th className="text-left font-bold px-6 py-5 md:px-10">University</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rows.map((u, idx) => (
                       <tr
                         key={`${u.country}-${u.name}-${idx}`}
-                        className="border-t hover:bg-[#fafbff]"
-                        style={{ borderColor: "#ececf4" }}
+                        className="border-t-2 hover:bg-black/5 transition-colors"
+                        style={{ borderColor: "var(--hs-bluenavy)" }}
                       >
-                        <td className="px-4 py-3 md:px-6 text-hughes-blue/90 flex items-center gap-2">
+                        <td className="px-6 py-4 md:px-10 font-bold flex items-center gap-4">
                           {COUNTRY_CODES[u.country] && (
                             <ReactCountryFlag
                               countryCode={COUNTRY_CODES[u.country]}
                               svg
-                              style={{ width: "1.5em", height: "1.5em", borderRadius: "3px" }}
+                              style={{ width: "2em", height: "2em", borderRadius: "4px" }}
                             />
                           )}
                           {u.country}
                         </td>
-                        <td className="px-4 py-3 md:px-6">
+                        <td className="px-6 py-4 md:px-10 font-medium">
                           {u.page ? (
                             <a
                               href={u.page}
                               target="_blank"
                               rel="noreferrer"
-                              className="text-hughes-blue hover:underline"
+                              className="text-hs-bluenavy hover:text-[var(--hs-blue)] hover:underline decoration-2 underline-offset-4"
                             >
                               {u.name}
                             </a>
                           ) : (
-                            <span className="text-hughes-blue/90">{u.name}</span>
+                            <span className="opacity-90">{u.name}</span>
                           )}
                         </td>
                       </tr>

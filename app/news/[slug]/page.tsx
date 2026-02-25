@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import NewsGallery from "@/components/NewsGallerySection";
+import { ArrowLeft } from "lucide-react"; // Añadido para el botón de regreso
 
 /* ─────────── Tipos locales para Next 15 ─────────── */
 type RouteParams = Promise<{ slug: string }>;
@@ -216,36 +217,47 @@ export default async function NewsDetailPage({ params }: PageInput) {
     .filter((g) => !!g.url) as { url: string; alt: string }[];
 
   return (
-    <section className="w-full py-12 md:py-16" style={{ background: "#f5f6fb" }}>
-      <div className="mx-auto max-w-5xl px-4">
+    // CAMBIO: Fondo principal amarillo
+    <main className="min-h-screen bg-hs-yellow py-12 md:py-20">
+      <div className="mx-auto max-w-4xl px-6">
+        
+        {/* Back Button */}
+        <div className="mb-10 text-left">
+          <Link
+            href="/news"
+            className="inline-flex items-center gap-2 text-base font-bold text-hs-bluenavy opacity-80 hover:opacity-100 transition-opacity"
+          >
+            <ArrowLeft className="w-5 h-5" /> Back to News
+          </Link>
+        </div>
+
         {/* Título */}
-        <h1 className="text-center text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy leading-tight mb-4">
           {title}
         </h1>
 
         {/* Fecha */}
         {date && (
-          <div className="mt-2 text-center text-sm text-hughes-blue/70">
+          <div className="text-lg font-bold text-hs-bluenavy opacity-70 mb-10 tracking-widest uppercase">
             {formatDate(date)}
           </div>
         )}
 
         {/* Portada */}
         {cover?.url && (
-          <div className="mt-6 flex justify-center">
+          <div className="mb-12 relative aspect-video w-full rounded-[40px] overflow-hidden shadow-2xl border-4 border-hs-bluenavy">
             <Image
               src={cover.url}
               alt={cover.alt}
-              width={700}
-              height={400}
-              className="rounded-2xl object-cover"
+              fill
+              className="object-cover"
               priority
             />
           </div>
         )}
 
-        {/* Contenido */}
-        <article className="prose prose-xl mt-8 mx-auto text-center max-w-3xl prose-h2:text-hughes-blue prose-a:text-[var(--hs-blue)]">
+        {/* Contenido (Forzando la herencia de color) */}
+        <article className="prose prose-lg md:prose-xl max-w-none text-hs-bluenavy font-medium leading-relaxed text-justify prose-headings:text-hs-bluenavy prose-headings:font-bold prose-a:text-hs-bluenavy prose-a:font-bold prose-strong:text-hs-bluenavy prose-strong:font-extrabold">
           {typeof content === "string" && /<\/?[a-z][\s\S]*>/i.test(content) ? (
             <div dangerouslySetInnerHTML={{ __html: content }} />
           ) : (
@@ -253,24 +265,15 @@ export default async function NewsDetailPage({ params }: PageInput) {
           )}
         </article>
 
-        {/* Galería */}
+        {/* Galería (El componente NewsGallery maneja sus estilos, asegúrate que se vea bien en amarillo) */}
         {gallery.length > 0 && (
-          <div className="mt-16">
+          <div className="mt-20 border-t-2 border-hs-bluenavy/20 pt-16">
+            <h2 className="text-3xl font-extrabold text-hs-bluenavy mb-8">Image Gallery</h2>
             <NewsGallery images={gallery} />
           </div>
         )}
-
-        {/* Back */}
-        <div className="mt-12 text-left">
-          <Link
-            href="/news"
-            className="inline-flex items-center text-sm font-semibold"
-            style={{ color: "var(--hs-blue)" }}
-          >
-            ← Back to News
-          </Link>
-        </div>
+        
       </div>
-    </section>
+    </main>
   );
 }

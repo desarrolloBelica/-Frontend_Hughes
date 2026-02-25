@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const HS_BLUE = "var(--hs-blue)";
-const HS_YELLOW = "var(--hs-yellow)";
-const HS_NAVY = "var(--hs-bluenavy)";
+import { ArrowLeft, UploadCloud } from "lucide-react";
 
 type FormState = {
   fullname: string;
@@ -70,7 +67,7 @@ export default function SubmitSpotlightPage() {
         }
         throw new Error(`Failed to submit (HTTP ${res.status}) ${detail}`);
       }
-      setSuccess("Spotlight submitted! Once approved, it will appear in the list.");
+      setSuccess("Spotlight submitted successfully! Once approved, it will appear in the list.");
       setForm(initial);
       setFiles([]);
       setInputVersion((v) => v + 1);
@@ -83,141 +80,183 @@ export default function SubmitSpotlightPage() {
   }
 
   return (
-    <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
-      <section className="relative overflow-hidden pb-16">
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(115deg, ${HS_NAVY} 0%, ${HS_BLUE} 60%, ${HS_YELLOW} 120%)` }}
-        />
-        <div className="absolute inset-0 opacity-25" style={{ background: "radial-gradient(80rem 40rem at 20% 10%, rgba(255,255,255,0.25), transparent 50%), radial-gradient(50rem 30rem at 90% 0%, rgba(255,255,255,0.2), transparent 55%)" }} />
+    <main className="min-h-screen bg-hs-bluenavy">
+      <section className="relative overflow-hidden pb-24 pt-16 md:pt-24">
+        
+        {/* Decoración de fondo */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--hs-yellow)_0%,_transparent_60%)] blur-[100px]" />
 
-        <div className="relative mx-auto max-w-4xl px-6 pt-14">
-          <div className="flex items-center justify-between gap-4 flex-wrap text-white">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] border border-white/20">
-                Share your story
-              </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Submit your Hughes spotlight.</h1>
-              <p className="text-white/80 max-w-2xl">We celebrate professional, artistic, and service achievements. Your voice inspires the next generation of Hughes.</p>
-            </div>
+        <div className="relative mx-auto max-w-4xl px-6">
+          
+          <div className="mb-12">
             <Link
               href="/alumni/spotlights"
-              className="inline-flex items-center rounded-full border px-4 py-2 text-sm font-semibold bg-white/10 border-white/30 text-white hover:bg-white/20"
+              className="inline-flex items-center gap-2 text-sm font-bold text-hs-yellow hover:opacity-80 transition-opacity"
             >
-              ← Back to Spotlights
+              <ArrowLeft className="w-4 h-4" /> Back to Spotlights
             </Link>
           </div>
 
-          <form onSubmit={onSubmit} className="mt-10 grid gap-4 bg-white border border-[#e6e8f2] rounded-2xl p-6 shadow-lg">
-            <div className="grid gap-4 md:grid-cols-2">
+          <div className="text-white mb-12">
+            <div className="inline-flex items-center gap-2 rounded-full bg-hs-yellow/10 border-2 border-hs-yellow/30 px-5 py-2 text-sm font-bold uppercase tracking-widest text-hs-yellow mb-4">
+              Share your story
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight mb-4">
+              Submit your Hughes spotlight.
+            </h1>
+            <p className="text-lg font-medium text-white/80 max-w-2xl leading-relaxed">
+              We celebrate professional, artistic, and service achievements. Your voice inspires the next generation of Hughes.
+            </p>
+          </div>
+
+          <form onSubmit={onSubmit} className="bg-white/5 border-2 border-white/10 backdrop-blur-md rounded-[40px] p-8 md:p-12 shadow-2xl">
+            <div className="grid gap-6 md:grid-cols-2 mb-6">
               <div>
-                <label className="hs-label hs-label-required">Full name</label>
+                <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">
+                  Full name <span className="text-red-500">*</span>
+                </label>
                 <input
                   value={form.fullname}
                   onChange={(e) => onChange("fullname", e.target.value)}
-                  className="hs-input"
+                  className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors"
                   placeholder="E.g. Maria Lopez"
                   required
                 />
               </div>
               <div>
-                <label className="hs-label hs-label-required">Graduation year</label>
+                <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">
+                  Graduation year <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="date"
                   value={form.graduationYear}
                   onChange={(e) => onChange("graduationYear", e.target.value)}
-                  className="hs-input"
+                  className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors [color-scheme:dark]"
                   required
                 />
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-3 mb-6">
               <div>
-                <label className="hs-label">City</label>
-                <input value={form.city} onChange={(e) => onChange("city", e.target.value)} className="hs-input" />
+                <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">City</label>
+                <input 
+                  value={form.city} 
+                  onChange={(e) => onChange("city", e.target.value)} 
+                  className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors" 
+                />
               </div>
               <div>
-                <label className="hs-label">University</label>
-                <input value={form.university} onChange={(e) => onChange("university", e.target.value)} className="hs-input" />
+                <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">University</label>
+                <input 
+                  value={form.university} 
+                  onChange={(e) => onChange("university", e.target.value)} 
+                  className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors" 
+                />
               </div>
               <div>
-                <label className="hs-label">Profession</label>
-                <input value={form.profession} onChange={(e) => onChange("profession", e.target.value)} className="hs-input" />
+                <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Profession</label>
+                <input 
+                  value={form.profession} 
+                  onChange={(e) => onChange("profession", e.target.value)} 
+                  className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors" 
+                />
               </div>
             </div>
 
-            <div>
-              <label className="hs-label">Professional or artistic path</label>
-              <input value={form.artisticPath} onChange={(e) => onChange("artisticPath", e.target.value)} className="hs-input" />
-            </div>
-
-            <div>
-              <label className="hs-label">Media (photos, images, videos)</label>
-              <input
-                key={inputVersion}
-                type="file"
-                accept="image/*,video/*,application/pdf"
-                multiple
-                onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
-                className="mt-2 block w-full rounded-md border px-3 py-2 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
+            <div className="mb-6">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Professional or artistic path</label>
+              <input 
+                value={form.artisticPath} 
+                onChange={(e) => onChange("artisticPath", e.target.value)} 
+                className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors" 
               />
-              <p className="mt-1 text-xs text-hughes-blue/70">You can add multiple images or media files to appear in your spotlight.</p>
             </div>
 
-            <div>
-              <label className="hs-label">Biography</label>
+            <div className="mb-6">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Media (Photos, Videos)</label>
+              <div className="relative w-full rounded-xl border-2 border-dashed border-white/30 bg-white/5 p-6 hover:bg-white/10 transition-colors text-center cursor-pointer">
+                <UploadCloud className="w-8 h-8 text-hs-yellow mx-auto mb-2" />
+                <p className="text-sm text-white/70 font-medium">Click to upload or drag and drop files here</p>
+                <input
+                  key={inputVersion}
+                  type="file"
+                  accept="image/*,video/*,application/pdf"
+                  multiple
+                  onChange={(e) => setFiles(Array.from(e.target.files ?? []))}
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                />
+              </div>
+              {files.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {files.map((f, i) => (
+                    <span key={i} className="px-3 py-1 bg-hs-yellow/20 text-hs-yellow rounded-full text-xs font-bold border border-hs-yellow/30">
+                      {f.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Biography</label>
               <textarea
                 value={form.biography}
                 onChange={(e) => onChange("biography", e.target.value)}
                 rows={4}
-                className="mt-2 w-full rounded-lg border px-3 py-3 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
+                className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors resize-none"
               />
             </div>
 
-            <div>
-              <label className="hs-label">How did Hughes impact your life?</label>
+            <div className="mb-6">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">How did Hughes impact your life?</label>
               <textarea
                 value={form.hughesImpact}
                 onChange={(e) => onChange("hughesImpact", e.target.value)}
                 rows={4}
-                className="mt-2 w-full rounded-lg border px-3 py-3 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
+                className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors resize-none"
               />
             </div>
 
-            <div>
-              <label className="hs-label">Message for current students</label>
+            <div className="mb-8">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Message for current students</label>
               <textarea
                 value={form.messageForStudents}
                 onChange={(e) => onChange("messageForStudents", e.target.value)}
                 rows={4}
-                className="mt-2 w-full rounded-lg border px-3 py-3 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
+                className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors resize-none"
               />
             </div>
 
-            {error && <div className="text-red-600 text-sm">{error}</div>}
-            {success && <div className="text-green-700 text-sm">{success}</div>}
+            {error && (
+              <div className="mb-6 rounded-xl bg-red-500/20 border-2 border-red-500 p-4 text-white font-bold">
+                {error}
+              </div>
+            )}
+            
+            {success && (
+              <div className="mb-6 rounded-xl bg-green-500/20 border-2 border-green-500 p-4 text-white font-bold">
+                {success}
+              </div>
+            )}
 
-            <div className="mt-2 flex items-center gap-3 flex-wrap">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t-2 border-white/10">
+              <Link
+                href="/alumni/spotlights"
+                className="w-full sm:w-auto text-center rounded-full border-2 border-white/30 px-8 py-4 font-bold text-white hover:bg-white hover:text-hs-bluenavy transition-colors"
+              >
+                Cancel
+              </Link>
               <button
                 type="submit"
                 disabled={submitting}
-                className="btn-hs-primary disabled:opacity-60"
+                className="w-full sm:w-auto rounded-full bg-hs-yellow px-10 py-4 font-bold text-hs-bluenavy text-lg hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xl"
               >
                 {submitting ? "Submitting…" : "Submit Spotlight"}
               </button>
-              <Link
-                href="/alumni/spotlights"
-                className="btn-hs-secondary"
-              >
-                ← Back to Spotlights
-              </Link>
             </div>
           </form>
+          
         </div>
       </section>
     </main>

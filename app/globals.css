@@ -231,14 +231,14 @@ html, body { color: var(--hs-blue); }
 
 .section-accent {
   background-color: var(--hs-yellow-darker);
-  color: var(--hs-blue);
+  color: var(--hs-bluenavy);
 }
 
 .section-gradient {
   background:
     radial-gradient(
       60rem 40rem at 10% -10%,
-      var(--hs-blue),
+      var(--hs-bluenavy),
       transparent 195%
     ),
     radial-gradient(
@@ -248,11 +248,12 @@ html, body { color: var(--hs-blue); }
     ),
     #ffffff;
 }
+
 .section-gradient-softly {
   background:
     radial-gradient(
       60rem 40rem at 10% -10%,
-      rgba(34, 58, 94, 0.592),
+      color-mix(in srgb, var(--hs-bluenavy) 59.2%, transparent),
       transparent 195%
     ),
     radial-gradient(
@@ -262,6 +263,7 @@ html, body { color: var(--hs-blue); }
     ),
     #ffffff;
 }
+
 .section-gradient-reverse {
   background:
     radial-gradient(
@@ -271,17 +273,17 @@ html, body { color: var(--hs-blue); }
     ),
     radial-gradient(
       60rem 40rem at 90% 110%,
-      var(--hs-blue),
+      var(--hs-bluenavy),
       transparent 195%
     ),
-
     #ffffff;
 }
+
 .section-gradient-strong {
   background:
     linear-gradient(
       135deg,
-      rgba(14, 54, 114, 0.771) 0%,
+      color-mix(in srgb, var(--hs-bluenavy) 77.1%, transparent) 0%,
       rgb(239, 178, 11) 100%
     ),
     #ffffff;
@@ -291,7 +293,7 @@ html, body { color: var(--hs-blue); }
   background:
     linear-gradient(
       180deg,
-      var(--hs-blue),
+      var(--hs-bluenavy),
       transparent 60%
     ),
     #ffffff;
@@ -311,33 +313,33 @@ html, body { color: var(--hs-blue); }
   background:
     linear-gradient(
       145deg,
-      rgba(34, 58, 94, 0.16),
+      color-mix(in srgb, var(--hs-bluenavy) 16%, transparent),
       rgba(255, 187, 0, 0.10)
     ),
     #ffffff;
-  border: 1px solid rgba(34, 58, 94, 0.08);
+  border: 1px solid color-mix(in srgb, var(--hs-bluenavy) 8%, transparent);
   border-radius: 1rem;
 }
 
 .bg-academic-grid {
   background:
-    linear-gradient(rgba(34,58,94,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,58,94,0.04) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--hs-bluenavy) 4%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--hs-bluenavy) 4%, transparent) 1px, transparent 1px),
     #ffffff;
   background-size: 40px 40px;
 }
 
 .bg-soft-dots {
   background:
-    radial-gradient(rgba(34, 58, 94, 0.616) 1px, transparent 1px),
+    radial-gradient(color-mix(in srgb, var(--hs-bluenavy) 61.6%, transparent) 1px, transparent 1px),
     #ffffff;
   background-size: 28px 28px;
 }
 
 .bg-blueprint {
   background:
-    linear-gradient(rgba(34, 58, 94, 0.149) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 58, 94, 0.142) 1px, transparent 2px),
+    linear-gradient(color-mix(in srgb, var(--hs-bluenavy) 14.9%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--hs-bluenavy) 14.2%, transparent) 1px, transparent 2px),
     #f8fafc;
   background-size: 24px 24px;
 }

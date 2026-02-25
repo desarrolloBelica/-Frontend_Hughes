@@ -83,8 +83,8 @@ function mediaAlt(m?: Media | null): string | undefined {
 function RoleChip({ children }: { children: React.ReactNode }) {
   return (
     <span
-      className="inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
-      style={{ borderColor: "#d0d0e0", color: "var(--hs-blue)" }}
+      className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider"
+      style={{ borderColor: "var(--hs-bluenavy)", color: "var(--hs-bluenavy)" }}
     >
       {children}
     </span>
@@ -104,15 +104,15 @@ function Bubble({
     <motion.div
       whileHover={{ y: -4 }}
       transition={{ type: "spring", stiffness: 260, damping: 20 }}
-      className={`relative rounded-3xl border bg-white shadow-[0_18px_60px_-28px_rgba(17,6,49,0.35)] ${
+      className={`relative rounded-3xl border shadow-[0_18px_60px_-28px_rgba(17,6,49,0.35)] ${
         featured ? "p-8 md:p-10" : "p-6"
       } ${className}`}
-      style={{ borderColor: "#d0d0e0" }}
+      style={{ borderColor: "var(--hs-bluenavy)", backgroundColor: "var(--hs-yellow)" }}
     >
       {/* cola */}
       <div
-        className="absolute -bottom-3 left-10 h-3 w-6 rotate-45 rounded-[6px] border bg-white"
-        style={{ borderColor: "#d0d0e0" }}
+        className="absolute -bottom-3 left-10 h-3 w-6 rotate-45 rounded-[6px] border"
+        style={{ borderColor: "var(--hs-bluenavy)", backgroundColor: "var(--hs-yellow)" }}
       />
       {/* comillas marca de agua */}
       <svg
@@ -206,11 +206,11 @@ const picks = useMemo(() => {
       <div className="relative mx-auto max-w-6xl px-4">
         {/* encabezado */}
         <div className="mb-10 text-center">
-          <div className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-white">Testimonials</div>
-          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-white">
+          <div className="mt-3 text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "var(--hs-yellow)" }}>Testimonials</div>
+          <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "var(--hs-yellow)" }}>
             What our community says
           </h2>
-          <p className="text-sm md:text-base mt-2 text-white/80">
+          <p className="text-sm md:text-base mt-2" style={{ color: "var(--hs-yellow-medium)" }}>
             Real voices from students, graduates, and parents.
           </p>
           </div>
@@ -221,15 +221,15 @@ const picks = useMemo(() => {
               {[0, 1, 2].map((i) => (
                 <div
                   key={i}
-                  className="rounded-3xl border bg-white h-60 animate-pulse md:col-span-3"
-                  style={{ borderColor: "#d0d0e0" }}
+                  className="rounded-3xl border h-60 animate-pulse md:col-span-3"
+                  style={{ borderColor: "var(--hs-bluenavy)", backgroundColor: "var(--hs-yellow)" }}
                 />
               ))}
             </motion.div>
           ) : error ? (
-            <p className="text-center text-white">Error loading testimonials: {error}</p>
+            <p className="text-center" style={{ color: "var(--hs-yellow)" }}>Error loading testimonials: {error}</p>
           ) : picks.length === 0 ? (
-            <p className="text-center text-white">No testimonials yet.</p>
+            <p className="text-center" style={{ color: "var(--hs-yellow)" }}>No testimonials yet.</p>
           ) : (
             <motion.div className="grid grid-cols-1 md:grid-cols-6 gap-6 items-stretch">
               {picks.map((t, idx) => {
@@ -254,7 +254,7 @@ const picks = useMemo(() => {
                       <div className="flex items-center gap-4">
                         <div
                           className="h-14 w-14 rounded-full overflow-hidden border flex-shrink-0"
-                          style={{ borderColor: "#d0d0e0" }}
+                          style={{ borderColor: "var(--hs-bluenavy)" }}
                         >
                           {avatarUrl ? (
                             <Image
@@ -265,12 +265,12 @@ const picks = useMemo(() => {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="h-full w-full bg-[#f1f2f7]" />
+                            <div className="h-full w-full" style={{ backgroundColor: "var(--hs-yellow-light)" }} />
                           )}
                         </div>
 
                         <div className="min-w-0">
-                          <div className="font-semibold text-hughes-blue truncate">{name}</div>
+                          <div className="font-semibold truncate" style={{ color: "var(--hs-bluenavy)" }}>{name}</div>
                           {role && (
                             <div className="mt-1">
                               <RoleChip>{role}</RoleChip>
@@ -280,7 +280,7 @@ const picks = useMemo(() => {
                       </div>
 
                       {/* el párrafo crece para empujar la "cola" al final */}
-                      <p className="mt-4 leading-relaxed text-hughes-blue flex-grow">
+                      <p className="mt-4 leading-relaxed flex-grow" style={{ color: "var(--hs-bluenavy)" }}>
                         “{msg}”
                       </p>
                     </Bubble>

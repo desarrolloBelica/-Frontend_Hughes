@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 /** ───────────── Tipos (Strapi v4/v5) ───────────── */
 
@@ -90,10 +91,7 @@ function normalizeRole(raw?: string | null): string {
 
 function RoleChip({ children }: { children: React.ReactNode }) {
   return (
-    <span
-      className="inline-flex items-center rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-wider"
-      style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
-    >
+    <span className="inline-flex items-center rounded-full bg-hs-yellow px-3 py-1 text-xs font-bold uppercase tracking-widest text-hs-bluenavy shadow-sm">
       {children}
     </span>
   );
@@ -101,16 +99,13 @@ function RoleChip({ children }: { children: React.ReactNode }) {
 
 function CardShell({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="h-full rounded-3xl border bg-white p-6 md:p-7 shadow-[0_20px_70px_-35px_rgba(17,6,49,0.35)]"
-      style={{ borderColor: "#ececf4" }}
-    >
+    <div className="h-full rounded-3xl border-2 border-hs-yellow/10 bg-white/5 p-6 md:p-8 shadow-xl transition-all duration-300 hover:-translate-y-2 hover:border-hs-yellow hover:bg-white/10 flex flex-col justify-between">
       {children}
     </div>
   );
 }
 
-/** ───────────── Encabezado con icono (sin badge) ───────────── */
+/** ───────────── Encabezado con icono ───────────── */
 
 function HeaderIconOnly({
   title,
@@ -120,25 +115,21 @@ function HeaderIconOnly({
   subtitle: string;
 }) {
   return (
-    <section
-      className="relative w-full py-12 md:py-16 text-center overflow-hidden"
-      style={{
-        background:
-          "radial-gradient(70rem 40rem at 100% -10%, rgba(17,6,49,0.06), transparent 60%)",
-      }}
-    >
-      <div className="mx-auto max-w-6xl px-4">
-        {/* Icono amarillo (comillas) */}
-        <div className="inline-flex items-center justify-center">
-          <svg width="42" height="42" viewBox="0 0 24 24" fill="#FFBB00" aria-hidden>
+    <section className="relative w-full py-16 md:py-24 text-center overflow-hidden bg-hs-yellow rounded-b-[40px] shadow-lg mb-12">
+      <div className="mx-auto max-w-6xl px-6 relative z-10">
+        {/* Icono navy (comillas) */}
+        <div className="inline-flex items-center justify-center mb-4">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="var(--hs-bluenavy)" aria-hidden>
             <path d="M7 10c1.657 0 3 1.343 3 3 0 1.306-.835 2.417-2 2.83V18H4v-3c0-2.761 2.239-5 5-5zm10 0c1.657 0 3 1.343 3 3 0 1.306-.835 2.417-2 2.83V18h-4v-3c0-2.761 2.239-5 5-5z" />
           </svg>
         </div>
 
-        <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy">
           {title}
         </h1>
-        <p className="text-sm md:text-base mt-2 text-hughes-blue/80">{subtitle}</p>
+        <p className="text-lg md:text-xl mt-4 font-medium text-hs-bluenavy opacity-90 max-w-2xl mx-auto">
+          {subtitle}
+        </p>
       </div>
     </section>
   );
@@ -232,37 +223,29 @@ export default function AllTestimonialsPage() {
   }, [filteredRows, page]);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f9f9fb" }}>
-      {/* Header con icono amarillo */}
+    <main className="min-h-screen bg-hs-bluenavy">
+      {/* Header */}
       <HeaderIconOnly
         title="All Testimonials"
         subtitle="Read what students, graduates, and parents say about Hughes Schools."
       />
 
-      <section className="pb-16" style={{ background: "#f9f9fb" }}>
-        <div className="mx-auto max-w-7xl px-4" style={{ background: "#f9f9fb" }}>
+      <section className="pb-24">
+        <div className="mx-auto max-w-7xl px-6">
+          
           {/* Filtros por rol */}
-          <div className="mb-6 flex flex-wrap items-center gap-2 justify-center">
+          <div className="mb-10 flex flex-wrap items-center gap-3 justify-center">
             {availableRoles.map((r) => {
               const active = r === roleFilter;
               return (
                 <button
                   key={r}
                   onClick={() => setRoleFilter(r)}
-                  className="tab-pill rounded-full px-4 py-2 border text-sm transition-colors"
-                  style={
-                    active
-                      ? {
-                          background: "var(--hs-yellow)",
-                          borderColor: "var(--hs-yellow)",
-                          color: "var(--hs-blue)",
-                        }
-                      : {
-                          background: "#ffffff",
-                          borderColor: "#e6e6f0",
-                          color: "var(--hs-blue)",
-                        }
-                  }
+                  className={`rounded-full px-5 py-2.5 text-sm font-bold border-2 transition-all duration-300 ${
+                    active 
+                      ? "bg-hs-yellow border-hs-yellow text-hs-bluenavy shadow-md scale-105" 
+                      : "bg-transparent border-hs-yellow text-hs-yellow hover:bg-hs-yellow/10"
+                  }`}
                 >
                   {r}
                 </button>
@@ -272,31 +255,32 @@ export default function AllTestimonialsPage() {
 
           {/* Grid / Contenido */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
               {Array.from({ length: PAGE_SIZE }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-full rounded-3xl border bg-white p-6 animate-pulse"
-                  style={{ borderColor: "#ececf4" }}
+                  className="h-[250px] rounded-3xl border-2 border-white/10 bg-white/5 p-8 animate-pulse"
                 >
-                  <div className="h-5 w-40 bg-[#ececf4] rounded mb-4" />
-                  <div className="h-5 w-24 bg-[#ececf4] rounded mb-4" />
-                  <div className="h-24 w-full bg-[#f3f4f8] rounded" />
+                  <div className="flex gap-4 mb-4">
+                    <div className="h-14 w-14 bg-white/10 rounded-full" />
+                    <div className="flex flex-col gap-2 pt-1">
+                      <div className="h-4 w-32 bg-white/10 rounded" />
+                      <div className="h-4 w-16 bg-white/10 rounded" />
+                    </div>
+                  </div>
+                  <div className="h-20 w-full bg-white/10 rounded mt-6" />
                 </div>
               ))}
             </div>
           ) : error ? (
-            <div
-              className="rounded-xl border p-6 text-center text-hughes-blue"
-              style={{ borderColor: "var(--hs-yellow)" }}
-            >
+            <div className="rounded-2xl border-2 border-red-500 bg-red-500/10 p-8 text-center text-white font-bold text-lg">
               Error loading testimonials: {error}
             </div>
           ) : total === 0 ? (
-            <p className="text-center text-hughes-blue">No testimonials yet.</p>
+            <p className="text-center text-xl text-hs-yellow font-bold py-12">No testimonials match this category yet.</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
                 {pageItems.map((t) => {
                   const name = (getAttr<string>(t, "name") ?? "Anonymous") as string;
                   const role = normalizeRole(getAttr<string>(t, "rol") ?? "");
@@ -310,34 +294,40 @@ export default function AllTestimonialsPage() {
 
                   return (
                     <CardShell key={String(t.id)}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div
-                          className="h-12 w-12 rounded-full overflow-hidden border flex-shrink-0"
-                          style={{ borderColor: "#ececf4" }}
-                        >
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="h-16 w-16 md:h-20 md:w-20 rounded-full overflow-hidden border-2 border-hs-yellow flex-shrink-0 bg-hs-bluenavy">
                           {avatarUrl ? (
                             <Image
                               src={avatarUrl}
                               alt={avatarAlt}
-                              width={48}
-                              height={48}
+                              width={80}
+                              height={80}
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="h-full w-full bg-[#f1f2f7]" />
+                            <div className="h-full w-full bg-white/10 flex items-center justify-center text-white/50 text-xl font-bold">
+                              {name.charAt(0)}
+                            </div>
                           )}
                         </div>
                         <div className="min-w-0">
-                          <div className="font-semibold text-hughes-blue truncate">{name}</div>
+                          <div className="font-extrabold text-xl text-white truncate">{name}</div>
                           {role && (
-                            <div className="mt-1">
+                            <div className="mt-2">
                               <RoleChip>{role}</RoleChip>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      <p className="leading-relaxed text-[15px] text-hughes-blue">“{msg}”</p>
+                      <div className="relative">
+                        <svg className="absolute -top-4 -left-2 w-8 h-8 text-hs-yellow/20 -z-10" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                        </svg>
+                        <p className="leading-relaxed text-base font-medium text-white/90 z-10 relative">
+                          {msg}
+                        </p>
+                      </div>
                     </CardShell>
                   );
                 })}
@@ -345,18 +335,14 @@ export default function AllTestimonialsPage() {
 
               {/* Paginación */}
               {totalPages > 1 && (
-                <div className="mt-10 flex items-center justify-center gap-2">
+                <div className="mt-16 flex items-center justify-center gap-3">
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="rounded-full border px-4 py-2 text-sm tab-pill"
-                    style={{
-                      background: "var(--hs-yellow)",
-                      borderColor: "var(--hs-yellow)",
-                      color: "var(--hs-blue)",
-                    }}
+                    disabled={page <= 1}
+                    className="rounded-full px-6 py-2.5 text-sm font-bold transition-colors disabled:opacity-50 border-2 border-hs-yellow bg-transparent text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy"
                     aria-label="Previous page"
                   >
-                    Prev
+                    <ChevronLeft className="w-5 h-5 inline-block mr-1" /> Prev
                   </button>
 
                   {Array.from({ length: totalPages }).map((_, i) => {
@@ -366,20 +352,11 @@ export default function AllTestimonialsPage() {
                       <button
                         key={p}
                         onClick={() => setPage(p)}
-                        className="rounded-full px-4 py-2 text-sm tab-pill border"
-                        style={
+                        className={`rounded-full h-10 w-10 flex items-center justify-center text-sm font-bold transition-all ${
                           active
-                            ? {
-                                background: "var(--hs-yellow)",
-                                borderColor: "var(--hs-yellow)",
-                                color: "var(--hs-blue)",
-                              }
-                            : {
-                                background: "#ffffff",
-                                borderColor: "#e6e6f0",
-                                color: "var(--hs-blue)",
-                              }
-                        }
+                            ? "bg-hs-yellow text-hs-bluenavy scale-110 shadow-lg"
+                            : "bg-white/10 text-white hover:bg-white/20"
+                        }`}
                         aria-current={active ? "page" : undefined}
                       >
                         {p}
@@ -389,15 +366,11 @@ export default function AllTestimonialsPage() {
 
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    className="rounded-full border px-4 py-2 text-sm tab-pill"
-                    style={{
-                      background: "var(--hs-yellow)",
-                      borderColor: "var(--hs-yellow)",
-                      color: "var(--hs-blue)",
-                    }}
+                    disabled={page >= totalPages}
+                    className="rounded-full px-6 py-2.5 text-sm font-bold transition-colors disabled:opacity-50 border-2 border-hs-yellow bg-transparent text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy"
                     aria-label="Next page"
                   >
-                    Next
+                    Next <ChevronRight className="w-5 h-5 inline-block ml-1" />
                   </button>
                 </div>
               )}

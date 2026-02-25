@@ -1,78 +1,91 @@
 "use client";
 
 import Link from "next/link";
-import { Rocket, Globe, Users, BookCheck, FileText, Calendar, ArrowLeft, Sparkles, Zap } from "lucide-react";
+import { Rocket, Globe, Users, BookCheck, FileText, ArrowLeft, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { CountingNumber } from "@/components/CountingNumber";
 
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
-
 const APPLICATION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSebFiZI9bn8C74mE4N7KIZVxtFgOJ55oTM1S1Oi28rm7g7zhw/viewform";
+
+// Componente de Botón Reutilizable
+function ApplyButton({ className = "" }: { className?: string }) {
+  return (
+    <a
+      href={APPLICATION_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-105 hover:shadow-2xl border-2 border-hs-yellow bg-hs-yellow text-hs-bluenavy ${className}`}
+    >
+      <Rocket className="w-6 h-6" />
+      Apply Now
+    </a>
+  );
+}
+
+// Componente para la línea divisoria
+const Divider = () => (
+  <div className="flex justify-center my-12">
+    <div 
+      className="w-24 h-[2px] rounded-full opacity-70 bg-hs-yellow" 
+    />
+  </div>
+);
 
 export default function UnitedSpaceSchoolPage() {
   return (
-    <main className="min-h-screen bg-white">
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white min-h-[520px] sm:min-h-[600px]">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
+    /* Contenedor principal con el fondo aplicado a TODA la página */
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+      
+      {/* Fondo de estrellas global */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
+      <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
+      
+      <div className="relative z-10">
         
-        <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 sm:py-32">
+        {/* Back Link Top */}
+        <div className="mx-auto max-w-7xl px-6 pt-10">
+          <Link
+            href="/academics/hughes-space"
+            className="inline-flex items-center gap-2 text-hs-yellow opacity-80 hover:opacity-100 transition-opacity font-bold text-lg"
+          >
+            <ArrowLeft className="w-5 h-5" /> Back to HSS
+          </Link>
+        </div>
+
+        {/* Hero */}
+        <section className="mx-auto max-w-7xl px-6 py-12 sm:py-20">
           <div className="text-center space-y-6">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow leading-tight">
               United Space School Selection
             </h1>
-            <p className="text-xl sm:text-2xl max-w-3xl mx-auto text-hs-yellow">
+            <p className="text-xl sm:text-2xl lg:text-3xl max-w-3xl mx-auto font-light text-hs-yellow opacity-90">
               How to represent Bolivia at United Space School?
             </p>
-            <div className="flex justify-center gap-4 pt-4">
+            <div className="flex justify-center gap-4 pt-8">
               <a
                 href="https://www.hughesspace.org"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-110 hover:shadow-2xl animate-pulse border-2 border-white/30"
-                style={{ 
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  backdropFilter: 'blur(10px)'
-                }}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all hover:scale-110 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] border-2 border-white/30 text-white bg-white/10 backdrop-blur-md"
               >
                 <Rocket className="w-6 h-6" />
                 Go Up Into Space!
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-5 h-5 text-hs-yellow" />
               </a>
             </div>
           </div>
-        </div>
-        {/* wave */}
-        <div className="absolute -bottom-px left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
-          </svg>
-        </div>
-      </section>
+        </section>
 
-      {/* Intro */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-12">
-            <a
-              href={APPLICATION_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-              style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
-            >
-              <Rocket className="w-5 h-5" />
-              Apply Now
-            </a>
+        <Divider />
+
+        {/* Intro */}
+        <section className="mx-auto max-w-7xl px-6 py-12 sm:py-20">
+          <div className="text-center mb-16">
+            <ApplyButton />
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
-            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
-              <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center max-w-7xl mx-auto">
+            <div className="space-y-6 text-lg md:text-xl text-white opacity-90 leading-relaxed font-medium text-justify">
+              <p className="text-2xl md:text-3xl font-bold text-hs-yellow text-left">
                 Hughes Space School is the largest space education organization in Bolivia.
               </p>
               <p>
@@ -82,174 +95,160 @@ export default function UnitedSpaceSchoolPage() {
                 We prepare, select, and send students from all over Latin America to international camps thanks to our association with the International Foundation for Space Education (FISE).
               </p>
               <p>
-                This is accomplished through our selection program: <strong>Space Week</strong>.
+                This is accomplished through our selection program: <strong className="text-hs-yellow">Space Week</strong>.
               </p>
             </div>
-            <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-500">
+            <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500 border-2 border-white/10">
               <Image
                 src="/17.jpg"
                 alt="Hughes Space School Program"
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* What is FISE */}
-      <section className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex items-center justify-center gap-3 mb-12">
-            <Globe className="w-10 h-10" style={{ color: BRAND.blue }} />
-            <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>What is FISE?</h2>
+        <Divider />
+
+        {/* What is FISE */}
+        <section className="mx-auto max-w-7xl px-6 py-12 sm:py-20">
+          <div className="flex items-center justify-center gap-3 mb-12 text-hs-yellow">
+            <Globe className="w-10 h-10" />
+            <h2 className="text-4xl sm:text-5xl font-bold">What is FISE?</h2>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl mx-auto">
-            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center max-w-7xl mx-auto">
+            <div className="relative h-[400px] md:h-[450px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500 border-2 border-white/10">
               <Image
                 src="/space2.jpeg"
                 alt="FISE Foundation"
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
             </div>
-            <div className="rounded-3xl p-8 sm:p-10 border-2" style={{ borderColor: BRAND.blue, backgroundColor: "rgba(var(--hs-blue-rgb), 0.05)" }}>
-              <p className="text-lg text-gray-700 leading-relaxed">
+            
+            {/* Caja Amarilla intercalada */}
+            <div className="rounded-3xl p-8 md:p-12 shadow-2xl bg-hs-yellow text-hs-bluenavy">
+              <p className="text-xl md:text-2xl font-bold leading-relaxed text-justify">
                 The Foundation for International Space Education (FISE) is a private, non-profit foundation whose mission is to provide space-based academic instruction to international pre-university students, as well as offer an introduction and orientation to the aerospace industry.
               </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Space Week */}
-      <section className="py-16 sm:py-24 section-gradient">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex items-center justify-center gap-3 mb-12">
-            <Users className="w-10 h-10" style={{ color: BRAND.blue }} />
-            <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>Space Week</h2>
+        <Divider />
+
+        {/* Space Week */}
+        <section className="mx-auto max-w-7xl px-6 py-12 sm:py-24">
+          <div className="flex items-center justify-center gap-3 mb-12 text-hs-yellow">
+            <Users className="w-10 h-10" />
+            <h2 className="text-4xl sm:text-5xl font-bold">Space Week</h2>
           </div>
+          
           {/* Featured Image */}
-          <div className="mb-12 max-w-5xl mx-auto">
-            <div className="relative h-[400px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500">
+          <div className="mb-16 max-w-5xl mx-auto">
+            <div className="relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden shadow-2xl hover:scale-[1.02] transition-transform duration-500 border-2 border-white/10">
               <Image
                 src="/15.png"
                 alt="Space Week Program"
                 fill
                 className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
             </div>
           </div>
           
           <div className="mx-auto max-w-6xl">
-            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
+            <div className="space-y-8 text-lg md:text-xl text-white opacity-90 leading-relaxed font-medium text-justify">
               <p>
-                <strong>Space Week</strong> is a highly selective one-week program. Participants are selected from a pool of students who apply nationwide, and undergo a rigorous week of hard work developing a project in the space sector. The event is a simulation of the United Space School camp.
+                <strong className="text-hs-yellow text-2xl">Space Week</strong> is a highly selective one-week program. Participants are selected from a pool of students who apply nationwide, and undergo a rigorous week of hard work developing a project in the space sector. The event is a simulation of the United Space School camp.
               </p>
               <p>
                 At the end of the program, two of the most outstanding candidates are chosen to represent Bolivia at the camp.
               </p>
-              <div className="mt-8 rounded-2xl border-2 p-6 shadow-lg hover:shadow-2xl transition-all duration-300" style={{ borderColor: BRAND.yellow, backgroundColor: "rgba(var(--hs-yellow-rgb), 0.05)" }}>
-                <h3 className="text-2xl font-bold mb-4" style={{ color: BRAND.blue }}>United Space School</h3>
-                <p className="mb-4">
-                  United Space School is an interdisciplinary program that annually brings together up to <span className="text-2xl font-bold" style={{ color: BRAND.blue }}><CountingNumber target={50} duration={2000} /></span> students from <span className="text-2xl font-bold" style={{ color: BRAND.blue }}><CountingNumber target={25} duration={2000} /></span> different nations to study at the University of Clear Lake. Under the mentorship of engineers, scientists, and leaders from the aerospace industry, students collaborate to design their own mission to Mars.
+              
+              {/* Highlight Panel */}
+              <div className="mt-12 rounded-3xl p-8 md:p-12 shadow-xl border-2 border-hs-yellow/30 bg-hs-bluenavy/40 backdrop-blur-md hover:border-hs-yellow transition-all duration-300">
+                <h3 className="text-3xl font-bold mb-6 text-hs-yellow">United Space School</h3>
+                <p className="mb-6">
+                  United Space School is an interdisciplinary program that annually brings together up to <span className="text-3xl font-bold text-hs-yellow"><CountingNumber target={50} duration={2000} /></span> students from <span className="text-3xl font-bold text-hs-yellow"><CountingNumber target={25} duration={2000} /></span> different nations to study at the University of Clear Lake. Under the mentorship of engineers, scientists, and leaders from the aerospace industry, students collaborate to design their own mission to Mars.
                 </p>
-                <p className="mb-4">
+                <p className="mb-6">
                   United Space School organizes its curriculum to train students in designing a crewed mission to Mars. Qualified instructors, including civilian aerospace professionals and contractors, provide training in key disciplines. In addition, students have access to research resources in libraries and online platforms at the University of Houston Clear Lake.
                 </p>
-                <p>
+                <p className="mb-6">
                   To complement and strengthen this training, students participate in a variety of space-related activities at the Johnson Space Center (J.S.C.), the University of Houston Clear Lake, Rice University, Space Center Houston, George Observatory at Brazos Bend State Park, and the Houston Museum of Natural Science.
                 </p>
-                <p className="mt-4 text-base">
+                <p>
                   These activities include a tour of J.S.C. facilities, a full team mission, a special project at George Observatory, an ARISS link with the International Space Station (ISS), and an international videoconference on life sciences, bioastronautics, and aerospace medicine at a university.
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* How to Apply */}
-      <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div className="mx-auto max-w-7xl px-6">
+        <Divider />
+
+        {/* How to Apply */}
+        <section className="mx-auto max-w-7xl px-6 py-12 sm:py-24">
           <div className="mx-auto max-w-5xl">
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <BookCheck className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 className="text-4xl sm:text-5xl font-bold" style={{ color: BRAND.blue }}>How to Apply to Space Week?</h2>
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-10 text-hs-yellow">
+              <BookCheck className="w-10 h-10" />
+              <h2 className="text-4xl sm:text-5xl font-bold text-center">How to Apply to Space Week?</h2>
             </div>
-            <div className="text-center mb-8">
+            
+            <div className="text-center mb-16">
               <Link
                 href="/academics/hughes-space/united-space-school/requirements"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-base shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-                style={{ backgroundColor: BRAND.blue, color: "white" }}
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-105 hover:shadow-xl bg-white/10 text-white border-2 border-white/30 backdrop-blur-sm hover:border-hs-yellow hover:text-hs-yellow"
               >
                 <FileText className="w-5 h-5" />
                 View Requirements
               </Link>
             </div>
-            <div className="space-y-6">
-              <div className="rounded-2xl p-6 border-2" style={{ borderColor: BRAND.blue }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND.blue }}>Keep in mind...</h3>
-                <p className="text-gray-700 mb-3">
-                  Participation in the selection process for the United Space School camp is completely free.
-                </p>
-                <p className="text-gray-700">
-                  First, you must be a high school student between 3rd and 6th grade (or between 14 and 19 years old), and have proficiency in understanding and expressing yourself in English.
-                </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Box 1 */}
+              <div className="rounded-3xl p-8 md:p-10 shadow-xl border-2 border-hs-yellow/30 bg-hs-bluenavy/40 backdrop-blur-md">
+                <h3 className="text-2xl font-bold mb-4 text-hs-yellow">Keep in mind...</h3>
+                <div className="text-lg text-white opacity-90 leading-relaxed font-medium space-y-4">
+                  <p>
+                    Participation in the selection process for the United Space School camp is completely free.
+                  </p>
+                  <p>
+                    First, you must be a high school student between 3rd and 6th grade (or between 14 and 19 years old), and have proficiency in understanding and expressing yourself in English.
+                  </p>
+                </div>
               </div>
-              <div className="rounded-2xl p-6 border-2" style={{ borderColor: BRAND.blue }}>
-                <h3 className="text-xl font-bold mb-3" style={{ color: BRAND.blue }}>Additionally...</h3>
-                <p className="text-gray-700">
-                  The 18 students selected nationwide will have to demonstrate their skills and knowledge at Space Week, which will take place at Hughes Schools in the city of Cochabamba, Bolivia, from <strong>January 26 to 30, 2026</strong>.
+              
+              {/* Box 2 */}
+              <div className="rounded-3xl p-8 md:p-10 shadow-xl border-2 border-hs-yellow/30 bg-hs-bluenavy/40 backdrop-blur-md">
+                <h3 className="text-2xl font-bold mb-4 text-hs-yellow">Additionally...</h3>
+                <p className="text-lg text-white opacity-90 leading-relaxed font-medium">
+                  The 18 students selected nationwide will have to demonstrate their skills and knowledge at Space Week, which will take place at Hughes Schools in the city of Cochabamba, Bolivia, from <strong className="text-hs-yellow">January 26 to 30, 2026</strong>.
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Back */}
-      <section className="bg-white py-10">
-        <div className="mx-auto max-w-7xl px-6 text-left">
-          <Link
-            href="/academics/hughes-space"
-            className="inline-flex items-center text-sm font-semibold"
-            style={{ color: "var(--hs-blue)" }}
-          >
-            ← Back to HSS
-          </Link>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-12 sm:py-16 bg-gradient-to-br from-slate-900 to-blue-900">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center text-white space-y-6">
-            <Rocket className="w-16 h-16 mx-auto" style={{ color: BRAND.yellow }} />
-            <h2 className="text-3xl sm:text-4xl font-bold">
+        {/* Final CTA */}
+        <section className="mx-auto max-w-7xl px-6 py-16 pb-24">
+          <div className="text-center text-white space-y-8">
+            <Rocket className="w-16 h-16 mx-auto text-hs-yellow animate-bounce" />
+            <h2 className="text-4xl sm:text-5xl font-bold text-hs-yellow">
               Ready to Apply?
             </h2>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            <p className="text-xl md:text-2xl font-medium opacity-90 max-w-2xl mx-auto">
               Take the first step toward representing Bolivia at the United Space School
             </p>
-            <a
-              href={APPLICATION_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-              style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
-            >
-              <Rocket className="w-5 h-5" />
-              Apply Now
-            </a>
+            <ApplyButton />
           </div>
-        </div>
-      </section>
+        </section>
 
-      
+      </div>
     </main>
   );
 }

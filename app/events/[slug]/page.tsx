@@ -1,8 +1,8 @@
-// app/events/[slug]/page.tsx
-import  Link  from "next/link";
+import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react"; // ⬅️ solo tipos
+import type { ReactNode } from "react";
+import { ArrowLeft } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -195,11 +195,11 @@ export default async function EventDetailPage({
   const gallery = pickGallery(row, cover?.url ?? null);
 
   // Render seguro de `content`
-  let contentNode: ReactNode = null; // ⬅️ cambio clave
+  let contentNode: ReactNode = null; 
   if (typeof contentRaw === "string") {
     contentNode = (
       <div
-        className="prose prose-slate mt-6 max-w-none text-hughes-blue"
+        className="prose prose-lg md:prose-xl mt-10 mx-auto text-justify max-w-4xl text-hs-bluenavy font-medium leading-relaxed prose-headings:text-hs-bluenavy prose-headings:font-bold prose-a:text-hs-bluenavy prose-a:font-bold prose-strong:text-hs-bluenavy prose-strong:font-extrabold"
         dangerouslySetInnerHTML={{ __html: contentRaw }}
       />
     );
@@ -207,7 +207,7 @@ export default async function EventDetailPage({
     const text = toPlainText(contentRaw);
     if (text.trim()) {
       contentNode = (
-        <div className="prose prose-slate mt-6 max-w-none text-hughes-blue">
+        <div className="prose prose-lg md:prose-xl mt-10 mx-auto text-justify max-w-4xl text-hs-bluenavy font-medium leading-relaxed prose-headings:text-hs-bluenavy prose-headings:font-bold prose-a:text-hs-bluenavy prose-a:font-bold prose-strong:text-hs-bluenavy prose-strong:font-extrabold">
           <p>{text}</p>
         </div>
       );
@@ -215,16 +215,30 @@ export default async function EventDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-white">
-      <section className="mx-auto max-w-4xl px-6 py-10 md:py-14">
-        <div className="mb-3 text-[12px] font-semibold tracking-widest uppercase text-hughes-blue">
-          {type} {date ? `• ${new Date(date).toLocaleDateString()}` : ""}
+    <main className="min-h-screen bg-hs-yellow py-12 md:py-20">
+      <section className="mx-auto max-w-5xl px-6">
+        
+        {/* Back Button */}
+        <div className="mb-10 text-left">
+          <Link
+            href="/events"
+            className="inline-flex items-center gap-2 text-base font-bold text-hs-bluenavy opacity-80 hover:opacity-100 transition-opacity"
+          >
+            <ArrowLeft className="w-5 h-5" /> Back to Events
+          </Link>
         </div>
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-hughes-blue">{title}</h1>
+
+        <div className="mb-4 text-sm font-bold tracking-widest uppercase text-hs-bluenavy opacity-80">
+          {type} {date ? `• ${new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric'})}` : ""}
+        </div>
+        
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy leading-tight mb-12">
+          {title}
+        </h1>
 
         {cover && (
-          <div className="mt-6 relative w-full overflow-hidden rounded-3xl">
-            <div className="relative aspect-[16/10] w-full">
+          <div className="relative w-full overflow-hidden rounded-[40px] shadow-2xl border-4 border-hs-bluenavy">
+            <div className="relative aspect-[16/10] lg:aspect-[21/9] w-full">
               <Image
                 src={cover.url}
                 alt={cover.alt}
@@ -237,15 +251,16 @@ export default async function EventDetailPage({
           </div>
         )}
 
+        {/* Contenido (Rich Text) */}
         {contentNode}
 
         {/* ───────── Galería ───────── */}
         {gallery.length > 0 && (
-          <div className="mt-10">
-            <h2 className="text-xl font-bold text-hughes-blue mb-4">Gallery</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="mt-20 border-t-2 border-hs-bluenavy/20 pt-16">
+            <h2 className="text-3xl font-extrabold text-hs-bluenavy mb-8">Event Gallery</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {gallery.map((img) => (
-                <div key={img.url} className="relative overflow-hidden rounded-2xl">
+                <div key={img.url} className="relative overflow-hidden rounded-3xl shadow-lg border-2 border-hs-bluenavy hover:scale-[1.02] transition-transform duration-300">
                   <div className="relative aspect-[16/10] w-full">
                     <Image
                       src={img.url}
@@ -260,18 +275,6 @@ export default async function EventDetailPage({
             </div>
           </div>
         )}
-        {/* Back */}
-        <section className="bg-white py-10">
-          <div className="mx-auto max-w-7xl px-6 text-left">
-            <Link
-              href="/events"
-              className="inline-flex items-center text-sm font-semibold"
-              style={{ color: "var(--hs-blue)" }}
-            >
-              ← Back to Events
-            </Link>
-          </div>
-        </section>
       </section>
     </main>
   );

@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 type Story = {
   id: string | number;
@@ -81,62 +76,68 @@ export default function DonationStoriesPage() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-hs-bluenavy pb-24">
       {/* Header */}
-      <section className="relative py-16 sm:py-24 bg-gradient-to-b from-blue-50 to-white">
-        <div className="mx-auto max-w-7xl px-6">
+      <section className="relative pt-16 md:pt-24 pb-16 border-b-2 border-white/10 overflow-hidden">
+        {/* Decoración de fondo */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--hs-yellow)_0%,_transparent_50%)] blur-[80px]" />
+        
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
           <Link
             href="/donation"
-            className="inline-flex items-center gap-2 text-[var(--hs-blue)] font-semibold mb-8 hover:underline"
+            className="inline-flex items-center gap-2 text-sm font-bold text-hs-yellow hover:opacity-80 transition-opacity mb-8"
           >
             <ArrowLeft className="w-5 h-5" />
             Back to Donations
           </Link>
 
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4" style={{ color: BRAND.blue }}>
-              Donation Impact Stories
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full bg-hs-yellow/10 border-2 border-hs-yellow/30 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-hs-yellow mb-4">
+              Real Impact
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-6 leading-tight">
+              Donation Impact <span className="text-hs-yellow">Stories</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Real stories from students whose lives have been transformed by your generosity
+            <p className="text-lg md:text-xl font-medium text-white/80 leading-relaxed">
+              Real stories from students whose lives have been transformed by your generosity. See how your gifts open doors to the world.
             </p>
           </div>
         </div>
       </section>
 
       {/* Stories Grid */}
-      <section className="py-16 bg-white">
+      <section className="py-16 relative z-10">
         <div className="mx-auto max-w-7xl px-6">
           {loading ? (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-10">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
-                  <div className="h-64 bg-gray-200" />
-                  <div className="p-6">
-                    <div className="h-6 bg-gray-200 rounded mb-3" />
-                    <div className="h-20 bg-gray-200 rounded mb-4" />
-                    <div className="h-4 bg-gray-200 rounded mb-2" />
-                    <div className="h-4 bg-gray-200 rounded w-2/3" />
+                <div key={i} className="bg-white/5 border-2 border-white/10 rounded-[32px] overflow-hidden shadow-xl animate-pulse">
+                  <div className="h-64 bg-white/10" />
+                  <div className="p-8">
+                    <div className="h-8 bg-white/10 rounded mb-4 w-3/4" />
+                    <div className="h-4 bg-white/10 rounded mb-3 w-full" />
+                    <div className="h-4 bg-white/10 rounded mb-6 w-5/6" />
+                    <div className="h-6 bg-white/10 rounded w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : error ? (
-            <div className="text-center py-12">
-              <p className="text-red-600 mb-4">Failed to load stories: {error}</p>
+            <div className="text-center py-16 bg-red-500/20 border-2 border-red-500 rounded-[40px]">
+              <p className="text-white font-bold text-xl mb-4">Failed to load stories: {error}</p>
               <button
                 onClick={() => window.location.reload()}
-                className="text-[var(--hs-blue)] font-semibold hover:underline"
+                className="inline-flex rounded-full bg-red-500 px-8 py-3 font-bold text-white hover:bg-red-600 transition-colors"
               >
                 Try Again
               </button>
             </div>
           ) : stories.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-xl">No donation stories available yet.</p>
+            <div className="text-center py-20 border-2 border-white/10 rounded-[40px] bg-white/5">
+              <p className="text-white/60 text-xl font-bold">No donation stories available yet.</p>
             </div>
           ) : (
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-10">
               {stories.map((story) => {
                 const docId = story.documentId ?? story.id;
                 const title = story.title ?? "Untitled Story";
@@ -144,40 +145,41 @@ export default function DonationStoriesPage() {
                 const studentName = getStudentName(story);
                 const imageUrl = getImageUrl(story);
                 const date = story.testimonialDate
-                  ? new Date(story.testimonialDate).toLocaleDateString()
+                  ? new Date(story.testimonialDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
                   : "";
 
                 return (
                   <Link
                     key={docId}
                     href={`/donation/stories/${docId}`}
-                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                    className="group bg-white/5 border-2 border-white/10 rounded-[32px] overflow-hidden shadow-2xl hover:border-hs-yellow transition-all duration-300 hover:-translate-y-2 flex flex-col"
                   >
-                    <div className="relative h-64">
+                    <div className="relative h-64 md:h-72 overflow-hidden">
                       <Image
                         src={imageUrl}
                         alt={studentName}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
                       />
+                      <div className="absolute inset-0 bg-gradient-to-t from-hs-bluenavy via-transparent to-transparent opacity-80" />
                     </div>
-                    <div className="p-6">
-                      <h3 className="font-bold text-xl mb-2" style={{ color: BRAND.blue }}>
+                    <div className="p-8 flex flex-col flex-grow">
+                      <h3 className="font-extrabold text-2xl text-hs-yellow mb-4 leading-tight group-hover:text-white transition-colors">
                         {title}
                       </h3>
-                      <blockquote className="text-gray-700 mb-4 line-clamp-3">
-                        {description}
+                      <blockquote className="text-base font-medium text-white/80 italic mb-8 line-clamp-4 flex-grow">
+                        "{description}"
                       </blockquote>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="font-semibold" style={{ color: BRAND.blue }}>
-                            {studentName}
-                          </div>
-                          {date && <div className="text-sm text-gray-500">{date}</div>}
+                      <div className="mt-auto border-t-2 border-white/10 pt-5">
+                        <div className="font-bold text-lg text-white uppercase tracking-widest mb-1">
+                          {studentName}
                         </div>
-                        <span className="text-[var(--hs-blue)] font-semibold text-sm">
-                          Read More →
-                        </span>
+                        <div className="flex items-center justify-between">
+                          {date ? <span className="text-sm font-bold text-hs-yellow/70">{date}</span> : <span />}
+                          <div className="text-hs-yellow font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                            Read <ArrowRight className="w-4 h-4" />
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Link>

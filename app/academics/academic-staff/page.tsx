@@ -135,97 +135,68 @@ function normalizeStaff(raw?: string | null): string {
  **********************/
 
 function Badge({ children }: { children: React.ReactNode }) {
-return (
-<span
-className="inline-flex items-center rounded-full border px-3 py-1 text-[12px] font-semibold uppercase tracking-wider"
-style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
->
-{children}
-</span>
-);
+  return (
+    <span className="inline-flex items-center rounded-full bg-hs-yellow px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-hs-bluenavy shadow-sm">
+      {children}
+    </span>
+  );
 }
-
 
 function SubjectTag({ children }: { children: React.ReactNode }) {
-return (
-<span className="rounded-full border px-3 py-1 text-sm" style={{ borderColor: "#e6e6f0" }}>
-{children}
-</span>
-);
+  return (
+    <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 text-sm font-medium text-white opacity-90">
+      {children}
+    </span>
+  );
 }
-
 
 function Card({ children }: { children: React.ReactNode }) {
-return (
-<div
-className="h-full rounded-3xl border bg-white p-8 md:p-10 shadow-[0_20px_70px_-35px_rgba(17,6,49,0.35)]"
-style={{ borderColor: "#ececf4" }}
->
-{children}
-</div>
-);
+  return (
+    // CAMBIO: Borde amarillo permanente, sombra más fuerte.
+    <div className="h-full rounded-3xl border-2 border-[var(--hs-yellow)] bg-hs-bluenavy p-8 md:p-10 shadow-[0_10px_30px_rgba(255,187,0,0.15)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(255,187,0,0.3)] flex flex-col justify-between">
+      {children}
+    </div>
+  );
 }
-
 
 function Header({ title, subtitle }: { title: string; subtitle: string }) {
   return (
-    <section className="relative w-full py-10 md:py-14 text-center overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4">
-        {/* 🎓 Birrete (Hughes) — base azul y más cerca del título */}
-        <div className="inline-flex items-center justify-center -mb-1 md:-mb-2">
+    <section className="relative w-full py-16 md:py-24 text-center overflow-hidden bg-hs-yellow rounded-b-[40px] shadow-lg mb-12">
+      <div className="mx-auto max-w-6xl px-6 relative z-10">
+        <div className="inline-flex items-center justify-center mb-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
+            width="56"
+            height="56"
             viewBox="0 0 64 64"
             aria-hidden
           >
-            {/* Ala del birrete */}
-            <path d="M32 10 6 20l26 10 26-10-26-10z" fill="var(--hs-blue)" />
-            <path
-              d="M6 20l26 10 26-10"
-              fill="none"
-              stroke="rgba(10,35,66,0.25)"
-              strokeWidth="2"
-              strokeLinejoin="round"
-            />
-            {/* Base/cinta del birrete (ahora azul) */}
-            <path d="M18 24h28v7c0 4.5-6.7 8-14 8s-14-3.5-14-8v-7z" fill="var(--hs-blue)" />
-            {/* Sutil brillo en el borde de la base */}
-            <path
-              d="M18 26h28"
-              stroke="rgba(255,255,255,.25)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-            {/* Borla */}
-            <path
-              d="M50 22v11"
-              fill="none"
-              stroke="var(--hs-yellow)"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
-            <circle cx="50" cy="35" r="3.5" fill="var(--hs-yellow)" />
+            <path d="M32 10 6 20l26 10 26-10-26-10z" fill="var(--hs-bluenavy)" />
+            <path d="M6 20l26 10 26-10" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="2" strokeLinejoin="round" />
+            <path d="M18 24h28v7c0 4.5-6.7 8-14 8s-14-3.5-14-8v-7z" fill="var(--hs-bluenavy)" />
+            <path d="M18 26h28" stroke="rgba(255,255,255,.15)" strokeWidth="2" strokeLinecap="round" />
+            <path d="M50 22v11" fill="none" stroke="var(--hs-bluenavy)" strokeWidth="3" strokeLinecap="round" />
+            <circle cx="50" cy="35" r="3.5" fill="var(--hs-bluenavy)" />
           </svg>
         </div>
 
-        <h1 className="mt-1 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy">
           {title}
         </h1>
-        <p className="text-sm md:text-base mt-2 text-hughes-blue/80">{subtitle}</p>
+        <p className="text-lg md:text-xl mt-4 font-medium text-hs-bluenavy opacity-90 max-w-2xl mx-auto">
+          {subtitle}
+        </p>
       </div>
     </section>
   );
 }
 
 
-
 /**********************
  * Page
  **********************/
 
-const PAGE_SIZE = 8; // bigger cards, fewer per page
+const PAGE_SIZE = 8; 
 
 export default function AcademicStaffPage() {
   const [rows, setRows] = useState<Teacher[]>([]);
@@ -268,13 +239,12 @@ export default function AcademicStaffPage() {
     };
   }, []);
 
-  // Derived filtering: show only Academic staff, exclude Art always
   const filtered = useMemo(() => {
     return rows
       .filter((r) => {
         const sNorm = normalizeStaff(getAttr<string>(r, "staff") ?? "").toLowerCase();
-        if (sNorm === "art") return false; // never show Art staff
-        if (sNorm !== "academic") return false; // only Academic staff on this page
+        if (sNorm === "art") return false; 
+        if (sNorm !== "academic") return false; 
         if (q.trim()) {
           const name = fullName(r).toLowerCase();
           const email = (getAttr<string>(r, "email") ?? "").toLowerCase();
@@ -298,50 +268,48 @@ export default function AcademicStaffPage() {
   }, [filtered, page]);
 
   return (
-    <main className="min-h-screen section-gradient-strong">
-      <Header title="Academic Staff" subtitle="Meet our teachers and coordinators." />
+    <main className="min-h-screen bg-hs-bluenavy">
+      <Header title="Academic Staff" subtitle="Meet our dedicated teachers who inspire excellence every day." />
 
-      <section className="pb-16">
-        <div className="mx-auto max-w-7xl px-4">
+      <section className="pb-24">
+        <div className="mx-auto max-w-7xl px-6">
+          
           {/* Search */}
-          <div className="mb-8 flex items-center justify-end">
+          <div className="mb-10 flex items-center justify-end">
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Search by name or email..."
-              className="rounded-full border px-5 py-3 text-sm min-w-[260px]"
-              style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)", background: "#fff" }}
+              className="rounded-full border-2 border-white/20 bg-white/10 px-6 py-3 text-base min-w-[300px] text-white placeholder-white/50 focus:outline-none focus:border-hs-yellow transition-colors"
             />
           </div>
 
-          {/* Grid / Content (bigger cards, two columns) */}
+          {/* Grid / Content */}
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 auto-rows-fr">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 auto-rows-fr">
               {Array.from({ length: PAGE_SIZE }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-full rounded-3xl border bg-white p-8 animate-pulse"
-                  style={{ borderColor: "#ececf4" }}
+                  className="h-full rounded-3xl border-2 border-hs-yellow/30 bg-white/5 p-8 animate-pulse flex flex-col sm:flex-row gap-6"
                 >
-                  <div className="h-20 w-20 bg-[#ececf4] rounded-full mb-4" />
-                  <div className="h-6 w-52 bg-[#ececf4] rounded mb-2" />
-                  <div className="h-5 w-28 bg-[#ececf4] rounded mb-4" />
-                  <div className="h-28 w-full bg-[#f3f4f8] rounded" />
+                  <div className="h-32 w-32 md:h-40 md:w-40 bg-white/10 rounded-full mx-auto sm:mx-0 flex-shrink-0" />
+                  <div className="flex-1 space-y-4 pt-4">
+                    <div className="h-8 w-3/4 bg-white/10 rounded mx-auto sm:mx-0" />
+                    <div className="h-6 w-1/2 bg-white/10 rounded mx-auto sm:mx-0" />
+                    <div className="h-16 w-full bg-white/10 rounded" />
+                  </div>
                 </div>
               ))}
             </div>
           ) : error ? (
-            <div
-              className="rounded-xl border p-6 text-center text-hughes-blue"
-              style={{ borderColor: "var(--hs-yellow)" }}
-            >
+            <div className="rounded-2xl border-2 border-red-500 bg-red-500/10 p-8 text-center text-white font-bold text-lg">
               Error loading staff: {error}
             </div>
           ) : total === 0 ? (
-            <p className="text-center text-hughes-blue">No staff found.</p>
+            <p className="text-center text-xl text-hs-yellow font-bold py-12">No staff found matching your criteria.</p>
           ) : (
             <>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 auto-rows-fr">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 auto-rows-fr">
                 {pageItems.map((r) => {
                   const name = fullName(r);
                   const staff = normalizeStaff(getAttr<string>(r, "staff") ?? "");
@@ -358,31 +326,32 @@ export default function AcademicStaffPage() {
 
                   return (
                     <Card key={String(r.id)}>
-                      <div className="flex items-center gap-4 mb-4">
-                        <div
-                          className="h-24 w-24 md:h-28 md:w-28 rounded-full overflow-hidden border flex-shrink-0 bg-white"
-                          style={{ borderColor: "#ececf4" }}
-                        >
+                      {/* CAMBIO: Layout flex para darle más espacio a la foto y quitarle el borde */}
+                      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-6">
+                        <div className="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden flex-shrink-0 bg-white/5 relative">
                           {avatarUrl ? (
                             <Image
                               src={avatarUrl}
                               alt={avatarAlt}
-                              width={112}
-                              height={112}
-                              className="h-full w-full object-contain"
+                              fill
+                              className="object-cover"
                             />
                           ) : (
-                            <div className="h-full w-full bg-[#f1f2f7]" />
+                            <div className="h-full w-full bg-white/10 flex items-center justify-center text-white/40">
+                              <span className="text-4xl font-bold">{name.charAt(0)}</span>
+                            </div>
                           )}
                         </div>
-                        <div className="min-w-0">
-                          <div className="font-semibold text-lg md:text-xl text-hughes-blue truncate">{name}</div>
-                          <div className="mt-2 flex flex-wrap items-center gap-2">
+                        <div className="min-w-0 flex-1 text-center sm:text-left mt-2 sm:mt-0">
+                          <h3 className="font-bold text-2xl md:text-3xl text-hs-yellow leading-tight mb-4 break-words">
+                            {name}
+                          </h3>
+                          <div className="flex flex-col items-center sm:items-start gap-3">
                             {staff && <Badge>{staff}</Badge>}
                             {email && (
                               <a
                                 href={`mailto:${email}`}
-                                className="text-sm underline text-hughes-blue/80 hover:text-hughes-blue"
+                                className="text-base font-medium text-white opacity-80 hover:text-hs-yellow hover:opacity-100 transition-colors break-all"
                               >
                                 {email}
                               </a>
@@ -392,7 +361,7 @@ export default function AcademicStaffPage() {
                       </div>
 
                       {subjects.length > 0 && (
-                        <div className="mt-3 flex flex-wrap gap-2">
+                        <div className="mt-auto pt-6 border-t border-white/10 flex flex-wrap justify-center sm:justify-start gap-2">
                           {subjects.map((s, i) => (
                             <SubjectTag key={`${r.id}-sub-${i}`}>{s}</SubjectTag>
                           ))}
@@ -405,15 +374,11 @@ export default function AcademicStaffPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="mt-10 flex items-center justify-center gap-2">
+                <div className="mt-16 flex items-center justify-center gap-3">
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="rounded-full border px-4 py-2 text-sm tab-pill"
-                    style={{
-                      background: "var(--hs-yellow)",
-                      borderColor: "var(--hs-yellow)",
-                      color: "var(--hs-blue)",
-                    }}
+                    disabled={page === 1}
+                    className="rounded-full px-6 py-2.5 text-sm font-bold transition-colors disabled:opacity-50 border-2 border-hs-yellow bg-transparent text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy"
                     aria-label="Previous page"
                   >
                     Prev
@@ -426,20 +391,11 @@ export default function AcademicStaffPage() {
                       <button
                         key={p}
                         onClick={() => setPage(p)}
-                        className="rounded-full px-4 py-2 text-sm tab-pill border"
-                        style={
+                        className={`rounded-full h-10 w-10 flex items-center justify-center text-sm font-bold transition-all ${
                           active
-                            ? {
-                                background: "var(--hs-yellow)",
-                                borderColor: "var(--hs-yellow)",
-                                color: "var(--hs-blue)",
-                              }
-                            : {
-                                background: "#ffffff",
-                                borderColor: "#e6e6f0",
-                                color: "var(--hs-blue)",
-                              }
-                        }
+                            ? "bg-hs-yellow text-hs-bluenavy scale-110 shadow-lg"
+                            : "bg-white/10 text-white hover:bg-white/20"
+                        }`}
                         aria-current={active ? "page" : undefined}
                       >
                         {p}
@@ -449,12 +405,8 @@ export default function AcademicStaffPage() {
 
                   <button
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    className="rounded-full border px-4 py-2 text-sm tab-pill"
-                    style={{
-                      background: "var(--hs-yellow)",
-                      borderColor: "var(--hs-yellow)",
-                      color: "var(--hs-blue)",
-                    }}
+                    disabled={page === totalPages}
+                    className="rounded-full px-6 py-2.5 text-sm font-bold transition-colors disabled:opacity-50 border-2 border-hs-yellow bg-transparent text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy"
                     aria-label="Next page"
                   >
                     Next

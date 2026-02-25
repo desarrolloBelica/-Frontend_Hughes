@@ -1,4 +1,3 @@
-// app/about/page.tsx
 "use client";
 
 import Image from "next/image";
@@ -22,18 +21,6 @@ import {
 import { motion } from "framer-motion";
 import React from "react";
 import { CountingNumber } from "@/components/CountingNumber";
-
-/**
- * About — streamlined
- * - Hero
- * - Vision / Mission
- * - Who We Are
- * - By the Numbers
- * - Academics table
- * - Performing Arts
- * - Results & Awards
- * - Graduate Profile + Student Life (merged & styled)
- */
 
 const META = {
   ceeb: "905040",
@@ -120,12 +107,22 @@ const normalizeOutcomes = (payload: unknown): Outcome[] => {
     .filter((item): item is Outcome => !Number.isNaN(item.quantity) && Boolean(item.recognition || item.event));
 };
 
-// Small UI pill
+// Small UI pill (Ajustado para fondos oscuros)
 const Chip = ({ children }: { children: React.ReactNode }) => (
-  <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-hughes-blue shadow-sm ring-1 ring-black/5">
+  <span className="inline-flex items-center gap-2 rounded-full bg-hs-yellow px-4 py-1.5 text-sm font-bold text-hs-bluenavy shadow-md">
     {children}
   </span>
 );
+
+// Componente Stat ajustado
+function Stat({ value, label, isNavyBg = false }: { value: React.ReactNode; label: string; isNavyBg?: boolean }) {
+  return (
+    <div className={`rounded-3xl p-6 md:p-8 shadow-xl border-2 transition-transform duration-300 hover:scale-105 ${isNavyBg ? 'bg-hs-bluenavy border-hs-yellow' : 'bg-hs-yellow border-hs-bluenavy'}`}>
+      <div className={`text-4xl md:text-5xl font-extrabold mb-2 ${isNavyBg ? 'text-hs-yellow' : 'text-hs-bluenavy'}`}>{value}</div>
+      <div className={`text-base md:text-lg font-bold opacity-90 ${isNavyBg ? 'text-white' : 'text-hs-bluenavy'}`}>{label}</div>
+    </div>
+  );
+}
 
 export default function AboutPage() {
   const [outcomes, setOutcomes] = React.useState<Outcome[]>([]);
@@ -158,84 +155,130 @@ export default function AboutPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-white text-lg md:text-xl leading-relaxed">
-      {/* HERO */}
-      <section className="relative isolate overflow-hidden">
+    <main className="min-h-screen bg-hs-bluenavy text-lg md:text-xl leading-relaxed">
+      
+      {/* 1. HERO */}
+      <section className="relative isolate overflow-hidden min-h-[70vh] flex items-center">
         <div className="absolute inset-0 -z-10">
           <Image src="/35.JPG" alt="Hughes students" fill priority className="object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
+          {/* Superposición fuerte Navy para que resalte el texto amarillo */}
+          <div className="absolute inset-0 bg-hs-bluenavy/70 mix-blend-multiply" />
+          <div className="absolute inset-0 bg-gradient-to-t from-hs-bluenavy via-transparent to-transparent" />
         </div>
-        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 text-white">
-          <motion.h1 initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6}} className="text-4xl md:text-6xl font-extrabold tracking-tight">
-            About Hughes Schools
+        
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-32 w-full">
+          <motion.h1 
+            initial={{opacity:0,y:20}} 
+            animate={{opacity:1,y:0}} 
+            transition={{duration:0.6}} 
+            className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-hs-yellow drop-shadow-xl leading-tight"
+          >
+            About <br className="hidden md:block"/> Hughes Schools
           </motion.h1>
-          <motion.p initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:0.6, delay:0.1}} className="mt-4 max-w-2xl text-white/90 text-justify">
-            A bilingual, independent PK–12 institution delivering rigorous academics, a robust Performing Arts program, and a culture of character, leadership, and community.
-          </motion.p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Chip><Users className="h-3.5 w-3.5"/> {META.enrollment} Students</Chip>
-            <Chip><Globe2 className="h-3.5 w-3.5"/> ~{META.englishPct}% Instruction in English</Chip>
-            <Chip><Landmark className="h-3.5 w-3.5"/> Founded {META.founded}</Chip>
-            <Chip><Trophy className="h-3.5 w-3.5"/> 100% College Matriculation</Chip>
-          </div>
+          <motion.div 
+            initial={{opacity:0,y:20}} 
+            animate={{opacity:1,y:0}} 
+            transition={{duration:0.6, delay:0.2}} 
+            className="mt-8 max-w-3xl bg-hs-bluenavy/85 backdrop-blur-md p-6 md:p-8 rounded-3xl border-l-4 border-hs-yellow shadow-2xl"
+          >
+            <p className="text-xl md:text-2xl text-white font-medium opacity-90 leading-relaxed drop-shadow-sm">
+              A bilingual, independent PK–12 institution delivering rigorous academics, a robust Performing Arts program, and a culture of character, leadership, and community.
+            </p>
+            
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Chip><Users className="h-4 w-4"/> {META.enrollment} Students</Chip>
+              <Chip><Globe2 className="h-4 w-4"/> ~{META.englishPct}% Instruction in English</Chip>
+              <Chip><Landmark className="h-4 w-4"/> Founded {META.founded}</Chip>
+              <Chip><Trophy className="h-4 w-4"/> 100% College Matriculation</Chip>
+            </div>
+          </motion.div>
+          
         </div>
       </section>
 
-      {/* VISION */}
-      <section className="section-gradient-softly">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-10 px-6 py-14 md:py-20 items-center">
-          <div className="relative h-64 md:h-96 rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
+      {/* 2. VISION */}
+      <section className="bg-hs-bluenavy text-hs-yellow border-t-2 border-hs-yellow/20">
+        <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-12 lg:gap-16 px-6 py-20 md:py-28 items-center">
+          <div className="relative h-[400px] md:h-[500px] rounded-[40px] overflow-hidden shadow-2xl border-4 border-hs-yellow/30">
             <Image src="/37.JPG" alt="Vision" fill className="object-cover" />
           </div>
           <div>
-            <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Vision</div>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Excellence with Purpose</h2>
-            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">{VISION}</p>
-            <div className="mt-4 flex gap-2 flex-wrap">
-              <Badge variant="secondary" className="rounded-full">Quality</Badge>
-              <Badge variant="secondary" className="rounded-full">Values</Badge>
-              <Badge variant="secondary" className="rounded-full">Social Commitment</Badge>
+            <div className="inline-flex px-4 py-2 rounded-full bg-hs-yellow/10 border border-hs-yellow/30 font-bold tracking-widest uppercase text-sm mb-6">
+              Our Vision
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              Excellence with Purpose
+            </h2>
+            <p className="text-lg md:text-xl text-white opacity-90 font-medium leading-relaxed text-justify mb-8">
+              {VISION}
+            </p>
+            <div className="flex gap-3 flex-wrap">
+              <span className="px-5 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">Quality</span>
+              <span className="px-5 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">Values</span>
+              <span className="px-5 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">Social Commitment</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* MISSION */}
-      <section className="bg-[#f7f9fd]">
-        <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-10 px-6 py-14 md:py-20 items-center">
-          <div>
-            <div className="text-[var(--hs-yellow)] font-semibold tracking-wide uppercase">Our Mission</div>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Integrity, Safety, Well-being</h2>
-            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">{MISSION}</p>
-            <ul className="mt-4 grid sm:grid-cols-2 gap-3 text-sm text-hughes-blue/80">
-              <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Bilingual PK–12</li>
-              <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Mastery-based advancement</li>
-              <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Continuous teacher development</li>
-              <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]"/> Family & community partnership</li>
+      {/* 3. MISSION */}
+      <section className="bg-hs-yellow text-hs-bluenavy">
+        <div className="mx-auto max-w-7xl grid md:grid-cols-2 gap-12 lg:gap-16 px-6 py-20 md:py-28 items-center">
+          <div className="order-2 md:order-1">
+            <div className="inline-flex px-4 py-2 rounded-full bg-hs-bluenavy/10 border border-hs-bluenavy/30 font-bold tracking-widest uppercase text-sm mb-6">
+              Our Mission
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight">
+              Integrity, Safety, Well-being
+            </h2>
+            <p className="text-lg md:text-xl font-medium opacity-90 leading-relaxed text-justify mb-8">
+              {MISSION}
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-4 text-base md:text-lg font-bold">
+              <li className="flex items-center gap-3">
+                <CheckCircle2 className="h-6 w-6 text-hs-bluenavy"/> Bilingual PK–12
+              </li>
+              <li className="flex items-center gap-3">
+                <CheckCircle2 className="h-6 w-6 text-hs-bluenavy"/> Mastery-based advancement
+              </li>
+              <li className="flex items-center gap-3">
+                <CheckCircle2 className="h-6 w-6 text-hs-bluenavy"/> Continuous teacher development
+              </li>
+              <li className="flex items-center gap-3">
+                <CheckCircle2 className="h-6 w-6 text-hs-bluenavy"/> Family & community partnership
+              </li>
             </ul>
           </div>
-          <div className="relative h-64 md:h-96 rounded-3xl overflow-hidden shadow-sm ring-1 ring-black/5">
+          <div className="order-1 md:order-2 relative h-[400px] md:h-[500px] rounded-[40px] overflow-hidden shadow-2xl border-4 border-hs-bluenavy/20">
             <Image src="/36 (2).JPG" alt="Mission" fill className="object-cover" />
           </div>
         </div>
       </section>
 
-      {/* WHO WE ARE */}
-      <section className="section-gradient-softly">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <div className="grid md:grid-cols-2 gap-6">
+      {/* 4. WHO WE ARE */}
+      <section className="bg-hs-bluenavy text-hs-yellow relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Who We Are</div>
-              <h3 className="mt-2 text-2xl font-bold text-hughes-blue">Cochabamba • PK–12 • Accredited</h3>
-              <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">
+              <div className="inline-flex px-4 py-2 rounded-full bg-hs-yellow/10 border border-hs-yellow/30 font-bold tracking-widest uppercase text-sm mb-6">
+                Who We Are
+              </div>
+              <h3 className="text-3xl md:text-4xl lg:text-5xl font-extrabold mb-6 leading-tight">
+                Cochabamba • PK–12 • Accredited
+              </h3>
+              <p className="text-lg md:text-xl text-white opacity-90 font-medium leading-relaxed text-justify">
                 Hughes Schools is accredited by the Bolivian Ministry of Education and the Cochabamba District Department of Education.
                 The school year runs February–November, with summer break in December–January and winter break the first two weeks of July.
                 ~{META.englishPct}% of instruction is in English.
               </p>
             </div>
-            <div className="rounded-2xl border p-6">
-              <div className="text-sm font-semibold text-hughes-blue mb-2">Community</div>
-              <p className="text-base text-muted-foreground font-bold text-hs-blue-medium leading-relaxed text-justify">
+            
+            <div className="rounded-3xl border-2 border-hs-yellow/50 bg-hs-yellow/5 p-8 md:p-10 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <Globe2 className="h-8 w-8 text-hs-yellow" />
+                <h4 className="text-2xl font-bold">Community</h4>
+              </div>
+              <p className="text-lg text-white opacity-90 font-medium leading-relaxed text-justify">
                 Located in Cochabamba, Bolivia (population ~1.9M). Student body: 95% Bolivian, 5% international (North America & Europe).
               </p>
             </div>
@@ -243,18 +286,19 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* BY THE NUMBERS */}
-      <section className="relative isolate bg-[var(--hs-yellow-darker)]/50">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">By the Numbers</h2>
-          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-6">
-            <Stat value={<CountingNumber target={META.enrollment} />} label="Students (PK–12)" />
-            <Stat value={<CountingNumber target={META.englishPct} suffix="%" />} label="Instruction in English" />
-            <Stat value={<CountingNumber target={100} suffix="%" />} label="4-year college matriculation" />
+      {/* 5. BY THE NUMBERS */}
+      <section className="bg-hs-yellow text-hs-bluenavy">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-center mb-16">By the Numbers</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <Stat isNavyBg={true} value={<CountingNumber target={META.enrollment} />} label="Students (PK–12)" />
+            <Stat isNavyBg={false} value={<CountingNumber target={META.englishPct} suffix="%" />} label="Instruction in English" />
+            <Stat isNavyBg={true} value={<CountingNumber target={100} suffix="%" />} label="4-year college matriculation" />
             <Stat
+              isNavyBg={false}
               value={
                 <span className="inline-flex items-baseline gap-1">
-                  <span className="text-2xl font-semibold">$</span>
+                  <span className="text-3xl font-bold">$</span>
                   <CountingNumber target={3.1} decimals={1} suffix="M+" />
                 </span>
               }
@@ -264,32 +308,44 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ACADEMICS */}
-      <section className="section-gradient-softly">
-        <div className="mx-auto max-w-7xl px-6 py-14 md:py-20 grid lg:grid-cols-5 gap-10">
-          <div className="lg:col-span-2">
-            <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Academics (PK–12)</div>
-            <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Rigorous. Structured. Mastery-Based.</h2>
-            <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify">Daily schedule of six 45-minute classes. Science includes labs each year. Advanced Placement(Pre-University courses) is not currently offered. Advancement requires mastery.</p>
-            <div className="mt-6 rounded-2xl bg-[#0b1229] text-white p-5">
-              <div className="text-sm/6 text-white/80">Honors Pathway</div>
-              <div className="mt-1 text-lg font-semibold">{HONORS}</div>
+      {/* 6. ACADEMICS */}
+      <section className="bg-hs-bluenavy text-hs-yellow">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 grid lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+          
+          <div className="lg:col-span-2 space-y-6">
+            <div className="inline-flex px-4 py-2 rounded-full bg-hs-yellow/10 border border-hs-yellow/30 font-bold tracking-widest uppercase text-sm">
+              Academics (PK–12)
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+              Rigorous. Structured. Mastery-Based.
+            </h2>
+            <p className="text-lg text-white opacity-90 font-medium leading-relaxed text-justify">
+              Daily schedule of six 45-minute classes. Science includes labs each year. Advanced Placement(Pre-University courses) is not currently offered. Advancement requires mastery.
+            </p>
+            
+            <div className="mt-8 rounded-3xl bg-hs-yellow text-hs-bluenavy p-8 shadow-xl">
+              <div className="flex items-center gap-3 mb-3">
+                <Sparkles className="w-6 h-6" />
+                <h4 className="text-xl font-bold uppercase tracking-wider">Honors Pathway</h4>
+              </div>
+              <p className="text-base md:text-lg font-medium leading-relaxed">{HONORS}</p>
             </div>
           </div>
+          
           <div className="lg:col-span-3">
-            <div className="overflow-hidden rounded-2xl border">
-              <table className="w-full text-sm">
-                <thead className="bg-[#f7f9fd] text-hughes-blue/80">
+            <div className="overflow-hidden rounded-3xl border-2 border-hs-yellow/30 shadow-2xl bg-white/5 backdrop-blur-sm">
+              <table className="w-full text-left">
+                <thead className="bg-hs-yellow text-hs-bluenavy border-b-2 border-hs-yellow">
                   <tr>
-                    <th className="text-left font-extrabold px-4 py-3 w-[180px]">Area</th>
-                    <th className="text-left font-extrabold px-4 py-3">Courses</th>
+                    <th className="font-extrabold px-6 py-5 text-lg w-[30%]">Area</th>
+                    <th className="font-extrabold px-6 py-5 text-lg">Courses</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="text-white opacity-90 text-base md:text-lg font-medium divide-y divide-hs-yellow/20">
                   {CORE_CREDITS.map((row) => (
-                    <tr key={row.area} className="border-t" style={{borderColor:'#ececf4'}}>
-                      <td className="px-4 py-3 font-bold text-hs-blue-medium">{row.area}</td>
-                      <td className="px-4 py-3 font-bold text-hs-blue-medium">{row.list.join(", ")}</td>
+                    <tr key={row.area} className="hover:bg-white/5 transition-colors">
+                      <td className="px-6 py-4 text-hs-yellow font-bold">{row.area}</td>
+                      <td className="px-6 py-4">{row.list.join(", ")}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -299,76 +355,111 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* PERFORMING ARTS */}
-      <section className="bg-[#f7f9fd]">
-        <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
-          <div className="flex items-center gap-2">
-            <Music className="h-5 w-5 text-[var(--hs-yellow)]"/>
-            <h2 className="text-2xl md:text-3xl font-bold text-hughes-blue">Performing Arts</h2>
-          </div>
-          <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium max-w-3xl text-justify">
-            All students (1–12) participate across two levels. {ARTS.footprint}
-          </p>
-
-          <div className="mt-8 grid md:grid-cols-2 gap-6">
-            <div className="rounded-2xl border p-5">
-              <div className="text-sm font-semibold text-hughes-blue">Level One (Grades 1–4)</div>
-              <div className="mt-1 text-sm font-bold text-hs-blue-medium">{ARTS.level1.hours} hrs/week · {ARTS.level1.courses.join(", ")}</div>
-              <div className="text-xs font-bold text-hs-blue-medium mt-1">{ARTS.level1.note}</div>
+      {/* 7. PERFORMING ARTS */}
+      <section className="bg-hs-yellow text-hs-bluenavy">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-hs-bluenavy text-hs-yellow mb-6 shadow-xl">
+              <Music className="h-10 w-10" />
             </div>
-            <div className="rounded-2xl border p-5">
-              <div className="text-sm font-semibold text-hughes-blue">Level Two (Grades 5–12)</div>
-              {ARTS.level2.tracks.map((t) => (
-                <div key={t.name} className="mt-1 text-sm font-bold text-hs-blue-medium"><span className="font-medium text-hughes-blue">{t.name}:</span> {t.hours} hrs/week · {t.courses.join(", ")}</div>
-              ))}
-              <div className="text-xs font-bold text-hs-blue-medium mt-2">{ARTS.level2.double}</div>
-            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-6">Performing Arts</h2>
+            <p className="text-lg md:text-xl font-bold opacity-90 leading-relaxed">
+              All students (1–12) participate across two levels. <br/> {ARTS.footprint}
+            </p>
           </div>
 
-          <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            <div className="rounded-3xl border-2 border-hs-bluenavy bg-white/40 p-8 shadow-lg">
+              <h3 className="text-2xl font-extrabold mb-4 border-b-2 border-hs-bluenavy/20 pb-4">Level One (Grades 1–4)</h3>
+              <div className="text-lg font-bold mb-2">
+                <span className="opacity-80">Load:</span> {ARTS.level1.hours} hrs/week
+              </div>
+              <div className="text-lg font-bold mb-4">
+                <span className="opacity-80">Courses:</span> {ARTS.level1.courses.join(", ")}
+              </div>
+              <div className="inline-block px-4 py-2 bg-hs-bluenavy text-hs-yellow rounded-full text-sm font-bold">
+                {ARTS.level1.note}
+              </div>
+            </div>
+            
+            <div className="rounded-3xl border-2 border-hs-bluenavy bg-white/40 p-8 shadow-lg">
+              <h3 className="text-2xl font-extrabold mb-4 border-b-2 border-hs-bluenavy/20 pb-4">Level Two (Grades 5–12)</h3>
+              <div className="space-y-4">
+                {ARTS.level2.tracks.map((t) => (
+                  <div key={t.name} className="text-lg">
+                    <span className="font-extrabold">{t.name} Track:</span> <span className="font-bold opacity-90">{t.hours} hrs/week · {t.courses.join(", ")}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 inline-block px-4 py-2 bg-hs-bluenavy text-hs-yellow rounded-xl text-sm font-bold leading-relaxed">
+                {ARTS.level2.double}
+              </div>
+            </div>
+          </div>
+
+          {/* Galería de imágenes pequeña */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {["/38.JPG","/39.JPG","/40.JPG","/42.jpg"].map((src) => (
-              <div key={src} className="relative h-28 md:h-40 rounded-xl overflow-hidden ring-1 ring-black/5">
+              <div key={src} className="relative h-40 md:h-56 rounded-2xl overflow-hidden shadow-xl border-2 border-hs-bluenavy/10 hover:scale-105 transition-transform">
                 <Image src={src} alt="Performing arts" fill className="object-cover" />
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
-      {/* RESULTS & AWARDS */}
-      <section className="section-gradient-softly">
-        <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
-          <div className="grid lg:grid-cols-3 gap-10 items-start">
-            <div className="lg:col-span-1">
-              <div className="text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">Outcomes</div>
-              <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">Results & Placement</h2>
-              <p className="mt-3 text-muted-foreground font-bold text-hs-blue-medium text-justify"><strong>Placement:</strong> {RESULTS.placement}</p>
-              <p className="mt-1 text-muted-foreground font-bold text-hs-blue-medium text-justify"><strong>Scholarships:</strong> {RESULTS.scholarships}</p>
+      {/* 8. RESULTS & AWARDS */}
+      <section className="bg-hs-bluenavy text-hs-yellow">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-3 gap-12 items-start">
+            
+            <div className="lg:col-span-1 space-y-6">
+              <div className="inline-flex px-4 py-2 rounded-full bg-hs-yellow/10 border border-hs-yellow/30 font-bold tracking-widest uppercase text-sm">
+                Outcomes
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+                Results & Placement
+              </h2>
+              <div className="space-y-6 mt-8">
+                <div className="bg-hs-yellow/10 p-6 rounded-2xl border border-hs-yellow/20">
+                  <p className="text-sm uppercase tracking-wider font-bold opacity-80 mb-2">Placement</p>
+                  <p className="text-xl font-bold text-white">{RESULTS.placement}</p>
+                </div>
+                <div className="bg-hs-yellow/10 p-6 rounded-2xl border border-hs-yellow/20">
+                  <p className="text-sm uppercase tracking-wider font-bold opacity-80 mb-2">Scholarships</p>
+                  <p className="text-xl font-bold text-white">{RESULTS.scholarships}</p>
+                </div>
+              </div>
             </div>
+            
             <div className="lg:col-span-2">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="awards">
-                  <AccordionTrigger className="text-left">Major Awards & Distinctions (2006–2024)</AccordionTrigger>
-                  <AccordionContent>
+              <Accordion type="single" collapsible className="bg-hs-yellow text-hs-bluenavy rounded-3xl p-6 md:p-8 shadow-2xl">
+                <AccordionItem value="awards" className="border-none">
+                  <AccordionTrigger className="text-2xl md:text-3xl font-extrabold hover:no-underline hover:opacity-80 transition-opacity">
+                    Major Awards & Distinctions (2006–2024)
+                  </AccordionTrigger>
+                  <AccordionContent className="pt-6">
                     {loadingOutcomes && (
-                      <p className="text-sm font-semibold text-hughes-blue/70">Cargando reconocimientos...</p>
+                      <p className="text-lg font-bold animate-pulse">Loading achievements...</p>
                     )}
 
                     {outcomesError && !loadingOutcomes && (
-                      <p className="text-sm font-semibold text-red-600">{outcomesError}</p>
+                      <p className="text-lg font-bold text-red-700">{outcomesError}</p>
                     )}
 
                     {!loadingOutcomes && !outcomesError && outcomes.length === 0 && (
-                      <p className="text-sm font-semibold text-hughes-blue/70">No hay reconocimientos disponibles por ahora.</p>
+                      <p className="text-lg font-bold opacity-80">No awards to display at this time.</p>
                     )}
 
                     {!loadingOutcomes && !outcomesError && outcomes.length > 0 && (
-                      <ul className="grid md:grid-cols-2 gap-2 text-sm font-bold text-hs-blue-medium">
+                      <ul className="grid sm:grid-cols-2 gap-4 text-base md:text-lg font-bold">
                         {outcomes.map((outcome, i) => (
-                          <li key={`${outcome.event ?? "outcome"}-${i}`} className="flex items-start gap-2">
-                            <span className="mt-[6px] h-1.5 w-1.5 rounded-full bg-[var(--hs-yellow)]" />
+                          <li key={`${outcome.event ?? "outcome"}-${i}`} className="flex items-start gap-3 bg-white/30 p-3 rounded-xl">
+                            <Trophy className="h-5 w-5 shrink-0 text-hs-bluenavy mt-0.5" />
                             <span>
-                              <span className="font-semibold">{outcome.quantity}</span>{" "}
+                              <span className="font-extrabold text-xl">{outcome.quantity}</span>{" "}
                               {outcome.recognition}
                               {outcome.event ? ` · ${outcome.event}` : ""}
                             </span>
@@ -380,64 +471,63 @@ export default function AboutPage() {
                 </AccordionItem>
               </Accordion>
             </div>
+
           </div>
         </div>
       </section>
 
-      {/* GRADUATE PROFILE + STUDENT LIFE (merged, styled) */}
-      <section className="bg-[#f7f9fd]">
-        <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
-          <div className="grid lg:grid-cols-2 gap-10 items-start">
+      {/* 9. GRADUATE PROFILE + STUDENT LIFE */}
+      <section className="bg-hs-yellow text-hs-bluenavy">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-start">
+            
             {/* Graduate Profile */}
-            <div className="rounded-3xl bg-white ring-1 ring-black/5 p-6 md:p-8">
-              <div className="flex items-center gap-2 text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">
-                <GraduationCap className="h-5 w-5" /> Graduate Profile
+            <div className="rounded-[40px] bg-hs-bluenavy text-hs-yellow p-8 md:p-12 shadow-2xl border-4 border-hs-bluenavy">
+              <div className="flex items-center gap-3 mb-8">
+                <GraduationCap className="h-8 w-8" /> 
+                <span className="font-bold uppercase tracking-widest text-sm">Graduate Profile</span>
               </div>
-              <h2 className="mt-2 text-2xl md:text-3xl font-bold text-hughes-blue">
+              <h2 className="text-3xl md:text-4xl font-extrabold leading-tight mb-6">
                 An ordinary person who does extraordinary things.
               </h2>
-              <p className="mt-3 text-muted-foreground text-justify">{GRADUATE_PROFILE}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Leadership</span>
-                <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Critical Thinking</span>
-                <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Creativity</span>
-                <span className="text-xs rounded-full bg-[var(--hs-yellow)]/10 text-hughes-blue px-3 py-1 ring-1 ring-[var(--hs-yellow)]/30">Service</span>
+              <p className="text-lg text-white opacity-90 font-medium leading-relaxed text-justify mb-8">
+                {GRADUATE_PROFILE}
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <span className="px-4 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold text-sm">Leadership</span>
+                <span className="px-4 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold text-sm">Critical Thinking</span>
+                <span className="px-4 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold text-sm">Creativity</span>
+                <span className="px-4 py-2 rounded-full bg-hs-yellow text-hs-bluenavy font-bold text-sm">Service</span>
               </div>
             </div>
 
             {/* Student Life / Extracurriculars */}
-            <div className="rounded-3xl bg-white ring-1 ring-black/5 p-6 md:p-8">
-              <div className="flex items-center gap-2 text-[var(--hs-yellow)] font-semibold uppercase tracking-wide">
-                <Sparkles className="h-5 w-5" /> Student Life & Extracurriculars
+            <div className="rounded-[40px] bg-white/40 border-2 border-hs-bluenavy p-8 md:p-12 shadow-xl">
+              <div className="flex items-center gap-3 mb-8">
+                <Sparkles className="h-8 w-8 text-hs-bluenavy" /> 
+                <span className="font-bold uppercase tracking-widest text-sm">Student Life & Extracurriculars</span>
               </div>
-              <h3 className="mt-2 text-xl md:text-2xl font-bold text-hughes-blue">Beyond the classroom</h3>
-              <p className="mt-3 text-muted-foreground text-justify">
+              <h3 className="text-3xl md:text-4xl font-extrabold leading-tight mb-6">
+                Beyond the classroom
+              </h3>
+              <p className="text-lg font-medium leading-relaxed text-justify mb-8">
                 Rich academic & service-oriented activities: math, acting, science, volunteering; science & math fairs;
                 academic olympiads; extensive performance opportunities in dance and music; and independent academic
                 and artistic projects with faculty mentorship.
               </p>
-              <ul className="mt-4 grid sm:grid-cols-2 gap-2 text-sm text-hughes-blue/80">
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Science & Math Fairs</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Academic Olympiads</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Dance & Music Performances</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Clubs: Math, Acting, Science, Volunteering</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Independent Projects (Mentored)</li>
-                <li className="flex items-start gap-2"><CheckCircle2 className="mt-0.5 h-4 w-4 text-[var(--hs-yellow)]" /> Local, National & International Showcases</li>
+              <ul className="grid sm:grid-cols-2 gap-4 text-base font-bold">
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Science & Math Fairs</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Academic Olympiads</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Dance & Music Performances</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Clubs: Math, Acting, Science, Volunteering</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Independent Projects (Mentored)</li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 shrink-0" /> Local, National & International Showcases</li>
               </ul>
             </div>
+
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-// Stat
-function Stat({ value, label }: { value: React.ReactNode; label: string }) {
-  return (
-    <div className="rounded-2xl bg-white ring-1 ring-black/5 p-5">
-      <div className="text-3xl md:text-4xl font-extrabold text-hughes-blue">{value}</div>
-      <div className="mt-1 text-sm text-hughes-blue/70">{label}</div>
-    </div>
   );
 }

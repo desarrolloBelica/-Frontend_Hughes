@@ -1,4 +1,3 @@
-// app/news/page.tsx
 "use client";
 
 import { useEffect, useMemo, useState, Suspense } from "react";
@@ -126,12 +125,12 @@ type SortOrder = "desc" | "asc";
 
 function ReadMore({ href }: { href: string }) {
   return (
-    <a href={href} className="group inline-flex items-center mt-3">
-      <span className="relative text-base font-semibold text-hughes-blue">
+    <a href={href} className="group inline-flex items-center mt-4">
+      <span className="relative text-lg font-bold text-hs-bluenavy">
         Read more
         <span
-          className="absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-          style={{ background: "var(--hs-yellow)" }}
+          // CAMBIO: La línea que aparece en hover ahora es azul navy
+          className="absolute left-0 -bottom-1 h-[3px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 bg-hs-bluenavy"
         />
       </span>
     </a>
@@ -225,20 +224,27 @@ function AllNewsInner() {
   }, [params]);
 
   return (
-    <section className="w-full py-16" style={{ background: "#f5f6fb" }}>
-      <div className="mx-auto max-w-6xl px-4">
+    // CAMBIO: Fondo general a hs-yellow
+    <main className="min-h-screen bg-hs-yellow py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-6">
+        
         {/* Encabezado */}
-        <div className="mb-6 flex flex-col gap-3 md:gap-4 md:mb-8">
-          <div className="flex items-center justify-center gap-3 text-center">
-            <span aria-hidden className="inline-block h-4 w-4 rounded-full" style={{ background: "var(--hs-yellow)" }} />
-            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-hughes-blue">Hughes Schools Newspaper</h1>
+        <div className="mb-12 flex flex-col gap-4">
+          <div className="flex items-center justify-center gap-4 text-center">
+            {/* Pequeño acento decorativo (navy) */}
+            <span aria-hidden className="inline-block h-4 w-4 rounded-full bg-hs-bluenavy" />
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy leading-tight">
+              Hughes Schools Newspaper
+            </h1>
           </div>
 
-          <p className="text-center text-sm md:text-base text-hughes-blue/80">Updates and highlights from our community.</p>
+          <p className="text-center text-lg md:text-xl font-medium text-hs-bluenavy opacity-90">
+            Updates and highlights from our community.
+          </p>
 
           {/* Controles: Orden */}
-          <div className="mt-2 flex w-full items-center justify-end gap-2 md:mt-4">
-            <label htmlFor="orderBy" className="text-sm font-medium text-hughes-blue">Order by</label>
+          <div className="mt-6 flex w-full items-center justify-end gap-3">
+            <label htmlFor="orderBy" className="text-base font-bold text-hs-bluenavy">Order by</label>
             <select
               id="orderBy"
               value={sortOrder}
@@ -246,8 +252,7 @@ function AllNewsInner() {
                 const next = (e.target.value as SortOrder) || "desc";
                 setQuery({ page: 1, sort: next });
               }}
-              className="rounded-xl border bg-white px-3 py-2 text-sm text-hughes-blue"
-              style={{ borderColor: "var(--hs-yellow)" }}
+              className="rounded-full border-2 border-hs-bluenavy bg-transparent px-5 py-2.5 text-base font-bold text-hs-bluenavy focus:outline-none focus:ring-2 focus:ring-hs-bluenavy/50 cursor-pointer"
             >
               <option value="desc">Newest → Oldest</option>
               <option value="asc">Oldest → Newest</option>
@@ -263,10 +268,10 @@ function AllNewsInner() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                <div key={i} className="h-[320px] bg-white rounded-2xl border animate-pulse" />
+                <div key={i} className="h-[400px] bg-hs-bluenavy/10 rounded-3xl animate-pulse border-2 border-hs-bluenavy/20" />
               ))}
             </motion.div>
           ) : error ? (
@@ -275,8 +280,7 @@ function AllNewsInner() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="rounded-xl border p-6 text-center text-hughes-blue"
-              style={{ borderColor: "var(--hs-yellow)" }}
+              className="rounded-3xl border-2 border-red-500 bg-red-500/10 p-8 text-center text-hs-bluenavy font-bold text-lg"
             >
               Error loading news: {error}
             </motion.div>
@@ -286,17 +290,17 @@ function AllNewsInner() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="text-center text-hughes-blue"
+              className="text-center text-xl font-bold text-hs-bluenavy py-12"
             >
               No news published yet.
             </motion.p>
           ) : (
             <motion.div
               key={`page-${page}-${sortOrder}`}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               {pageItems.map((item) => {
@@ -306,28 +310,35 @@ function AllNewsInner() {
                 const date = (getAttr<string>(item, "date") ?? "") as string;
 
                 return (
-                  <article key={String(item.id)}>
-                    <a href={href} className="block relative overflow-hidden rounded-3xl">
-                      <div className="relative aspect-[16/10] w-full rounded-3xl overflow-hidden">
+                  <article key={String(item.id)} className="group flex flex-col h-full">
+                    {/* Contenedor de la imagen (Navy background si no hay foto, y borde para contraste) */}
+                    <a href={href} className="block relative overflow-hidden rounded-3xl border-2 border-hs-bluenavy shadow-lg group-hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-1">
+                      <div className="relative aspect-[16/10] w-full bg-hs-bluenavy">
                         {cover ? (
                           <Image
                             src={cover.url}
                             alt={cover.alt}
                             fill
                             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                            className="object-cover"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="h-full w-full bg-neutral-100" />
+                          <div className="h-full w-full flex items-center justify-center text-hs-yellow/50 font-bold">No Image</div>
                         )}
                       </div>
                     </a>
-                    <div className="mt-4">
-                      <div className="text-[12px] font-semibold tracking-widest uppercase text-hughes-blue">
-                        {date ? new Date(date).toLocaleDateString() : ""}
+                    
+                    {/* Textos de la tarjeta */}
+                    <div className="mt-6 flex-grow flex flex-col items-start px-2">
+                      <div className="text-sm font-bold tracking-widest uppercase text-hs-bluenavy opacity-80 mb-2">
+                        {date ? new Date(date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric'}) : "No Date"}
                       </div>
-                      <h3 className="mt-2 text-2xl font-semibold leading-snug text-hughes-blue">{title}</h3>
-                      <ReadMore href={href} />
+                      <h3 className="text-2xl md:text-3xl font-extrabold leading-tight text-hs-bluenavy mb-4 line-clamp-3">
+                        {title}
+                      </h3>
+                      <div className="mt-auto">
+                        <ReadMore href={href} />
+                      </div>
                     </div>
                   </article>
                 );
@@ -338,15 +349,16 @@ function AllNewsInner() {
 
         {/* Paginación */}
         {totalPages > 1 && (
-          <div className="mt-10 flex items-center justify-center gap-2">
+          <div className="mt-16 flex items-center justify-center gap-3">
             <button
-              className="rounded-full border px-3 py-2 text-hughes-blue disabled:opacity-40"
+              className="rounded-full border-2 border-hs-bluenavy p-3 text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-hs-bluenavy"
               onClick={() => setQuery({ page: Math.max(1, page - 1), sort: sortOrder })}
               disabled={page <= 1}
-              style={{ background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }}
+              aria-label="Previous page"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
+            
             {Array.from({ length: totalPages }).map((_, i) => {
               const p = i + 1;
               const active = p === page;
@@ -354,32 +366,37 @@ function AllNewsInner() {
                 <button
                   key={p}
                   onClick={() => setQuery({ page: p, sort: sortOrder })}
-                  className="rounded-full px-4 py-2 text-sm tab-pill border"
-                  style={active ? { background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" } : { background: "#ffffff", borderColor: "transparent" }}
+                  className={`h-12 w-12 rounded-full border-2 font-bold text-base transition-all ${
+                    active 
+                      ? "bg-hs-bluenavy border-hs-bluenavy text-hs-yellow scale-110 shadow-lg" 
+                      : "border-hs-bluenavy text-hs-bluenavy hover:bg-hs-bluenavy/10"
+                  }`}
+                  aria-current={active ? "page" : undefined}
                 >
                   {p}
                 </button>
               );
             })}
+            
             <button
-              className="rounded-full border px-3 py-2 text-hughes-blue disabled:opacity-40"
+               className="rounded-full border-2 border-hs-bluenavy p-3 text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-hs-bluenavy"
               onClick={() => setQuery({ page: Math.min(totalPages, page + 1), sort: sortOrder })}
               disabled={page >= totalPages}
-              style={{ background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }}
+              aria-label="Next page"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
       </div>
-    </section>
+    </main>
   );
 }
 
 /* ───────────── Boundary de Suspense ───────────── */
 export default function Page() {
   return (
-    <Suspense fallback={null /* o un loader pequeño */}>
+    <Suspense fallback={<div className="min-h-screen bg-hs-yellow" />}>
       <AllNewsInner />
     </Suspense>
   );

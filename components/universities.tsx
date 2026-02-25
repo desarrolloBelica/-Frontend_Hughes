@@ -108,9 +108,9 @@ export default function UniversityCarousel() {
   const logos = React.useMemo(() => [...items, ...items], [items]);
 
   return (
-    <section className="py-16 bg-white overflow-hidden">
+    <section className="py-16 overflow-hidden" style={{ backgroundColor: "var(--hs-yellow)" }}>
 
-      <h2 className="text-center text-3xl md:text-3xl font-bold mb-2 text-hughes-blue">
+      <h2 className="text-center text-3xl md:text-4xl font-bold mb-2" style={{ color: "var(--hs-bluenavy)" }}>
         Prestigious Universities & Conservatories 
         Accepting Hughes Schools Graduates
       </h2>
@@ -157,7 +157,7 @@ export default function UniversityCarousel() {
 
       {/* Texto y botón */}
       <div className="mt-12 text-center max-w-3xl mx-auto px-6">
-        <p className="text-base md:text-lg text-[#110631]">
+        <p className="text-base md:text-lg" style={{ color: "var(--hs-bluenavy)" }}>
           Our graduates have been accepted to over <strong>{items.length} universities</strong> around the world, 
           showcasing the academic excellence and global reach of Hughes Schools.
         </p>
@@ -167,7 +167,7 @@ export default function UniversityCarousel() {
   whileTap={{ scale: 0.98 }}
   onClick={() => router.push("/academics/graduates")}
   aria-label="See all universities"
-  className="group relative mt-6 inline-flex h-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#FFBB00] px-9 text-[15px] font-semibold shadow-2xl transition-transform"
+  className="group relative mt-6 inline-flex h-12 items-center justify-center overflow-hidden rounded-full border-2 border-[#FFBB00] px-9 text-[17px] font-semibold shadow-2xl transition-transform"
 >
   {/* Fondo amarillo al hacer hover */}
   <span className="absolute inset-0 rounded-full bg-[#110631] transition-colors duration-200 group-hover:bg-[#FFBB00]" />

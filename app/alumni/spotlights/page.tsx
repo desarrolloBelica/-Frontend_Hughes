@@ -2,11 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-
-const HS_YELLOW = "var(--hs-yellow)";
-const HS_BLUE = "var(--hs-blue)";
-const HS_NAVY = "var(--hs-bluenavy)";
-const HS_BLUE_MEDIUM = "var(--hs-blue-medium)";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
 type RowV5 = {
   id: number | string;
@@ -41,18 +37,15 @@ function sAttr<T = unknown>(row: Spotlight, key: keyof RowV5): T | undefined {
 
 function parseYear(d?: string | number): number | null {
   if (d === undefined || d === null) return null;
-  // Handle numeric years directly
   if (typeof d === "number") {
     return d > 1900 && d < 3000 ? d : null;
   }
   const raw = d.trim();
-  // Try direct 4-digit year
   const match = raw.match(/\b(19|20)\d{2}\b/);
   if (match) {
     const n = Number(match[0]);
     return Number.isNaN(n) ? null : n;
   }
-  // Fallback: Date parse
   const n = new Date(raw).getFullYear();
   return Number.isNaN(n) ? null : n;
 }
@@ -86,13 +79,9 @@ export default function SpotlightsListPage() {
         }
 
         const attempts = [
-          // Primary: filter approved and populate medias
           `${base}/api/spothights?filters[approved][$eq]=true&pagination[pageSize]=200&sort[0]=createdAt:desc&populate[medias]=*`,
-          // Fallback: remove sort
           `${base}/api/spothights?filters[approved][$eq]=true&pagination[pageSize]=200&populate[medias]=*`,
-          // Fallback: no filters (we will filter approved client-side)
           `${base}/api/spothights?pagination[pageSize]=200&populate[medias]=*`,
-          // Last resort: no populate
           `${base}/api/spothights?pagination[pageSize]=200`,
         ];
 
@@ -104,7 +93,6 @@ export default function SpotlightsListPage() {
 
         if (!rowsFetched) throw new Error("Unable to load spotlights (all attempts failed)");
 
-        // Keep only approved client-side to be safe
         const approvedOnly = rowsFetched.filter((r) => sAttr<boolean>(r, "approved") ?? false);
         if (!cancelled) setRows(approvedOnly);
       } catch (e: unknown) {
@@ -148,7 +136,6 @@ export default function SpotlightsListPage() {
     return a;
   }, [filtered, sort]);
 
-  // Pagination derived from sorted
   const total = sorted.length;
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   const pageItems = useMemo(() => {
@@ -157,67 +144,77 @@ export default function SpotlightsListPage() {
   }, [sorted, page]);
 
   useEffect(() => {
-    setPage(1); // reset when filters change
+    setPage(1); 
   }, [year, sort]);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
-      <section className="relative w-full overflow-hidden pb-14">
-        <div
-          className="absolute inset-0"
-          style={{ background: `linear-gradient(120deg, ${HS_NAVY} 0%, ${HS_BLUE} 50%, ${HS_BLUE_MEDIUM} 100%)` }}
-        />
-        <div className="absolute inset-0 opacity-30" style={{ background: "radial-gradient(60rem 40rem at 20% 20%, rgba(255,187,0,0.18), transparent 50%), radial-gradient(40rem 30rem at 85% 10%, rgba(255,187,0,0.12), transparent 55%)" }} />
+    <main className="min-h-screen bg-hs-bluenavy">
+      <section className="relative w-full overflow-hidden pb-24">
+        {/* Decoración de fondo */}
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--hs-yellow)_0%,_transparent_60%)] blur-[100px]" />
 
-        <div className="relative mx-auto max-w-6xl px-6 pt-14">
-          <div className="flex items-center justify-between flex-wrap gap-4 text-white">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] border border-white/20">
+        <div className="relative mx-auto max-w-6xl px-6 pt-16 md:pt-24">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 text-white mb-16">
+            <div className="space-y-4 max-w-2xl">
+              <div className="inline-flex items-center gap-2 rounded-full bg-hs-yellow/10 border-2 border-hs-yellow/30 px-5 py-2 text-sm font-bold uppercase tracking-widest text-hs-yellow">
                 Alumni Spotlights
               </div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">Stories that carry Hughes forward.</h1>
-              <p className="text-white/80 max-w-3xl">Read journeys from our graduates, filter by year, and see how they lead across arts, science, business, and service.</p>
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link href="/alumni/spotlights/submit" className="btn-hs-primary">Share your spotlight</Link>
-                <Link href="/alumni" className="btn-hs-secondary">Back to Alumni</Link>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                Stories that carry <br/> Hughes forward.
+              </h1>
+              <p className="text-lg font-medium opacity-90 leading-relaxed">
+                Read journeys from our graduates, filter by year, and see how they lead across arts, science, business, and service.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                <Link href="/alumni/spotlights/submit" className="inline-flex rounded-full bg-hs-yellow text-hs-bluenavy font-bold px-6 py-3 hover:bg-white transition-colors">
+                  Share your spotlight
+                </Link>
+                <Link href="/alumni" className="inline-flex rounded-full border-2 border-hs-yellow text-hs-yellow font-bold px-6 py-3 hover:bg-hs-yellow hover:text-hs-bluenavy transition-colors">
+                  Back to Alumni
+                </Link>
               </div>
             </div>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <div className="rounded-2xl border bg-white p-4 shadow-sm" style={{ borderColor: "#e6e8f2" }}>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">Graduation Year</label>
-              <input
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                placeholder="e.g. 2022"
-                className="mt-2 w-full rounded-md border px-3 py-2 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
-              />
+          {/* Filtros */}
+          <div className="grid gap-6 md:grid-cols-3 mb-12">
+            <div className="rounded-3xl border-2 border-hs-bluenavy/50 bg-white/5 p-6 backdrop-blur-md">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-3">Graduation Year</label>
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/50" />
+                <input
+                  value={year}
+                  onChange={(e) => setYear(e.target.value)}
+                  placeholder="e.g. 2022"
+                  className="w-full rounded-full border-2 border-white/20 bg-transparent py-3 pl-12 pr-4 text-white placeholder-white/50 focus:outline-none focus:border-hs-yellow transition-colors"
+                />
+              </div>
             </div>
-            <div className="rounded-2xl border bg-white p-4 shadow-sm" style={{ borderColor: "#e6e8f2" }}>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">Sort</label>
+
+            <div className="rounded-3xl border-2 border-hs-bluenavy/50 bg-white/5 p-6 backdrop-blur-md">
+              <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-3">Sort by</label>
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as any)}
-                className="mt-2 w-full rounded-md border px-3 py-2 text-sm"
-                style={{ borderColor: "#e2e6f0" }}
+                className="w-full rounded-full border-2 border-white/20 bg-hs-bluenavy py-3 px-4 text-white focus:outline-none focus:border-hs-yellow transition-colors cursor-pointer appearance-none"
               >
                 <option value="createdAt">Newest first (created)</option>
                 <option value="gradDesc">Graduation year: Newest</option>
                 <option value="gradAsc">Graduation year: Oldest</option>
               </select>
             </div>
-            <div className="rounded-2xl border bg-white p-4 shadow-sm" style={{ borderColor: "#e6e8f2" }}>
-              <div className="text-sm font-semibold text-hughes-blue/80">{total} spotlight{total === 1 ? "" : "s"}</div>
-              <p className="text-xs text-hughes-blue/60 mt-1">Showing stories approved by Hughes Schools.</p>
+
+            <div className="rounded-3xl border-2 border-hs-yellow/30 bg-hs-yellow/10 p-6 flex flex-col justify-center">
+              <div className="text-3xl font-extrabold text-hs-yellow">{total}</div>
+              <div className="text-base font-bold text-white opacity-90 uppercase tracking-widest mt-1">Spotlight{total === 1 ? "" : "s"} found</div>
             </div>
           </div>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            {loading && <div className="col-span-full text-hughes-blue/70">Loading spotlights…</div>}
-            {error && <div className="col-span-full text-red-600">{error}</div>}
-            {!loading && !error && sorted.length === 0 && <div className="col-span-full text-hughes-blue/70">No spotlights found.</div>}
+          {/* Grid de Resultados */}
+          <div className="grid gap-8 md:grid-cols-2">
+            {loading && <div className="col-span-full text-center text-xl font-bold text-hs-yellow animate-pulse py-12">Loading spotlights…</div>}
+            {error && <div className="col-span-full text-center p-8 bg-red-500/20 border-2 border-red-500 rounded-3xl text-white font-bold">{error}</div>}
+            {!loading && !error && sorted.length === 0 && <div className="col-span-full text-center text-xl font-bold text-white/70 py-12">No spotlights found for this year.</div>}
 
             {pageItems.map((s) => {
               const id = sAttr<string>(s, "documentId") ?? String((s as { id?: unknown }).id ?? "");
@@ -230,55 +227,58 @@ export default function SpotlightsListPage() {
               return (
                 <article
                   key={id}
-                  className="rounded-2xl border bg-white p-5 shadow-sm hover-lift"
-                  style={{ borderColor: "#e8ebf3" }}
+                  className="group rounded-[32px] border-2 border-white/10 bg-white/5 p-8 shadow-xl hover:bg-white/10 hover:border-hs-yellow transition-all duration-300"
                 >
-                  <div className="flex items-center justify-between gap-3 flex-wrap">
-                    <h3 className="text-xl font-bold" style={{ color: HS_BLUE }}>
-                      {fullName}{gy ? ` · ${gy}` : ""}
-                    </h3>
-                    <span className="inline-flex items-center gap-2 rounded-full bg-[var(--hs-yellow-light)] px-3 py-1 text-[11px] font-semibold text-[var(--hs-blue)]">
-                      <span className="h-2 w-2 rounded-full" style={{ background: HS_YELLOW }} />
-                      Spotlight
-                    </span>
-                  </div>
-                  <p className="mt-1 text-hughes-blue/80 text-sm">{[city, university, profession].filter(Boolean).join(" · ")}</p>
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="text-2xl md:text-3xl font-extrabold text-white group-hover:text-hs-yellow transition-colors leading-tight">
+                        {fullName}{gy ? <span className="opacity-70"> · {gy}</span> : ""}
+                      </h3>
+                    </div>
+                    
+                    <p className="text-base font-medium text-white/80 leading-relaxed min-h-[3rem]">
+                      {[city, university, profession].filter(Boolean).join(" · ")}
+                    </p>
 
-                  <div className="mt-4 flex items-center justify-between">
-                    <Link
-                      href={`/alumni/spotlights/${encodeURIComponent(id)}`}
-                      className="inline-flex items-center text-[15px] font-semibold hover-underline"
-                      style={{ color: HS_BLUE }}
-                    >
-                      Read more →
-                    </Link>
+                    <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
+                       <span className="inline-flex items-center gap-2 rounded-full bg-hs-yellow/20 px-3 py-1.5 text-xs font-bold text-hs-yellow uppercase tracking-widest">
+                        Spotlight
+                      </span>
+                      <Link
+                        href={`/alumni/spotlights/${encodeURIComponent(id)}`}
+                        className="inline-flex items-center text-base font-bold text-hs-yellow group-hover:underline"
+                      >
+                        Read story <ChevronRight className="w-5 h-5 ml-1" />
+                      </Link>
+                    </div>
                   </div>
                 </article>
               );
             })}
           </div>
 
-          <div className="mt-10 flex items-center justify-center gap-3">
-            <button
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="rounded-full border px-4 py-2 text-sm font-semibold disabled:opacity-50 bg-white shadow-sm"
-              style={{ borderColor: "#d7dce8", color: HS_BLUE }}
-            >
-              ← Prev
-            </button>
-            <span className="text-hughes-blue/70 text-sm">
-              Page {page} of {totalPages}
-            </span>
-            <button
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              className="rounded-full border px-4 py-2 text-sm font-semibold disabled:opacity-50 bg-white shadow-sm"
-              style={{ borderColor: "#d7dce8", color: HS_BLUE }}
-            >
-              Next →
-            </button>
-          </div>
+          {/* Paginación */}
+          {totalPages > 1 && (
+            <div className="mt-16 flex items-center justify-center gap-4">
+              <button
+                disabled={page <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-hs-yellow text-hs-yellow disabled:opacity-30 disabled:hover:bg-transparent hover:bg-hs-yellow hover:text-hs-bluenavy transition-all"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <span className="text-white font-bold text-lg">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                className="flex items-center justify-center w-12 h-12 rounded-full border-2 border-hs-yellow text-hs-yellow disabled:opacity-30 disabled:hover:bg-transparent hover:bg-hs-yellow hover:text-hs-bluenavy transition-all"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </main>

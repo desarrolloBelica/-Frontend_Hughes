@@ -67,14 +67,15 @@ export default function FooterHS({
         <div className="relative -translate-y-8">
           <div
             className="mx-auto flex w-full max-w-4xl items-center justify-between gap-6 rounded-[50px] px-8 py-4 shadow-xl md:px-12 md:py-6"
-            style={{ background: "var(--hs-yellow)" }}
+            style={{ background: "var(--hs-yellow-medium)" }}
           >
-            <h2 className="text-white text-lg font-extrabold tracking-tight md:text-2xl">
+            <h2 className="text-lg font-extrabold tracking-tight md:text-2xl" style={{ color: "var(--hs-bluenavy)" }}>
               {ctaText}
             </h2>
             <a
               href={applyHref}
-              className="inline-flex items-center rounded-full bg-[#0B1220] px-6 py-2 text-sm font-semibold text-white transition border border-transparent hover:bg-transparent hover:border-white hover:text-white focus:outline-none focus:ring-2 focus:ring-white/40 md:px-8 md:py-3 md:text-base"
+              className="inline-flex items-center rounded-full px-6 py-2 text-sm font-semibold transition border-2 hover:bg-[var(--hs-bluenavy)] hover:text-[var(--hs-yellow)] focus:outline-none focus:ring-2 focus:ring-[var(--hs-bluenavy)]/40 md:px-8 md:py-3 md:text-base"
+              style={{ backgroundColor: "transparent", borderColor: "var(--hs-bluenavy)", color: "var(--hs-bluenavy)" }}
             >
               Apply Now
             </a>

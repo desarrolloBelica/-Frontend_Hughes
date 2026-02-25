@@ -1,16 +1,15 @@
-// app/admissions/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FileDown, ChevronDown, ChevronUp } from "lucide-react";
+import { FileDown, ChevronDown, ChevronUp, CheckCircle2 } from "lucide-react";
 
 /* ───────────── Helpers: obtener ID de YouTube ───────────── */
 function getYouTubeId(url: string) {
   try {
     const u = new URL(url);
-    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1); // youtu.be/<id>
-    if (u.searchParams.get("v")) return u.searchParams.get("v")!;   // watch?v=<id>
+    if (u.hostname.includes("youtu.be")) return u.pathname.slice(1);
+    if (u.searchParams.get("v")) return u.searchParams.get("v")!;
     if (u.pathname.startsWith("/shorts/")) return u.pathname.split("/")[2];
     if (u.pathname.startsWith("/embed/")) return u.pathname.split("/")[2];
   } catch {}
@@ -23,7 +22,7 @@ function YouTubeEmbedNoHover({ url, title }: { url: string; title: string }) {
   const id = getYouTubeId(url);
   if (!id) {
     return (
-      <div className="relative overflow-hidden rounded-3xl bg-[#f2f4fa] aspect-video flex items-center justify-center text-hughes-blue/60">
+      <div className="relative overflow-hidden rounded-3xl bg-white/5 border-2 border-white/10 aspect-video flex items-center justify-center text-white/50 font-bold">
         Invalid YouTube URL
       </div>
     );
@@ -33,26 +32,26 @@ function YouTubeEmbedNoHover({ url, title }: { url: string; title: string }) {
   const embedSrc = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1`;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl aspect-video">
+    <div className="relative overflow-hidden rounded-[32px] aspect-video shadow-2xl border-4 border-hs-yellow/50 bg-hs-bluenavy">
       {!play ? (
         <button
           type="button"
           onClick={() => setPlay(true)}
-          className="relative w-full h-full"
+          className="relative w-full h-full group"
           aria-label="Play video"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={thumbnail}
             alt={title}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-            <span className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-lg">
+          <div className="absolute inset-0 flex items-center justify-center bg-hs-bluenavy/40 group-hover:bg-hs-bluenavy/20 transition-colors">
+            <span className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-hs-yellow shadow-[0_0_30px_rgba(255,187,0,0.6)] group-hover:scale-110 transition-transform">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-[#0B1220]"
+                className="h-10 w-10 text-hs-bluenavy ml-1"
                 fill="currentColor"
                 viewBox="0 0 24 24"
                 aria-hidden="true"
@@ -83,34 +82,28 @@ type YesNo = "yes" | "no" | "";
 
 type FormState = {
   studentName: string;
-  studentIdNumber: string;      // Nº C.I. del estudiante
-  incomingCourse: string;       // select
+  studentIdNumber: string;
+  incomingCourse: string;
   birthDate: string;
   currentSchool: string;
-
   parentsFullNames: string;
   fatherPhone: string;
   motherPhone: string;
   parentsEmail: string;
-
   hasSiblingsHS: YesNo;
   siblingNames: string;
-
-  references: string;           // ¿Qué referencias tiene de Hughes?
-  artImportance: ArtImportance; // pregunta Google #1
-  changeReason: string;         // pregunta Google #2 (condicional por curso)
-
+  references: string;
+  artImportance: ArtImportance;
+  changeReason: string;
   preferredInterview?: string;
 };
 
-/* Lista enumerada de grados (sin paralelos) */
 const GRADE_OPTIONS = [
   "Kinder",
   "1st", "2nd", "3rd", "4th", "5th",
   "6th", "7th", "8th", "9th", "10th", "11th", "12th",
 ] as const;
 
-// cursos desde 2º en adelante para mostrar "motivo del cambio"
 const UPPER_GRADES = new Set<string>([
   "2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th",
 ]);
@@ -121,19 +114,15 @@ const INITIAL: FormState = {
   incomingCourse: "",
   birthDate: "",
   currentSchool: "",
-
   parentsFullNames: "",
   fatherPhone: "",
   motherPhone: "",
   parentsEmail: "",
-
   hasSiblingsHS: "",
   siblingNames: "",
-
   references: "",
   artImportance: "",
   changeReason: "",
-
   preferredInterview: "",
 };
 
@@ -211,7 +200,6 @@ export default function AdmissionsPage() {
 
   const showChangeReason = UPPER_GRADES.has(form.incomingCourse);
 
-  // Resources state
   const [resources, setResources] = useState<Array<{ id: string; title: string; url: string; mime?: string }>>([]);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [loadingResources, setLoadingResources] = useState(false);
@@ -242,21 +230,15 @@ export default function AdmissionsPage() {
 
         if (!cancel) setResources(flat);
       } catch {
-        // silently fail
       } finally {
         if (!cancel) setLoadingResources(false);
       }
     })();
-    return () => {
-      cancel = true;
-    };
+    return () => { cancel = true; };
   }, []);
 
-  // Validation helper
   function validateForm(): boolean {
     const errors: Record<string, string> = {};
-
-    // Required fields
     if (!form.studentName?.trim()) errors.studentName = "El nombre del estudiante es obligatorio";
     if (!form.incomingCourse) errors.incomingCourse = "El curso es obligatorio";
     if (!form.parentsEmail?.trim()) {
@@ -264,16 +246,12 @@ export default function AdmissionsPage() {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.parentsEmail)) {
       errors.parentsEmail = "Ingresa un correo electrónico válido";
     }
-
-    // Phone validation (optional but should be valid if provided)
     if (form.fatherPhone && !/^\+?[0-9\s-()]+$/.test(form.fatherPhone)) {
       errors.fatherPhone = "Ingresa un número de teléfono válido";
     }
     if (form.motherPhone && !/^\+?[0-9\s-()]+$/.test(form.motherPhone)) {
       errors.motherPhone = "Ingresa un número de teléfono válido";
     }
-
-    // Sibling validation
     if (form.hasSiblingsHS === "yes" && !form.siblingNames?.trim()) {
       errors.siblingNames = "Ingresa los nombres de los hermanos";
     }
@@ -290,14 +268,12 @@ export default function AdmissionsPage() {
     setFieldErrors({});
 
     try {
-      // Run validation
       if (!validateForm()) {
         setError("Corrige los errores antes de enviar.");
         setSubmitting(false);
         return;
       }
 
-      // Enviar todo el payload (incluye los nuevos campos)
       const res = await fetch("/api/admissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -311,14 +287,12 @@ export default function AdmissionsPage() {
 
       if (!res.ok || !okFlag) {
         setOk(false);
-        // Extract detailed error message
         let errorMsg = "Hubo un problema al enviar tu solicitud.";
         if (typeof json === "object" && json !== null) {
           const jsonObj = json as Record<string, unknown>;
           if (jsonObj.error && typeof jsonObj.error === "object") {
             const errObj = jsonObj.error as Record<string, unknown>;
             if (errObj.message) errorMsg += ` ${String(errObj.message)}`;
-            if (errObj.details) errorMsg += ` Details: ${JSON.stringify(errObj.details)}`;
           } else if (jsonObj.error) {
             errorMsg += ` ${String(jsonObj.error)}`;
           }
@@ -340,121 +314,117 @@ export default function AdmissionsPage() {
   }
 
   return (
-    <main className="min-h-screen">
-      {/* Hero / franja superior con azul Hugues */}
-      <section className="w-full text-white" style={{ background: "var(--hs-blue)" }}>
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight">Admissions</h1>
-          <p className="mt-3 text-white/95 max-w-2xl text-lg md:text-xl">
-            Limited seats. Submit your interview request today and start your path to Hughes Schools.
+    <main className="min-h-screen bg-hs-bluenavy">
+      
+      {/* ───────────── HERO AMARILLO (Rediseñado para contraste con el Navbar) ───────────── */}
+      <section className="relative overflow-hidden bg-hs-yellow rounded-b-[40px] shadow-2xl z-20">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_right,_var(--hs-bluenavy)_0%,_transparent_50%)] blur-[80px]" />
+        
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-32 relative z-10 text-center flex flex-col items-center">
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-hs-bluenavy bg-hs-bluenavy/10 px-5 py-2 text-sm font-bold tracking-widest uppercase text-hs-bluenavy shadow-md mb-6">
+            Join our community
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-hs-bluenavy mb-6">
+            Admissions <span className="text-white drop-shadow-md">2025–26</span>
+          </h1>
+          
+          <p className="text-lg md:text-xl font-bold text-hs-bluenavy/80 max-w-3xl leading-relaxed">
+            Limited seats. Submit your interview request today and start your path to Hughes Schools. Be part of a community focused on academic excellence and integral development.
           </p>
+          
+          <a
+            href="#apply"
+            className="mt-10 inline-flex items-center rounded-full bg-hs-bluenavy px-10 py-4 font-bold text-lg text-hs-yellow shadow-xl hover:scale-105 hover:bg-white hover:text-hs-bluenavy transition-all"
+          >
+            Start your application
+          </a>
         </div>
       </section>
 
       {/* Intro + video */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 grid grid-cols-1 md:grid-cols-2 gap-10">
-          {/* Texto */}
-          <div>
-            <p className="text-[12px] font-semibold tracking-[0.2em] text-hughes-blue">
-              LIMITED SEATS AVAILABLE
-            </p>
-            <h2 className="mt-2 text-3xl md:text-4xl font-extrabold text-hughes-blue">
-              Apply NOW for 2025–26!
-            </h2>
-            <p className="mt-3 text-lg text-hughes-blue/80">
-              Be part of a community focused on academic excellence and integral development.
-            </p>
+      <section className="mx-auto max-w-7xl px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <h2 className="text-3xl md:text-5xl font-extrabold text-hs-yellow leading-tight mb-8">
+            How to apply?
+          </h2>
+          <ol className="space-y-6 text-white text-lg font-medium">
+            <li className="flex gap-4 items-start">
+              <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">1</span>
+              <span>
+                <strong className="text-hs-yellow">Complete the form.</strong> Tell us about the student and your contact information.
+              </span>
+            </li>
+            <li className="flex gap-4 items-start">
+              <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">2</span>
+              <span>
+                <strong className="text-hs-yellow">We will contact you</strong> to schedule a campus visit and interview.
+              </span>
+            </li>
+            <li className="flex gap-4 items-start">
+              <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">3</span>
+              <span>
+                <strong className="text-hs-yellow">Bring required documents</strong> (ID, birth certificate, report cards).
+              </span>
+            </li>
+            <li className="flex gap-4 items-start">
+              <span className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-hs-yellow text-hs-bluenavy font-bold">4</span>
+              <span>
+                <strong className="text-hs-yellow">Receive next steps</strong> and complete enrollment if admitted.
+              </span>
+            </li>
+          </ol>
+        </div>
 
-            {/* HOW TO APPLY */}
-            <h3 className="mt-6 text-xl font-semibold text-hughes-blue">Cómo postular</h3>
-            <ol className="mt-3 space-y-3 text-hughes-blue">
-              <li className="flex gap-3">
-                <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
-                <span>
-                  <strong>Completa el formulario de solicitud de entrevista.</strong> Cuéntanos sobre el estudiante y cómo contactarte.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
-                <span>
-                  <strong>Te contactamos</strong> para agendar la visita al campus y la entrevista.
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
-                <span>
-                  <strong>Trae los documentos requeridos</strong> (CI, certificado de nacimiento, libretas).
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="mt-1 inline-block h-2.5 w-2.5 rounded-full" style={{ background: "var(--hs-yellow)" }} />
-                <span>
-                  <strong>Recibe los siguientes pasos</strong> y finaliza tu inscripción si eres admitido.
-                </span>
-              </li>
-            </ol>
-
-            <a
-              href="#apply"
-              className="group mt-6 inline-flex items-center rounded-full border-2 px-6 py-2 font-semibold text-hughes-blue border-hughes-blue hover:bg-hughes-blue hover:text-white transition"
-            >
-              Iniciar mi solicitud
-            </a>
-          </div>
-
-          {/* Video */}
-          <div>
-            <YouTubeEmbedNoHover
-              url="https://www.youtube.com/watch?v=Q85YLX65Oa8&list=TLGG5EgtexIIU6gxNDA4MjAyNQ"
-              title="Hughes Schools Tour"
-            />
-          </div>
+        <div>
+          <YouTubeEmbedNoHover
+            url="https://www.youtube.com/watch?v=Q85YLX65Oa8&list=TLGG5EgtexIIU6gxNDA4MjAyNQ"
+            title="Hughes Schools Tour"
+          />
         </div>
       </section>
 
-      {/* Resources Section */}
-      <section className="bg-white border-t" style={{ borderColor: "#ececf4" }}>
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      {/* Resources Section inside Admissions */}
+      <section className="bg-hs-bluenavy border-t-2 border-white/10 pb-20">
+        <div className="mx-auto max-w-7xl px-6 pt-16 md:pt-20">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
             <div>
-              <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">Admissions Resources</h3>
-              <p className="mt-2 text-hughes-blue/80">Download important documents and school regulations</p>
+              <h3 className="text-3xl md:text-4xl font-extrabold text-hs-yellow">Admissions Resources</h3>
+              <p className="mt-2 text-lg font-medium text-white/80">Download important documents and school regulations</p>
             </div>
             <Link
               href="/resources"
-              className="inline-flex items-center gap-2 rounded-full border-2 px-6 py-2 font-semibold text-hughes-blue border-hughes-blue hover:bg-hughes-blue hover:text-white transition"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow px-8 py-3 font-bold text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy transition-colors"
             >
               See All Resources
             </Link>
           </div>
 
-          {/* Collapsible Resources */}
-          <div className="rounded-2xl border bg-white" style={{ borderColor: "#ececf4" }}>
+          <div className="rounded-3xl border-2 border-white/10 bg-white/5 overflow-hidden shadow-2xl">
             <button
               onClick={() => setResourcesOpen(!resourcesOpen)}
-              className="w-full flex items-center justify-between p-6 text-left"
+              className="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-white/5 transition-colors focus:outline-none"
               aria-expanded={resourcesOpen}
             >
-              <div className="flex items-center gap-3">
-                <FileDown className="w-6 h-6" style={{ color: "var(--hs-blue)" }} />
-                <span className="font-semibold text-hughes-blue">
+              <div className="flex items-center gap-4">
+                <FileDown className="w-8 h-8 text-hs-yellow" />
+                <span className="text-xl font-bold text-white">
                   {loadingResources ? "Loading resources..." : `Available Documents (${resources.length})`}
                 </span>
               </div>
               {resourcesOpen ? (
-                <ChevronUp className="w-5 h-5 text-hughes-blue" />
+                <ChevronUp className="w-6 h-6 text-hs-yellow" />
               ) : (
-                <ChevronDown className="w-5 h-5 text-hughes-blue" />
+                <ChevronDown className="w-6 h-6 text-hs-yellow" />
               )}
             </button>
 
             {resourcesOpen && (
-              <div className="border-t px-6 pb-6" style={{ borderColor: "#ececf4" }}>
+              <div className="border-t-2 border-white/10 px-6 md:px-8 pb-8 pt-4">
                 {resources.length === 0 ? (
-                  <p className="py-4 text-sm text-hughes-blue/60">No resources available at this time.</p>
+                  <p className="py-4 text-white/60 font-bold">No resources available at this time.</p>
                 ) : (
-                  <ul className="space-y-3 mt-4">
+                  <ul className="space-y-4">
                     {resources.map((f) => (
                       <li key={f.id}>
                         <a
@@ -462,22 +432,15 @@ export default function AdmissionsPage() {
                           download
                           target={f.url.startsWith("http") ? "_blank" : undefined}
                           rel="noopener"
-                          className="flex items-center justify-between gap-4 rounded-xl border bg-white p-4 transition hover:bg-gray-50"
-                          style={{ borderColor: "#ececf4" }}
+                          className="group flex items-center justify-between gap-4 rounded-2xl border-2 border-white/10 bg-hs-bluenavy p-4 md:p-6 transition-all hover:border-hs-yellow hover:-translate-y-1 shadow-lg"
                         >
-                          <div className="flex items-center gap-3 min-w-0">
-                            <span
-                              className="inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold"
-                              style={{ borderColor: "#e6e6f0", color: "var(--hs-blue)" }}
-                            >
+                          <div className="flex items-center gap-4 min-w-0">
+                            <span className="inline-flex items-center justify-center rounded-full border-2 border-hs-yellow bg-hs-yellow/10 px-3 py-1 text-xs font-bold text-hs-yellow tracking-widest">
                               {fileBadgeName(f.mime, f.url)}
                             </span>
-                            <span className="truncate font-medium text-hughes-blue text-sm">{f.title}</span>
+                            <span className="truncate font-bold text-white text-base md:text-lg group-hover:text-hs-yellow transition-colors">{f.title}</span>
                           </div>
-                          <span
-                            className="shrink-0 text-xs font-semibold px-3 py-1 rounded-full"
-                            style={{ background: "var(--hs-yellow)", color: "var(--hs-blue)" }}
-                          >
+                          <span className="shrink-0 text-sm font-bold px-4 py-2 rounded-full bg-hs-yellow text-hs-bluenavy">
                             Download
                           </span>
                         </a>
@@ -492,211 +455,169 @@ export default function AdmissionsPage() {
       </section>
 
       {/* Formulario + beneficios */}
-      <section id="apply" className="bg-[#f5f6fb]">
-        <div className="mx-auto max-w-7xl px-6 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-10">
-          {/* Lado izquierdo: por qué aplicar */}
-          <div className="lg:col-span-6">
-            <h3 className="text-2xl md:text-3xl font-bold text-hughes-blue">¿Por qué postular a Hughes Schools?</h3>
-            <p className="mt-3 text-hughes-blue/80">
-              Nuestro proceso de admisión está diseñado para conocer a tu hijo y guiar a tu familia en una transición sin contratiempos.
+      <section id="apply" className="bg-hs-yellow text-hs-bluenavy relative">
+        <div className="mx-auto max-w-7xl px-6 py-20 md:py-28 grid grid-cols-1 lg:grid-cols-12 gap-16">
+          
+          <div className="lg:col-span-5 space-y-8">
+            <h3 className="text-4xl md:text-5xl font-extrabold leading-tight">
+              Why choose Hughes Schools?
+            </h3>
+            <p className="text-xl font-bold opacity-90">
+              Our admission process is designed to get to know your child and guide your family through a seamless transition.
             </p>
-            <div
-              className="mt-6 p-5 rounded-2xl border bg-white text-sm md:text-base text-hughes-blue/90 leading-relaxed"
-              style={{ borderColor: "var(--hs-yellow)" }}
-            >
-              <p className="font-semibold mb-2">Beneficios de unirte a Hughes Schools:</p>
-              <ul className="list-disc ml-5 space-y-2">
-                <li><strong>Rigor académico</strong> con metodologías modernas y altas expectativas.</li>
-                <li><strong>Desarrollo integral</strong>: carácter, artes, deportes y liderazgo.</li>
-                <li><strong>Comunidad segura y cálida</strong> con una cultura de respeto.</li>
-                <li><strong>Instalaciones modernas</strong> diseñadas para aprender e innovar.</li>
-                <li><strong>Enfoque bilingüe/global</strong> que abre oportunidades más allá del aula.</li>
-                <li><strong>Cupos limitados</strong>: postular temprano mejora tus posibilidades de asegurar una plaza.</li>
+            <div className="p-8 rounded-[32px] border-4 border-hs-bluenavy bg-hs-bluenavy/5 shadow-xl">
+              <p className="text-2xl font-extrabold mb-6">Benefits of joining us:</p>
+              <ul className="space-y-4 text-lg font-bold">
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 text-hs-bluenavy shrink-0"/> <span><strong>Rigorous academics</strong> with modern methodologies.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 text-hs-bluenavy shrink-0"/> <span><strong>Integral development:</strong> character, arts, sports, leadership.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 text-hs-bluenavy shrink-0"/> <span><strong>Safe community</strong> with a strong culture of respect.</span></li>
+                <li className="flex items-start gap-3"><CheckCircle2 className="mt-0.5 h-6 w-6 text-hs-bluenavy shrink-0"/> <span><strong>Global bilingual approach</strong> opening worldwide doors.</span></li>
               </ul>
             </div>
           </div>
 
-          {/* Tarjeta del formulario */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-7">
             <form
               onSubmit={onSubmit}
-              className="rounded-3xl bg-white p-6 md:p-8 shadow-sm border"
-              style={{ borderColor: "#ececf4" }}
+              className="rounded-[40px] bg-hs-bluenavy p-8 md:p-12 shadow-2xl border-4 border-hs-bluenavy text-white"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {/* Datos del estudiante */}
+              <h3 className="text-3xl font-extrabold text-hs-yellow mb-8 border-b-2 border-white/10 pb-6">
+                Application Form
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    Nombre del estudiante *
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Nombre del estudiante *</label>
                   <input
                     value={form.studentName}
                     onChange={(e) => {
                       setForm({ ...form, studentName: e.target.value });
-                      if (fieldErrors.studentName) {
-                        setFieldErrors({ ...fieldErrors, studentName: "" });
-                      }
+                      if (fieldErrors.studentName) setFieldErrors({ ...fieldErrors, studentName: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.studentName ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors ${fieldErrors.studentName ? "border-red-500" : "border-white/20"}`}
+                    placeholder="Ej.: Juan Pérez"
                   />
-                  {fieldErrors.studentName && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.studentName}</p>
-                  )}
+                  {fieldErrors.studentName && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.studentName}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    Número de CI
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Número de CI</label>
                   <input
                     value={form.studentIdNumber}
                     onChange={(e) => setForm({ ...form, studentIdNumber: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors"
                     placeholder="Ej.: 12345678"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    Curso al que postula *
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Curso al que postula *</label>
                   <select
                     value={form.incomingCourse}
                     onChange={(e) => {
                       setForm({ ...form, incomingCourse: e.target.value });
-                      if (fieldErrors.incomingCourse) {
-                        setFieldErrors({ ...fieldErrors, incomingCourse: "" });
-                      }
+                      if (fieldErrors.incomingCourse) setFieldErrors({ ...fieldErrors, incomingCourse: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.incomingCourse ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-hs-bluenavy px-4 py-3 text-white focus:border-hs-yellow focus:outline-none transition-colors appearance-none cursor-pointer ${fieldErrors.incomingCourse ? "border-red-500" : "border-white/20"}`}
                   >
                     <option value="">Selecciona un curso</option>
                     {GRADE_OPTIONS.map((grade) => (
-                      <option key={grade} value={grade}>
-                        {grade}
-                      </option>
+                      <option key={grade} value={grade}>{grade}</option>
                     ))}
                   </select>
-                  {fieldErrors.incomingCourse && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.incomingCourse}</p>
-                  )}
+                  {fieldErrors.incomingCourse && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.incomingCourse}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Fecha de nacimiento</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Fecha de nacimiento</label>
                   <input
                     type="date"
                     value={form.birthDate}
                     onChange={(e) => setForm({ ...form, birthDate: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white focus:border-hs-yellow focus:outline-none transition-colors [color-scheme:dark]"
                   />
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Colegio actual</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Colegio actual</label>
                   <input
                     value={form.currentSchool}
                     onChange={(e) => setForm({ ...form, currentSchool: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors"
                   />
                 </div>
 
-                {/* Contacto de padres */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Nombres completos de los padres</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Nombres completos de los padres</label>
                   <input
                     value={form.parentsFullNames}
                     onChange={(e) => setForm({ ...form, parentsFullNames: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors"
                     placeholder="Ej.: Ana Pérez & Carlos Pérez"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Teléfono del padre</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Teléfono del padre</label>
                   <input
                     value={form.fatherPhone}
                     onChange={(e) => {
                       setForm({ ...form, fatherPhone: e.target.value });
-                      if (fieldErrors.fatherPhone) {
-                        setFieldErrors({ ...fieldErrors, fatherPhone: "" });
-                      }
+                      if (fieldErrors.fatherPhone) setFieldErrors({ ...fieldErrors, fatherPhone: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.fatherPhone ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors ${fieldErrors.fatherPhone ? "border-red-500" : "border-white/20"}`}
                     placeholder="+591 70000000"
                   />
-                  {fieldErrors.fatherPhone && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.fatherPhone}</p>
-                  )}
+                  {fieldErrors.fatherPhone && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.fatherPhone}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">Teléfono de la madre</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Teléfono de la madre</label>
                   <input
                     value={form.motherPhone}
                     onChange={(e) => {
                       setForm({ ...form, motherPhone: e.target.value });
-                      if (fieldErrors.motherPhone) {
-                        setFieldErrors({ ...fieldErrors, motherPhone: "" });
-                      }
+                      if (fieldErrors.motherPhone) setFieldErrors({ ...fieldErrors, motherPhone: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.motherPhone ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors ${fieldErrors.motherPhone ? "border-red-500" : "border-white/20"}`}
                     placeholder="+591 70000000"
                   />
-                  {fieldErrors.motherPhone && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.motherPhone}</p>
-                  )}
+                  {fieldErrors.motherPhone && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.motherPhone}</p>}
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">Correo de los padres *</label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Correo de los padres *</label>
                   <input
                     value={form.parentsEmail}
                     onChange={(e) => {
                       setForm({ ...form, parentsEmail: e.target.value });
-                      if (fieldErrors.parentsEmail) {
-                        setFieldErrors({ ...fieldErrors, parentsEmail: "" });
-                      }
+                      if (fieldErrors.parentsEmail) setFieldErrors({ ...fieldErrors, parentsEmail: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.parentsEmail ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors ${fieldErrors.parentsEmail ? "border-red-500" : "border-white/20"}`}
                     placeholder="familia@email.com"
                   />
-                  {fieldErrors.parentsEmail && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.parentsEmail}</p>
-                  )}
+                  {fieldErrors.parentsEmail && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.parentsEmail}</p>}
                 </div>
 
-                {/* Hermanos en Hughes */}
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    ¿Tiene hermanos en Hughes Schools?
-                  </label>
-                  <div className="mt-2 flex gap-4 text-sm text-hughes-blue">
-                    <label className="inline-flex items-center gap-2">
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-3">¿Tiene hermanos en Hughes?</label>
+                  <div className="flex gap-6 text-base font-bold text-white">
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
                         name="hasSiblingsHS"
                         checked={form.hasSiblingsHS === "yes"}
                         onChange={() => setForm({ ...form, hasSiblingsHS: "yes" })}
+                        className="accent-hs-yellow w-5 h-5"
                       />
                       Sí
                     </label>
-                    <label className="inline-flex items-center gap-2">
+                    <label className="inline-flex items-center gap-2 cursor-pointer">
                       <input
                         type="radio"
                         name="hasSiblingsHS"
                         checked={form.hasSiblingsHS === "no"}
                         onChange={() => setForm({ ...form, hasSiblingsHS: "no", siblingNames: "" })}
+                        className="accent-hs-yellow w-5 h-5"
                       />
                       No
                     </label>
@@ -704,59 +625,48 @@ export default function AdmissionsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    Nombre(s) del/los hermano(s)
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Nombre(s) del hermano(s)</label>
                   <input
                     value={form.siblingNames}
                     onChange={(e) => {
                       setForm({ ...form, siblingNames: e.target.value });
-                      if (fieldErrors.siblingNames) {
-                        setFieldErrors({ ...fieldErrors, siblingNames: "" });
-                      }
+                      if (fieldErrors.siblingNames) setFieldErrors({ ...fieldErrors, siblingNames: "" });
                     }}
-                    className={`mt-2 w-full rounded-xl border px-3 py-2 ${
-                      fieldErrors.siblingNames ? "border-red-500" : ""
-                    }`}
+                    className={`w-full rounded-xl border-2 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors disabled:opacity-50 ${fieldErrors.siblingNames ? "border-red-500" : "border-white/20"}`}
                     placeholder="Si aplica"
                     disabled={form.hasSiblingsHS !== "yes"}
                   />
-                  {fieldErrors.siblingNames && (
-                    <p className="mt-1 text-xs text-red-600">{fieldErrors.siblingNames}</p>
-                  )}
+                  {fieldErrors.siblingNames && <p className="mt-1 text-xs font-bold text-red-400">{fieldErrors.siblingNames}</p>}
                 </div>
 
-                {/* Referencias */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    ¿Qué referencias tiene de Hughes Schools?
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">¿Qué referencias tiene de Hughes?</label>
                   <textarea
                     value={form.references}
                     onChange={(e) => setForm({ ...form, references: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2 min-h-[90px]"
-                    placeholder="Por ejemplo: amigos/familiares, redes sociales, visita al campus, etc."
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors min-h-[100px] resize-none"
+                    placeholder="Amigos, familiares, redes sociales..."
                   />
                 </div>
 
-                {/* Pregunta Google #1: Importancia artística */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    ¿Qué tan importante considera que es la formación artística (música y/o danza) para su hijo(a)?
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-4">
+                    ¿Qué tan importante considera la formación artística para su hijo(a)?
                   </label>
-                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm text-hughes-blue">
+                  <div className="grid grid-cols-2 gap-3 text-base font-bold text-white">
                     {[
-                      { v: "no", t: "No es importante" },
+                      { v: "no", t: "Nada importante" },
                       { v: "poco", t: "Poco importante" },
                       { v: "importante", t: "Importante" },
                       { v: "muy", t: "Muy importante" },
                     ].map(opt => (
-                      <label key={opt.v} className="inline-flex items-center gap-2">
+                      <label key={opt.v} className="inline-flex items-center gap-2 cursor-pointer bg-white/5 border-2 border-white/10 p-3 rounded-xl hover:border-hs-yellow transition-colors">
                         <input
                           type="radio"
                           name="artImportance"
                           checked={form.artImportance === (opt.v as ArtImportance)}
                           onChange={() => setForm({ ...form, artImportance: opt.v as ArtImportance })}
+                          className="accent-hs-yellow w-5 h-5"
                         />
                         {opt.t}
                       </label>
@@ -764,45 +674,35 @@ export default function AdmissionsPage() {
                   </div>
                 </div>
 
-                {/* Pregunta Google #2: Motivo del cambio (condicional) */}
                 {showChangeReason && (
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-semibold text-hughes-blue">
-                      En caso de que ingrese a 2.º de primaria o cursos superiores, ¿cuál es el motivo del cambio de colegio?
-                    </label>
+                    <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Motivo del cambio de colegio</label>
                     <textarea
                       value={form.changeReason}
                       onChange={(e) => setForm({ ...form, changeReason: e.target.value })}
-                      className="mt-2 w-full rounded-xl border px-3 py-2 min-h-[90px]"
+                      className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white placeholder-white/40 focus:border-hs-yellow focus:outline-none transition-colors min-h-[100px] resize-none"
                     />
                   </div>
                 )}
 
-                {/* Fecha de entrevista */}
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-hughes-blue">
-                    Fecha de entrevista preferida (opcional)
-                  </label>
+                  <label className="block text-sm font-bold uppercase tracking-widest text-hs-yellow mb-2">Fecha de entrevista preferida (Opcional)</label>
                   <input
                     type="date"
                     value={form.preferredInterview}
                     onChange={(e) => setForm({ ...form, preferredInterview: e.target.value })}
-                    className="mt-2 w-full rounded-xl border px-3 py-2"
+                    className="w-full rounded-xl border-2 border-white/20 bg-white/5 px-4 py-3 text-white focus:border-hs-yellow focus:outline-none transition-colors [color-scheme:dark]"
                   />
                 </div>
               </div>
 
-              {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
-              {ok && (
-                <p className="mt-4 text-sm text-green-600">
-                  ¡Gracias! Hemos recibido tu solicitud.
-                </p>
-              )}
+              {error && <div className="mt-8 rounded-xl bg-red-500/20 border-2 border-red-500 p-4 text-white font-bold">{error}</div>}
+              {ok && <div className="mt-8 rounded-xl bg-green-500/20 border-2 border-green-500 p-4 text-white font-bold">¡Gracias! Hemos recibido tu solicitud de manera exitosa. Nos pondremos en contacto pronto.</div>}
 
-              <div className="mt-6 flex justify-end">
+              <div className="mt-10 flex justify-end">
                 <button
                   disabled={submitting}
-                  className="group inline-flex items-center rounded-full bg-[var(--hs-yellow)] px-6 py-3 font-semibold text-hughes-blue transition hover:opacity-90 disabled:opacity-50"
+                  className="w-full md:w-auto inline-flex items-center justify-center rounded-full bg-hs-yellow px-10 py-4 text-lg font-bold text-hs-bluenavy transition-transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 shadow-xl"
                 >
                   {submitting ? "Enviando..." : "Enviar solicitud"}
                 </button>

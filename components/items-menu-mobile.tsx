@@ -24,6 +24,7 @@ const GROUPS: Group[] = [
       { label: "Where Our Graduates Go", href: "/academics/graduates" },
       { label: "Hughes Schools Robotics", href: "/academics/hs-robot" },
       { label: "Hughes Space School", href: "/academics/hughes-space" },
+      { label: "HSMUN", href: "/academics/hs-mun" },
     ],
   },
   {

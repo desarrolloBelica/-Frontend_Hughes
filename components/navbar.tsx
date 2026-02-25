@@ -41,12 +41,13 @@ const Navbar = () => {
 
   return (
     <header
+      suppressHydrationWarning
       className={[
-        "fixed left-0 right-0 z-50 bg-white border-b transition-all duration-300",
+        "fixed left-0 right-0 z-50 transition-all duration-300",
         visible ? "translate-y-0" : "-translate-y-full",
         atTop ? "shadow-none" : "shadow-sm",
       ].join(" ")}
-      style={{ height: H }}
+      style={{ height: H, backgroundColor: "var(--hs-bluenavy)" }}
     >
       {/* contenedor interno */}
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-between px-4">

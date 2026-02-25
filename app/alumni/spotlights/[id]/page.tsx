@@ -2,10 +2,6 @@ import Link from "next/link";
 import SpotlightMediaCarousel from "../../../../components/SpotlightMediaCarousel";
 import type { SpotlightMedia } from "../../../../components/SpotlightMediaCarousel";
 
-const HS_YELLOW = "var(--hs-yellow)";
-const HS_BLUE = "var(--hs-blue)";
-const HS_NAVY = "var(--hs-bluenavy)";
-
 type Media = {
   url?: string;
   alternativeText?: string | null;
@@ -20,7 +16,7 @@ type RowV5 = {
   city?: string;
   university?: string;
   profession?: string;
-  graduationYear?: string; // date string
+  graduationYear?: string; 
   artisticPath?: string;
   biography?: string;
   hughesImpact?: string;
@@ -43,7 +39,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
 
 function sAttr<T = unknown>(row: Spotlight, key: keyof RowV5): T | undefined {
   const root = row as Record<string, unknown>;
-  if (root[key as string] !== undefined) return root[key as string] as T; // v5
+  if (root[key as string] !== undefined) return root[key as string] as T; 
   const attrs = (row as RowV4).attributes as Record<string, unknown> | undefined;
   if (attrs && attrs[key as string] !== undefined) return attrs[key as string] as T;
   return undefined;
@@ -119,26 +115,26 @@ async function fetchSpotlightByDocumentId(documentId: string): Promise<Spotlight
 }
 
 export default async function SpotlightDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  // The folder is [id] but the value contains documentId for Strapi findOne
   const { id } = await params;
   const item = await fetchSpotlightByDocumentId(id);
+
   if (!item) {
     return (
-      <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
-        <section className="mx-auto max-w-4xl px-6 py-16 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 border" style={{ borderColor: "#e3e6f2", color: HS_BLUE }}>
-            Spotlight Hughes
+      <main className="min-h-screen bg-hs-bluenavy flex items-center justify-center">
+        <section className="mx-auto max-w-2xl px-6 py-16 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow bg-hs-yellow/10 px-5 py-2 text-sm font-bold uppercase text-hs-yellow tracking-widest mb-6">
+            Not Found
           </div>
-          <h1 className="mt-4 text-3xl font-extrabold tracking-tight" style={{ color: HS_BLUE }}>We couldn’t find this spotlight</h1>
-          <p className="mt-2 text-hughes-blue/80">It may be awaiting approval or the link might be incorrect.</p>
-          <div className="mt-6 flex justify-center">
-            <Link
-              href="/alumni/spotlights"
-              className="btn-hs-secondary"
-            >
-              ← Back to Spotlights
-            </Link>
-          </div>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+            We couldn’t find this spotlight
+          </h1>
+          <p className="text-lg text-white/70 mb-10">It may be awaiting approval or the link might be incorrect.</p>
+          <Link
+            href="/alumni/spotlights"
+            className="inline-flex rounded-full border-2 border-hs-yellow px-8 py-3 font-bold text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy transition-colors"
+          >
+            ← Back to Spotlights
+          </Link>
         </section>
       </main>
     );
@@ -156,61 +152,62 @@ export default async function SpotlightDetailPage({ params }: { params: Promise<
   const medias = extractMedias(item);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
-      <section className="relative overflow-hidden pb-16">
-        <div
-          className="absolute inset-x-0 top-0 h-64"
-          style={{ background: `linear-gradient(135deg, ${HS_NAVY} 0%, ${HS_BLUE} 60%, ${HS_YELLOW} 120%)` }}
-        />
-        <div className="relative mx-auto max-w-4xl px-6 pt-14">
-          <div className="rounded-2xl bg-white border border-[#e6e8f2] shadow-lg p-6 md:p-8">
-            <div className="flex items-center justify-between gap-4 flex-wrap">
-              <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-[var(--hs-yellow-light)] px-4 py-2 text-[11px] font-semibold text-[var(--hs-blue)]">
-                  Spotlight Hughes
-                </div>
-                <h1 className="mt-3 text-3xl md:text-4xl font-extrabold tracking-tight" style={{ color: HS_BLUE }}>
-                  {fullName}{gy ? ` · ${gy}` : ""}
-                </h1>
-                <p className="text-hughes-blue/80 mt-1 text-sm">{[city, university, profession].filter(Boolean).join(" · ")}</p>
+    <main className="min-h-screen bg-hs-bluenavy">
+      <section className="relative overflow-hidden pb-24 pt-16 md:pt-24">
+        
+        <div className="relative mx-auto max-w-4xl px-6">
+          <div className="mb-8">
+            <Link 
+              href="/alumni/spotlights" 
+              className="inline-flex items-center text-sm font-bold text-hs-yellow hover:opacity-80 transition-opacity"
+            >
+              ← Back to Spotlights
+            </Link>
+          </div>
+
+          <div className="rounded-[40px] bg-hs-yellow border-4 border-hs-yellow shadow-2xl p-8 md:p-12">
+            
+            <div className="border-b-2 border-hs-bluenavy/20 pb-8 mb-8">
+              <div className="inline-flex items-center gap-2 rounded-full bg-hs-bluenavy px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-hs-yellow mb-4">
+                Hughes Alumni
               </div>
-              <Link href="/alumni/spotlights" className="btn-hs-secondary">
-                ← Back to Spotlights
-              </Link>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy leading-tight">
+                {fullName}{gy ? <span className="opacity-70"> · {gy}</span> : ""}
+              </h1>
+              <p className="text-hs-bluenavy/80 mt-4 text-xl font-bold">
+                {[city, university, profession].filter(Boolean).join(" · ")}
+              </p>
             </div>
 
-            <div className="mt-8 grid gap-4">
+            <div className="grid gap-8">
               {medias.length > 0 && (
-                <SpotlightMediaCarousel items={medias} />
-              )}
-              {artisticPath && (
-                <div className="rounded-xl bg-[#f9fafc] border p-4" style={{ borderColor: "#eef1f6" }}>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">Professional or artistic path</div>
-                  <div className="mt-1 text-hughes-blue whitespace-pre-line">{artisticPath}</div>
+                <div className="rounded-3xl overflow-hidden shadow-xl border-2 border-hs-bluenavy">
+                  <SpotlightMediaCarousel items={medias} />
                 </div>
               )}
-              {biography && (
-                <div className="rounded-xl bg-[#f9fafc] border p-4" style={{ borderColor: "#eef1f6" }}>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">Biography</div>
-                  <div className="mt-1 text-hughes-blue whitespace-pre-line">{biography}</div>
-                </div>
-              )}
-              {impact && (
-                <div className="rounded-xl bg-[#f9fafc] border p-4" style={{ borderColor: "#eef1f6" }}>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">How Hughes shaped my life</div>
-                  <div className="mt-1 text-hughes-blue whitespace-pre-line">{impact}</div>
-                </div>
-              )}
-              {message && (
-                <div className="rounded-xl bg-[#f9fafc] border p-4" style={{ borderColor: "#eef1f6" }}>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-hughes-blue/70">Message for current students</div>
-                  <div className="mt-1 text-hughes-blue whitespace-pre-line">{message}</div>
-                </div>
-              )}
+
+              {/* Tarjetas de Información en azul para contrastar el fondo amarillo */}
+              {artisticPath && <InfoCard label="Professional or artistic path" content={artisticPath} />}
+              {biography && <InfoCard label="Biography" content={biography} />}
+              {impact && <InfoCard label="How Hughes shaped my life" content={impact} />}
+              {message && <InfoCard label="Message for current students" content={message} />}
             </div>
+
           </div>
         </div>
       </section>
     </main>
+  );
+}
+
+// Componente helper interno para las respuestas del form
+function InfoCard({ label, content }: { label: string; content: string }) {
+  return (
+    <div className="rounded-3xl bg-hs-bluenavy p-6 md:p-8 shadow-md">
+      <h3 className="text-sm font-bold uppercase tracking-widest text-hs-yellow opacity-90 mb-4">{label}</h3>
+      <p className="text-lg md:text-xl font-medium text-white leading-relaxed whitespace-pre-line text-justify">
+        {content}
+      </p>
+    </div>
   );
 }

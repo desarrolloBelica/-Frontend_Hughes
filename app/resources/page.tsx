@@ -4,12 +4,6 @@ import * as React from "react";
 import Link from "next/link";
 import { FileDown, Download, Search, Filter } from "lucide-react";
 
-/* ─────────── Brand ─────────── */
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
-
 /* ─────────── Tipos & helpers Strapi v4/v5 ─────────── */
 type MediaAttrs = { url?: string; name?: string; mime?: string };
 type MediaEntry = { id?: number | string; attributes?: MediaAttrs } & MediaAttrs;
@@ -109,7 +103,7 @@ export default function ResourcesPage() {
         
         if (!res.ok) {
           if (res.status === 403) {
-            throw new Error("Access denied. Please enable 'find' permission for Resources in Strapi (Settings → Users & Permissions → Roles → Public → Resources)");
+            throw new Error("Access denied. Please enable 'find' permission for Resources in Strapi.");
           }
           throw new Error(`HTTP ${res.status}`);
         }
@@ -150,63 +144,48 @@ export default function ResourcesPage() {
   }, [files, q, kind]);
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* HERO con icono lucide grande */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-4xl px-6 py-12 md:py-16 text-center">
-          <div className="mb-6 flex items-center justify-center">
-            <div
-              className="inline-flex h-20 w-20 items-center justify-center rounded-3xl bg-white"
-              style={{ boxShadow: "0 28px 60px -28px rgba(17,6,49,.40)" }}
-              aria-hidden
-            >
-              <FileDown size={44} color={BRAND.blue} strokeWidth={2.5} />
+    <main className="min-h-screen bg-hs-bluenavy pb-24">
+      {/* HERO */}
+      <section className="relative overflow-hidden pt-16 pb-12 md:pt-24 md:pb-16 border-b-2 border-white/10">
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--hs-yellow)_0%,_transparent_60%)] blur-[100px]" />
+        
+        <div className="relative mx-auto max-w-4xl px-6 text-center">
+          <div className="mb-8 flex items-center justify-center">
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-[32px] bg-hs-yellow shadow-[0_0_40px_rgba(255,187,0,0.5)]">
+              <FileDown size={48} className="text-hs-bluenavy ml-1" strokeWidth={2.5} />
             </div>
           </div>
 
-          <h1
-            className="text-3xl md:text-6xl font-extrabold tracking-tight"
-            style={{ color: BRAND.blue }}
-          >
-            Resources
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6">
+            School <span className="text-hs-yellow">Resources</span>
           </h1>
 
-          <p className="mt-5 max-w-2xl mx-auto text-lg md:text-xl"
-             style={{ color: "rgba(17,6,49,.8)" }}>
-            Download school regulations and documents.
+          <p className="max-w-2xl mx-auto text-lg md:text-xl font-medium text-white/80 leading-relaxed">
+            Download essential school regulations, handbooks, and official documents.
           </p>
         </div>
       </section>
 
       {/* CONTROLES (buscador + filtros) */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-4xl px-6 pb-4">
-          <div className="flex flex-col md:flex-row md:items-center gap-3 md:gap-4">
+      <section className="pt-12 pb-6 relative z-10">
+        <div className="mx-auto max-w-5xl px-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/5 border-2 border-white/10 p-4 md:p-6 rounded-[32px] backdrop-blur-md shadow-2xl">
+            
             {/* buscador */}
-            <div className="relative flex-1">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2"
-                size={18}
-                color="rgba(17,6,49,.55)"
-              />
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-white/50" />
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search by name…"
-                className="w-full rounded-full border bg-white pl-9 pr-3 py-2 text-sm outline-none"
-                style={{ borderColor: "#ececf4", color: BRAND.blue }}
-                aria-label="Search resources"
+                placeholder="Search resources by name…"
+                className="w-full rounded-full border-2 border-white/20 bg-hs-bluenavy py-3 pl-14 pr-6 text-white placeholder-white/40 outline-none focus:border-hs-yellow transition-colors text-base font-medium shadow-inner"
               />
             </div>
 
             {/* chips de filtro */}
-            <div className="flex items-center gap-2">
-              <div
-                className="hidden md:inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-hughes-blue/60"
-                aria-hidden
-              >
-                <Filter size={14} />
-                Filter
+            <div className="flex items-center flex-wrap gap-3">
+              <div className="hidden lg:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-hs-yellow/80 mr-2">
+                <Filter size={16} /> Filter:
               </div>
 
               {(["ALL", "PDF", "DOCX", "OTHER"] as Kind[]).map((k) => {
@@ -215,23 +194,13 @@ export default function ResourcesPage() {
                   <button
                     key={k}
                     onClick={() => setKind(k)}
-                    className="rounded-full border px-3 py-1 text-sm transition"
-                    style={
+                    className={`rounded-full border-2 px-5 py-2 text-sm font-bold transition-all ${
                       active
-                        ? {
-                            background: BRAND.yellow,
-                            borderColor: BRAND.yellow,
-                            color: BRAND.blue,
-                          }
-                        : {
-                            background: "#fff",
-                            borderColor: "#e6e6f0",
-                            color: BRAND.blue,
-                          }
-                    }
-                    aria-pressed={active}
+                        ? "bg-hs-yellow border-hs-yellow text-hs-bluenavy shadow-lg scale-105"
+                        : "bg-transparent border-hs-yellow/50 text-hs-yellow hover:bg-hs-yellow/10"
+                    }`}
                   >
-                    {k === "ALL" ? "All" : k}
+                    {k === "ALL" ? "All Files" : k}
                   </button>
                 );
               })}
@@ -239,48 +208,39 @@ export default function ResourcesPage() {
           </div>
 
           {/* conteo */}
-          <div className="mt-2 text-xs" style={{ color: "rgba(17,6,49,.6)" }}>
-            Showing <strong>{filtered.length}</strong> of {files.length}
+          <div className="mt-6 text-sm font-bold uppercase tracking-widest text-hs-yellow/80 text-center md:text-left ml-4">
+            Showing <span className="text-white">{filtered.length}</span> of {files.length} documents
           </div>
         </div>
       </section>
 
       {/* LISTA */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-4xl px-6 pb-20 md:pb-28">
+      <section className="relative z-10">
+        <div className="mx-auto max-w-5xl px-6 pb-20">
           {loading && (
-            <div
-              className="rounded-2xl border bg-white p-6"
-              style={{ borderColor: "#ececf4" }}
-            >
-              <div className="space-y-3 animate-pulse">
+            <div className="rounded-3xl border-2 border-white/10 bg-white/5 p-8 shadow-xl">
+              <div className="space-y-4 animate-pulse">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-12 rounded-xl bg-gray-100" />
+                  <div key={i} className="h-20 rounded-2xl bg-white/10" />
                 ))}
               </div>
             </div>
           )}
 
           {!loading && error && (
-            <div
-              className="rounded-2xl border bg-white p-6 text-red-600"
-              style={{ borderColor: "#fae2e2" }}
-            >
-              Error: {error}
+            <div className="rounded-3xl border-2 border-red-500 bg-red-500/20 p-8 text-white font-bold text-center text-lg shadow-xl">
+              Error loading resources: {error}
             </div>
           )}
 
           {!loading && !error && (
             <>
               {filtered.length === 0 ? (
-                <div
-                  className="rounded-2xl border bg-white p-10 text-center"
-                  style={{ borderColor: "#ececf4", color: BRAND.blue }}
-                >
-                  No results.
+                <div className="rounded-3xl border-2 border-white/10 bg-white/5 p-16 text-center text-xl font-bold text-white/60 shadow-xl">
+                  No resources match your search criteria.
                 </div>
               ) : (
-                <ul className="space-y-4">
+                <ul className="space-y-5">
                   {filtered.map((f) => (
                     <li key={f.id}>
                       <a
@@ -288,39 +248,21 @@ export default function ResourcesPage() {
                         download
                         target={f.url.startsWith("http") ? "_blank" : undefined}
                         rel="noopener"
-                        className="group flex items-center justify-between gap-4 rounded-2xl border bg-white p-4 md:p-5 transition hover:-translate-y-[1px]"
-                        style={{
-                          borderColor: "#ececf4",
-                          boxShadow: "0 20px 70px -35px rgba(17,6,49,.12)",
-                        }}
+                        className="group flex flex-col sm:flex-row sm:items-center justify-between gap-6 rounded-3xl border-2 border-white/10 bg-white/5 p-6 md:p-8 transition-all hover:border-hs-yellow hover:bg-white/10 shadow-lg hover:shadow-2xl hover:-translate-y-1"
                       >
-                        <div className="flex min-w-0 items-start gap-3">
-                          <span
-                            className="mt-0.5 inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold"
-                            style={{ borderColor: "#e6e6f0", color: BRAND.blue }}
-                          >
+                        <div className="flex items-center gap-5 min-w-0">
+                          <span className="inline-flex items-center justify-center shrink-0 rounded-full border-2 border-hs-yellow bg-hs-yellow/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-hs-yellow">
                             {fileBadgeName(f.mime, f.url)}
                           </span>
-                          <span className="min-w-0">
-                            <span className="block truncate font-semibold" style={{ color: BRAND.blue }}>
+                          <div className="min-w-0 flex-1">
+                            <span className="block truncate font-extrabold text-white text-xl md:text-2xl group-hover:text-hs-yellow transition-colors">
                               {f.title}
                             </span>
-                            <span className="block text-xs" style={{ color: "rgba(17,6,49,.6)" }}>
-                              Click to download
-                            </span>
-                          </span>
+                          </div>
                         </div>
 
-                        <span
-                          className="shrink-0 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition"
-                          style={{
-                            background: BRAND.yellow,
-                            color: BRAND.blue,
-                            border: `1px solid ${BRAND.yellow}`,
-                            boxShadow: "0 12px 26px -14px rgba(255,187,0,.9)",
-                          }}
-                        >
-                          <Download size={16} />
+                        <span className="shrink-0 inline-flex justify-center items-center gap-3 rounded-full bg-hs-yellow px-6 py-3 text-base font-bold text-hs-bluenavy shadow-[0_0_20px_rgba(255,187,0,0.3)] transition-transform group-hover:scale-105">
+                          <Download size={20} />
                           Download
                         </span>
                       </a>
@@ -329,16 +271,10 @@ export default function ResourcesPage() {
                 </ul>
               )}
 
-              <div className="mt-10 flex justify-center">
+              <div className="mt-16 flex justify-center">
                 <Link
                   href="/"
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition"
-                  style={{
-                    background: "#fff",
-                    color: BRAND.blue,
-                    border: `1px solid ${BRAND.yellow}`,
-                    boxShadow: "0 10px 24px -16px rgba(17,6,49,.18)",
-                  }}
+                  className="inline-flex items-center gap-2 rounded-full border-2 border-hs-yellow px-8 py-4 font-bold text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy transition-all shadow-lg"
                 >
                   ← Back to home
                 </Link>

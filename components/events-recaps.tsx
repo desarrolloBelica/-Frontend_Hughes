@@ -224,14 +224,14 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
   const current = slides[index] ?? null;
 
   return (
-    <section className="w-full py-14 section-gradient-softly">
+    <section className="w-full py-14" style={{ backgroundColor: "var(--hs-bluenavy)" }}>
       <div className="mx-auto max-w-6xl px-4">
         <div className="mb-8 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="inline-flex items-center gap-2 text-hs-yellow font-bold uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 font-bold uppercase tracking-wider" style={{ color: "var(--hs-yellow)" }}>
               Latest Events
             </div>
-            <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hs-blue-dark">
+            <h2 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight" style={{ color: "var(--hs-yellow)" }}>
               See what's new and dive into the event recap
             </h2>
           </div>
@@ -245,11 +245,11 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
           </Link>
         </div>
 
-        <div className="relative overflow-hidden rounded-3xl border bg-white shadow-[0_10px_50px_-25px_rgba(0,0,0,0.35)]" style={{ borderColor: "#ececf4" }}>
+        <div className="relative overflow-hidden rounded-3xl border shadow-[0_10px_50px_-25px_rgba(0,0,0,0.35)]" style={{ borderColor: "var(--hs-yellow-darker)", backgroundColor: "var(--hs-yellow)" }}>
           {loading ? (
-            <div className="aspect-[16/8] w-full animate-pulse bg-gray-100" />
+            <div className="aspect-[16/8] w-full animate-pulse" style={{ backgroundColor: "var(--hs-yellow-light)" }} />
           ) : error ? (
-            <div className="aspect-[16/8] w-full grid place-content-center text-center text-hughes-blue p-8">
+            <div className="aspect-[16/8] w-full grid place-content-center text-center p-8" style={{ color: "var(--hs-bluenavy)" }}>
               Error al cargar eventos: {error}
             </div>
           ) : current ? (
@@ -275,7 +275,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
 
               <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 text-white">
                 <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hughes-blue">
+                  <span className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide" style={{ backgroundColor: "var(--hs-yellow)", color: "var(--hs-bluenavy)" }}>
                     {current.type || "Event"}
                   </span>
                   {current.date && (
@@ -290,7 +290,8 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
                 <div className="mt-4 flex items-center gap-3 flex-wrap">
                   <Link
                     href={current.href}
-                    className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-wide text-hughes-blue"
+                    className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                    style={{ backgroundColor: "var(--hs-yellow)", color: "var(--hs-bluenavy)" }}
                   >
                     Read Recap
                   </Link>
@@ -302,14 +303,16 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
                 <>
                   <button
                     aria-label="Anterior"
-                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/85 p-3 text-hughes-blue shadow hover:bg-white"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full p-3 shadow"
+                    style={{ backgroundColor: "var(--hs-yellow)", color: "var(--hs-bluenavy)" }}
                     onClick={() => setIndex((i) => (i - 1 + slides.length) % slides.length)}
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                   <button
                     aria-label="Siguiente"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/85 p-3 text-hughes-blue shadow hover:bg-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full p-3 shadow"
+                    style={{ backgroundColor: "var(--hs-yellow)", color: "var(--hs-bluenavy)" }}
                     onClick={() => setIndex((i) => (i + 1) % slides.length)}
                   >
                     <ChevronRight className="h-5 w-5" />
@@ -323,7 +326,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
                         className="h-2.5 rounded-full transition-all"
                         style={{
                           width: i === index ? "32px" : "10px",
-                          backgroundColor: i === index ? "var(--hs-yellow)" : "rgba(255,255,255,0.7)",
+                          backgroundColor: i === index ? "var(--hs-yellow)" : "var(--hs-yellow-light)",
                         }}
                         onClick={() => setIndex(i)}
                       />
@@ -333,7 +336,7 @@ export default function EventsRecaps({ viewAllHref = "/events" }: { viewAllHref?
               )}
             </div>
           ) : (
-            <div className="aspect-[16/8] w-full grid place-content-center text-center text-hughes-blue p-8">
+            <div className="aspect-[16/8] w-full grid place-content-center text-center p-8" style={{ color: "var(--hs-bluenavy)" }}>
               No hay eventos disponibles.
             </div>
           )}

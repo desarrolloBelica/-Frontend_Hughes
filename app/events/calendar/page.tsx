@@ -72,6 +72,7 @@ function getAttr<T>(
   return undefined;
 }
 
+// SE MANTIENEN LOS COLORES ORIGINALES POR CATEGORÍA
 const TIPO_COLORS: Record<
   string,
   { bg: string; text: string; border: string; soft: string }
@@ -196,10 +197,7 @@ async function fetchEventsByRange(
 
 function HSBadge({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold"
-      style={{ background: "#fff4cc", color: "#0b1229", border: "1px solid #ffe38c" }}
-    >
+    <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs md:text-sm font-bold bg-hs-yellow text-hs-bluenavy shadow-sm">
       {children}
     </div>
   );
@@ -215,8 +213,7 @@ function HSNavButton({
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 text-sm font-semibold hover:bg-white"
-      style={{ borderColor: "#ececf4", color: "var(--hs-blue)" }}
+      className="inline-flex items-center gap-1 rounded-full border-2 border-hs-bluenavy px-4 py-2 text-sm font-bold text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow transition-colors"
     >
       {children}
     </button>
@@ -237,11 +234,13 @@ function FilterChip({
   return (
     <button
       onClick={onToggle}
-      className="rounded-full border px-3 py-1 text-xs font-semibold transition"
+      className={`rounded-full border-2 px-4 py-1.5 text-xs md:text-sm font-bold transition-all ${
+        active ? 'shadow-md scale-105' : 'opacity-70 hover:opacity-100'
+      }`}
       style={{
-        borderColor: active ? color.border : "#e6e6f0",
-        background: active ? color.bg : "white",
-        color: active ? color.text : "var(--hs-blue)",
+        borderColor: active ? color.border : "var(--hs-bluenavy)",
+        background: active ? color.bg : "transparent",
+        color: active ? color.text : "var(--hs-bluenavy)",
       }}
     >
       {label}
@@ -254,11 +253,8 @@ function FilterChip({
 function ListView({ events }: { events: EventItem[] }) {
   if (events.length === 0) {
     return (
-      <div
-        className="rounded-2xl border bg-white p-8 text-center text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)]"
-        style={{ borderColor: "#ececf4" }}
-      >
-        No events for this month.
+      <div className="rounded-3xl border-2 border-hs-bluenavy/20 bg-white p-12 text-center text-lg font-bold text-hs-bluenavy shadow-xl">
+        No events for this month matching your filters.
       </div>
     );
   }
@@ -283,21 +279,20 @@ function ListView({ events }: { events: EventItem[] }) {
           <button
             key={ev.id}
             onClick={() => window.dispatchEvent(new CustomEvent("hs-calendar-open", { detail: ev }))}
-            className="relative w-full text-left rounded-2xl border bg-white p-4 md:p-5 text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)] focus:outline-none focus:ring-2 focus:ring-[var(--hs-yellow)]"
-            style={{ borderColor: "#ececf4" }}
+            className="group relative w-full text-left rounded-3xl border-2 border-hs-bluenavy/10 bg-white p-5 md:p-6 text-hs-bluenavy shadow-md hover:shadow-xl hover:border-hs-bluenavy transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-hs-yellow"
           >
             <span
-              className="absolute left-0 top-0 h-full w-1.5 rounded-l-2xl"
-              style={{ background: c.border }}
+              className="absolute left-0 top-0 h-full w-2.5 rounded-l-3xl"
+              style={{ background: c.bg }}
             />
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between pl-3">
               <div className="flex-1">
-                <div className="flex flex-wrap items-start gap-2 md:items-center">
-                  <h3 className="text-lg md:text-xl font-extrabold tracking-tight">
+                <div className="flex flex-wrap items-start gap-3 md:items-center">
+                  <h3 className="text-xl md:text-2xl font-bold tracking-tight">
                     {ev.title}
                   </h3>
                   <span
-                    className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                    className="rounded-full px-3 py-1 text-xs font-bold shadow-sm"
                     style={{
                       background: c.bg,
                       color: c.text,
@@ -307,17 +302,17 @@ function ListView({ events }: { events: EventItem[] }) {
                     {ev.tipo ?? "Other"}
                   </span>
                 </div>
-                <div className="mt-1 text-sm text-hughes-blue/80">
+                <div className="mt-2 text-base font-semibold opacity-80">
                   {dayLabel}
                 </div>
-                <div className="mt-1 text-sm text-hughes-blue/80 flex flex-wrap gap-2 items-center">
+                <div className="mt-2 text-sm font-medium opacity-80 flex flex-wrap gap-4 items-center">
                   {ev.location && (
                     isLocationLink ? (
                       <a
                         href={ev.location}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="underline font-semibold text-[var(--hs-blue)]"
+                        className="underline hover:text-hs-yellow transition-colors"
                         onClick={(e) => e.stopPropagation()}
                       >
                         Location
@@ -331,7 +326,7 @@ function ListView({ events }: { events: EventItem[] }) {
                       href={ev.ticketLink ?? "#"}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline font-semibold text-[var(--hs-blue)]"
+                      className="underline hover:text-hs-yellow transition-colors"
                       onClick={(e) => e.stopPropagation()}
                     >
                       Tickets
@@ -347,7 +342,7 @@ function ListView({ events }: { events: EventItem[] }) {
   );
 }
 
-/* ─────────── Month View (arreglado responsive móvil) ─────────── */
+/* ─────────── Month View ─────────── */
 
 function MonthView({
   monthDate,
@@ -372,11 +367,8 @@ function MonthView({
     setExpandedDays((s) => ({ ...s, [key]: !s[key] }));
 
   return (
-    <div
-      className="rounded-2xl border bg-white p-2 md:p-4 shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)]"
-      style={{ borderColor: "#ececf4" }}
-    >
-      <div className="grid grid-cols-7 gap-1 px-1 pb-2 text-[12px] font-semibold text-hughes-blue/70">
+    <div className="rounded-3xl border-2 border-hs-bluenavy/20 bg-white p-3 md:p-6 shadow-xl">
+      <div className="grid grid-cols-7 gap-1 px-1 pb-4 text-sm font-bold text-hs-bluenavy uppercase tracking-wider">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
           <div key={d} className="text-center">
             {d}
@@ -384,7 +376,7 @@ function MonthView({
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1.5 md:gap-2">
         {days.map((day) => {
           const inMonth = isSameMonth(day, monthStart);
           const dayKey = format(day, "yyyy-MM-dd");
@@ -400,46 +392,44 @@ function MonthView({
               ? colorFor(allEvents[0].tipo).soft
               : inMonth
               ? "white"
-              : "#fafafb";
+              : "#f8f9fc"; 
 
           return (
             <div
               key={day.toISOString()}
-              className="min-h-[110px] md:min-h-[120px] rounded-xl border p-1.5 md:p-2 overflow-visible"
+              className={`min-h-[120px] md:min-h-[140px] rounded-2xl border-2 p-2 overflow-visible transition-colors ${
+                inMonth ? "border-hs-bluenavy/10 hover:border-hs-bluenavy/30" : "border-transparent opacity-60"
+              }`}
               style={{
-                borderColor: "#ececf4",
                 background: cellSoft,
-                opacity: inMonth ? 1 : 0.9,
               }}
             >
-              <div className="flex items-center justify-between">
-                <div className="text-xs font-semibold text-hughes-blue">
+              <div className="flex items-center justify-between mb-2">
+                <div className={`text-sm font-bold ${inMonth ? 'text-hs-bluenavy' : 'text-hs-bluenavy/50'}`}>
                   {format(day, "d")}
                 </div>
               </div>
 
-              <div className="mt-1 space-y-1.5">
+              <div className="space-y-2">
                 {visibleEvents.map((ev) => {
                   const c = colorFor(ev.tipo);
                   const oneDay = ev.start === (ev.end ?? ev.start);
                   const dateText = oneDay
-                    ? format(parseISO(ev.start), "MMM d, yyyy", { locale: enUS })
+                    ? format(parseISO(ev.start), "MMM d", { locale: enUS })
                     : `${format(parseISO(ev.start), "MMM d", { locale: enUS })}–${format(
                         parseISO(ev.end ?? ev.start),
-                        "MMM d, yyyy",
+                        "MMM d",
                         { locale: enUS }
                       )}`;
 
                   return (
                     <div key={`${ev.id}-${ev.start}`} className="relative group">
-                      {/* BLOQUE del evento (móvil: columna; desktop: igual) */}
                       <div
-                        className="w-full rounded-md px-2 py-2 text-[12px] md:text-[13px] font-semibold leading-[1.25] break-words whitespace-normal cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--hs-yellow)]"
+                        className="w-full rounded-lg px-2 py-1.5 text-xs md:text-sm font-bold leading-tight break-words whitespace-normal cursor-pointer shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-hs-yellow"
                         style={{
                           background: c.bg,
                           color: c.text,
-                          border: `2px solid ${c.border}`,
-                          minHeight: "70px",
+                          border: `1px solid ${c.border}`,
                         }}
                         onClick={() => onSelect(ev)}
                         role="button"
@@ -451,39 +441,8 @@ function MonthView({
                           }
                         }}
                       >
-                        {/* Título (máx 2 líneas) */}
-                        <div
-                          className="line-clamp-2"
-                          style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {ev.title}
-                        </div>
-
-                        {/* Pie del bloque: chip + meta  (en móvil en columna para que no se desborde) */}
-                        <div className="mt-1 flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
-                          <span
-                            className="inline-block rounded-full px-2 py-0.5 text-[10.5px] font-bold shrink-0"
-                            style={{
-                              background: c.text === "#ffffff" ? "rgba(0,0,0,0.15)" : "rgba(255,255,255,0.9)",
-                              color: c.text === "#ffffff" ? "#ffffff" : c.text,
-                              border: `1px solid ${c.text === "#ffffff" ? "rgba(255,255,255,0.3)" : c.border}`,
-                            }}
-                          >
-                            {ev.tipo ?? "Other"}
-                          </span>
-                          <span className="md:hidden text-[11px] opacity-85">
-                            {dateText}
-                            {ev.location ? ` • ${ev.location}` : ""}
-                          </span>
-                        </div>
+                        <div className="line-clamp-2">{ev.title}</div>
                       </div>
-
-                      {/* Hover card removed in favor of click modal */}
                     </div>
                   );
                 })}
@@ -491,8 +450,7 @@ function MonthView({
                 {remaining > 0 && !expanded && (
                   <button
                     onClick={() => toggleDay(dayKey)}
-                    className="w-full rounded-md border px-2 py-1 text-[12px] font-semibold text-hughes-blue hover:bg-white"
-                    style={{ borderColor: "#e6e6f0", background: "rgba(255,255,255,0.65)" }}
+                    className="w-full rounded-lg border-2 border-hs-bluenavy/20 bg-white/60 px-2 py-1 text-xs font-bold text-hs-bluenavy hover:bg-hs-yellow hover:border-hs-yellow hover:text-hs-bluenavy transition-colors"
                   >
                     +{remaining} more
                   </button>
@@ -500,8 +458,7 @@ function MonthView({
                 {expanded && allEvents.length > MAX_VISIBLE && (
                   <button
                     onClick={() => toggleDay(dayKey)}
-                    className="w-full rounded-md border px-2 py-1 text-[12px] font-semibold text-hughes-blue hover:bg-white"
-                    style={{ borderColor: "#e6e6f0", background: "rgba(255,255,255,0.65)" }}
+                    className="w-full rounded-lg border-2 border-hs-bluenavy/20 bg-white/60 px-2 py-1 text-xs font-bold text-hs-bluenavy hover:bg-hs-yellow hover:border-hs-yellow hover:text-hs-bluenavy transition-colors"
                   >
                     Show less
                   </button>
@@ -578,7 +535,7 @@ export default function CalendarPage() {
 
   const openEvent = (ev: EventItem) => setSelectedEvent(ev);
   const closeModal = () => setSelectedEvent(null);
-  // Allow cross-component open via custom event (list view uses dispatch to avoid prop drilling there)
+  
   useEffect(() => {
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<EventItem>).detail;
@@ -589,97 +546,104 @@ export default function CalendarPage() {
   }, []);
 
   return (
-    <main className="min-h-screen" style={{ background: "#f5f6fb" }}>
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-10 md:py-14">
+    <main className="min-h-screen bg-hs-yellow text-hs-bluenavy">
+      <section className="py-16 md:py-24">
+        <div className="mx-auto max-w-7xl px-6">
+          
           <HSBadge>Calendar · Schedule</HSBadge>
 
-          <div className="mt-3 flex items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-hughes-blue">
-                Hughes Schools Yearly Calendar
-              </h1>
-              <p className="mt-2 text-hughes-blue/80">
-                Browse month by month. Filter by view and quickly scan the activities of our
-                community.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <HSNavButton onClick={() => setCurrentMonth((m) => subMonths(m, 1))}>
-                <ChevronLeft className="h-4 w-4" />
-                Prev
-              </HSNavButton>
-              <div className="mx-2 text-lg md:text-xl font-bold text-hughes-blue">
-                {title}
-              </div>
-              <HSNavButton onClick={() => setCurrentMonth((m) => addMonths(m, 1))}>
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </HSNavButton>
-            </div>
+          {/* Encabezado sin los controles de mes */}
+          <div className="mt-6 max-w-2xl mb-10">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+              Hughes Schools Yearly Calendar
+            </h1>
+            <p className="mt-4 text-lg font-medium opacity-90 leading-relaxed">
+              Browse month by month. Filter by view and quickly scan the activities of our community.
+            </p>
           </div>
 
           {/* Filtros por tipo */}
-          <div className="mt-6 flex flex-wrap gap-2">
-            {allTypeKeys.map((t) => {
-              const c = colorFor(t);
-              const active = activeTypes.includes(t);
-              return (
-                <FilterChip
-                  key={t}
-                  label={t}
-                  active={active}
-                  onToggle={() => toggleType(t)}
-                  color={c}
-                />
-              );
-            })}
+          <div className="mb-10 bg-white/20 p-6 rounded-3xl border-2 border-hs-bluenavy/20">
+            <div className="text-sm font-bold uppercase tracking-widest mb-4 opacity-80">Filter by category:</div>
+            <div className="flex flex-wrap gap-3">
+              {allTypeKeys.map((t) => {
+                const c = colorFor(t);
+                const active = activeTypes.includes(t);
+                return (
+                  <FilterChip
+                    key={t}
+                    label={t}
+                    active={active}
+                    onToggle={() => toggleType(t)}
+                    color={c}
+                  />
+                );
+              })}
+            </div>
           </div>
 
-          {/* Tabs List / Month */}
+          {/* CONTROLES UNIFICADOS (TABS + MES + CONTADOR) */}
           <div className="mt-6">
             <Tabs
               value={view === "month" ? "Month" : "List"}
               onValueChange={(v) => setView(v === "Month" ? "month" : "list")}
               className="w-full"
             >
-              <TabsList className="mx-auto grid w-full max-w-sm grid-cols-2 rounded-full bg-[#ebeaf3] p-1">
-                <TabsTrigger
-                  value="List"
-                  className="rounded-full px-6 py-2 text-sm font-semibold data-[state=active]:bg-[var(--hs-yellow)] data-[state=active]:text-hughes-blue"
-                >
-                  List
-                </TabsTrigger>
-                <TabsTrigger
-                  value="Month"
-                  className="rounded-full px-6 py-2 text-sm font-semibold data-[state=active]:bg-[var(--hs-yellow)] data-[state=active]:text-hughes-blue"
-                >
-                  Month
-                </TabsTrigger>
-              </TabsList>
-
-              <div className="mt-6">
-                {loading ? (
-                  <div
-                    className="rounded-2xl border bg-white p-8 text-center text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)]"
-                    style={{ borderColor: "#ececf4" }}
+              
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+                {/* TABS LIST/MONTH */}
+                <TabsList className="flex w-full lg:max-w-xs rounded-full bg-hs-bluenavy/10 p-1 border-2 border-hs-bluenavy h-14">
+                  <TabsTrigger
+                    value="List"
+                    className="flex-1 rounded-full text-base font-bold data-[state=active]:bg-hs-bluenavy data-[state=active]:text-hs-yellow transition-all"
                   >
+                    List
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="Month"
+                    className="flex-1 rounded-full text-base font-bold data-[state=active]:bg-hs-bluenavy data-[state=active]:text-hs-yellow transition-all"
+                  >
+                    Month
+                  </TabsTrigger>
+                </TabsList>
+
+                {/* CONTROLES DE MES Y CONTADOR (Movidos aquí abajo) */}
+                <div className="flex items-center justify-center gap-4 bg-white/20 p-2.5 rounded-full border-2 border-hs-bluenavy shadow-sm">
+                  <HSNavButton onClick={() => setCurrentMonth((m) => subMonths(m, 1))}>
+                    <ChevronLeft className="h-5 w-5" />
+                  </HSNavButton>
+                  
+                  <div className="w-48 flex flex-col items-center justify-center">
+                    <span className="text-xl md:text-2xl font-extrabold uppercase tracking-wide leading-tight">
+                      {title}
+                    </span>
+                    <span className="text-xs font-bold opacity-80 uppercase tracking-widest mt-0.5">
+                      {monthEvents.length} {monthEvents.length === 1 ? "Event" : "Events"}
+                    </span>
+                  </div>
+
+                  <HSNavButton onClick={() => setCurrentMonth((m) => addMonths(m, 1))}>
+                    <ChevronRight className="h-5 w-5" />
+                  </HSNavButton>
+                </div>
+              </div>
+
+              {/* CONTENIDO DEL CALENDARIO */}
+              <div>
+                {loading ? (
+                  <div className="rounded-3xl border-2 border-hs-bluenavy/20 bg-white p-16 text-center text-xl font-bold text-hs-bluenavy shadow-xl animate-pulse">
                     Loading events…
                   </div>
                 ) : err ? (
-                  <div
-                    className="rounded-2xl border bg-white p-8 text-center text-hughes-blue shadow-[0_10px_45px_-20px_rgba(17,6,49,0.35)]"
-                    style={{ borderColor: "#ececf4" }}
-                  >
+                  <div className="rounded-3xl border-2 border-red-500 bg-red-500/10 p-12 text-center text-xl font-bold text-red-900 shadow-xl">
                     Error loading events: {err}
                   </div>
                 ) : (
                   <>
-                    <TabsContent value="List" className="mt-0">
+                    <TabsContent value="List" className="mt-0 focus:outline-none">
                       <ListView events={monthEvents} />
                     </TabsContent>
-                    <TabsContent value="Month" className="mt-0">
+                    <TabsContent value="Month" className="mt-0 focus:outline-none">
                       <MonthView monthDate={currentMonth} events={monthEvents} onSelect={openEvent} />
                     </TabsContent>
                   </>
@@ -689,6 +653,7 @@ export default function CalendarPage() {
           </div>
         </div>
 
+        {/* MODAL */}
         {selectedEvent && (
           <EventModal event={selectedEvent} onClose={closeModal} />
         )}
@@ -703,10 +668,10 @@ function EventModal({ event, onClose }: { event: EventItem; onClose: () => void 
   const c = colorFor(event.tipo);
   const oneDay = event.start === (event.end ?? event.start);
   const dateText = oneDay
-    ? format(parseISO(event.start), "PP", { locale: enUS })
-    : `${format(parseISO(event.start), "PP", { locale: enUS })} – ${format(
+    ? format(parseISO(event.start), "PPP", { locale: enUS })
+    : `${format(parseISO(event.start), "PPP", { locale: enUS })} – ${format(
         parseISO(event.end ?? event.start),
-        "PP",
+        "PPP",
         { locale: enUS }
       )}`;
 
@@ -714,68 +679,71 @@ function EventModal({ event, onClose }: { event: EventItem; onClose: () => void 
   const hasTicketLink = !!event.ticketLink;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
-      <div className="w-full max-w-xl rounded-2xl bg-white p-6 shadow-2xl relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-hs-bluenavy/80 backdrop-blur-sm px-4 p-6">
+      <div className="w-full max-w-2xl rounded-3xl bg-white p-8 md:p-10 shadow-2xl relative border-4 border-hs-yellow animate-in fade-in zoom-in duration-200">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-hughes-blue/70 hover:text-hughes-blue font-semibold"
+          className="absolute right-6 top-6 h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 text-hs-bluenavy hover:bg-hs-yellow transition-colors font-bold text-xl"
           aria-label="Close"
         >
           ✕
         </button>
-        <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold" style={{ background: c.bg, color: c.text, border: `1px solid ${c.border}` }}>
+        
+        <div 
+          className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-bold mb-6 shadow-sm" 
+          style={{ background: c.bg, color: c.text, border: `2px solid ${c.border}` }}
+        >
           {event.tipo ?? "Other"}
         </div>
-        <h2 className="mt-3 text-2xl font-extrabold text-hughes-blue">{event.title}</h2>
-        <p className="mt-2 text-sm text-hughes-blue/80">{dateText}</p>
+        
+        <h2 className="text-3xl md:text-4xl font-extrabold text-hs-bluenavy leading-tight mb-4">{event.title}</h2>
+        <p className="text-lg font-bold text-hs-bluenavy/70 mb-8 border-b-2 border-gray-100 pb-6">{dateText}</p>
 
-        <div className="mt-4 space-y-2 text-sm text-hughes-blue">
+        <div className="space-y-6 text-base md:text-lg font-medium text-hs-bluenavy">
           {event.description && (
-            <div className="flex items-start gap-2">
-              <span className="font-semibold">Description:</span>
-              <span className="text-hughes-blue/90 leading-relaxed">{event.description}</span>
+            <div>
+              <span className="font-extrabold block mb-2 text-xl">Description:</span>
+              <p className="opacity-90 leading-relaxed text-justify whitespace-pre-wrap">{event.description}</p>
             </div>
           )}
 
           {event.location && (
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">Location:</span>
+            <div className="bg-gray-50 p-4 rounded-xl border-2 border-gray-100">
+              <span className="font-extrabold block mb-1">Location:</span>
               {isLocationLink ? (
                 <a
                   href={event.location}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline text-[var(--hs-blue)]"
+                  className="font-bold underline hover:text-hs-yellow transition-colors break-all"
                 >
-                  Open location
+                  {event.location}
                 </a>
               ) : (
-                <span>{event.location}</span>
+                <span className="opacity-90">{event.location}</span>
               )}
             </div>
           )}
 
-
           {hasTicketLink && (
-            <div className="flex items-center gap-2">
-              <span className="font-semibold">Tickets:</span>
+            <div className="bg-hs-yellow/20 p-4 rounded-xl border-2 border-hs-yellow/50">
+              <span className="font-extrabold block mb-1">Tickets:</span>
               <a
                 href={event.ticketLink ?? "#"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline text-[var(--hs-blue)]"
+                className="font-bold underline hover:text-hs-yellow transition-colors break-all"
               >
-                Buy tickets
+                Buy tickets here
               </a>
             </div>
           )}
         </div>
 
-        <div className="mt-6 flex justify-end">
+        <div className="mt-10 flex justify-end">
           <button
             onClick={onClose}
-            className="rounded-full px-4 py-2 font-semibold text-hughes-blue border"
-            style={{ borderColor: "#ececf4" }}
+            className="rounded-full px-8 py-3 font-bold text-lg text-white bg-hs-bluenavy hover:bg-hs-yellow hover:text-hs-bluenavy transition-colors shadow-lg"
           >
             Close
           </button>

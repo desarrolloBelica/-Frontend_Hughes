@@ -1,11 +1,10 @@
-// app/events/EventsClient.tsx
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 /* ───────── Tipos ───────── */
@@ -22,13 +21,14 @@ type Media = {
   };
 };
 
-type KnownFieldKey = "title" | "type" | "gallery" | "featured_image" | "slug";
+type KnownFieldKey = "title" | "type" | "gallery" | "featured_image" | "slug" | "date";
 
 type BlogV5 = {
   id: number | string;
   title?: string;
   type?: string;
   slug?: string;
+  date?: string;
   gallery?: Media[] | Media | null;
   featured_image?: Media | null;
 };
@@ -39,6 +39,7 @@ type BlogV4 = {
     title?: string;
     type?: string;
     slug?: string;
+    date?: string;
     gallery?:
       | { data?: Media[] | Media | null }
       | Media[]
@@ -177,8 +178,18 @@ export default function EventsClient({ initialType, initialPage }: Props) {
   }, []);
 
   const filtered = useMemo(() => {
-    if (typeParam === "All") return data;
-    return data.filter((b) => (getAttr<string>(b, "type") || "") === typeParam);
+    let result = data;
+    if (typeParam !== "All") {
+      result = data.filter((b) => (getAttr<string>(b, "type") || "") === typeParam);
+    }
+    // Ordenar por fecha descendente (más recientes primero)
+    return result.sort((a, b) => {
+      const dateA = new Date((getAttr<string>(a, "date") ?? "") as string).getTime();
+      const dateB = new Date((getAttr<string>(b, "date") ?? "") as string).getTime();
+      if (Number.isNaN(dateA)) return 1;
+      if (Number.isNaN(dateB)) return -1;
+      return dateB - dateA;
+    });
   }, [data, typeParam]);
 
   const total = filtered.length;
@@ -201,31 +212,35 @@ export default function EventsClient({ initialType, initialPage }: Props) {
   }
 
   return (
-    <section className="w-full py-16" style={{ background: "#f5f6fb" }}>
-      <div className="mx-auto max-w-6xl px-4">
+    <main className="min-h-screen bg-hs-yellow py-16 md:py-24">
+      <div className="mx-auto max-w-7xl px-6">
+        
         {/* Encabezado */}
-        <div className="mb-8 text-center">
-          <div className="mx-auto inline-flex items-center gap-2 tag-hs">Event Recaps</div>
-          <h1 className="mt-3 text-3xl md:text-4xl font-bold tracking-tight text-hughes-blue">All Events</h1>
-          <p className="text-sm md:text-base mt-2 text-hughes-blue">
-            Browse our academic, performing arts, and other moments.
+        <div className="mb-12 flex flex-col items-center gap-4 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-hs-bluenavy text-hs-yellow font-bold text-sm uppercase tracking-wider shadow-sm">
+            <CalendarDays className="w-4 h-4" /> Event Recaps
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-bluenavy leading-tight">
+            All Events
+          </h1>
+          <p className="text-lg md:text-xl font-medium text-hs-bluenavy opacity-90 max-w-2xl">
+            Browse our academic, performing arts, and other unforgettable moments.
           </p>
         </div>
 
         {/* Filtros */}
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-2">
+        <div className="mb-12 flex flex-wrap items-center justify-center gap-3">
           {TYPES.map((t) => {
             const active = t === typeParam;
             return (
               <button
                 key={t}
-                className="tab-pill rounded-full px-4 py-2 border transition-colors"
+                className={`rounded-full px-6 py-2.5 text-sm md:text-base font-bold border-2 transition-all duration-300 ${
+                  active 
+                    ? "bg-hs-bluenavy border-hs-bluenavy text-hs-yellow shadow-md scale-105" 
+                    : "bg-transparent border-hs-bluenavy text-hs-bluenavy hover:bg-hs-bluenavy/10"
+                }`}
                 onClick={() => pushQuery({ type: t })}
-                style={
-                  active
-                    ? { background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }
-                    : { background: "#ffffff", borderColor: "transparent" }
-                }
               >
                 {t}
               </button>
@@ -241,10 +256,10 @@ export default function EventsClient({ initialType, initialPage }: Props) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               {Array.from({ length: PAGE_SIZE }).map((_, i) => (
-                <div key={i} className="h-[320px] bg-white rounded-2xl border animate-pulse" />
+                <div key={i} className="h-[400px] bg-hs-bluenavy/10 rounded-3xl animate-pulse border-2 border-hs-bluenavy/20" />
               ))}
             </motion.div>
           ) : error ? (
@@ -253,8 +268,7 @@ export default function EventsClient({ initialType, initialPage }: Props) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="rounded-xl border p-6 text-center text-hughes-blue"
-              style={{ borderColor: "var(--hs-yellow)" }}
+              className="rounded-3xl border-2 border-red-500 bg-red-500/10 p-8 text-center text-hs-bluenavy font-bold text-lg"
             >
               Error loading events: {error}
             </motion.div>
@@ -264,17 +278,17 @@ export default function EventsClient({ initialType, initialPage }: Props) {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="text-center text-hughes-blue"
+              className="text-center text-xl font-bold text-hs-bluenavy py-12"
             >
               No events published yet.
             </motion.p>
           ) : (
             <motion.div
               key={`${typeParam}-${page}`}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"
             >
               {pageItems.map((item) => {
@@ -284,34 +298,40 @@ export default function EventsClient({ initialType, initialPage }: Props) {
                 const href = recapHref(item);
 
                 return (
-                  <article key={String(item.id)}>
-                    <Link href={href} className="block relative overflow-hidden rounded-3xl">
-                      <div className="relative aspect-[16/10] w-full rounded-3xl overflow-hidden">
+                  <article key={String(item.id)} className="group flex flex-col h-full">
+                    <Link href={href} className="block relative overflow-hidden rounded-3xl border-2 border-hs-bluenavy shadow-lg group-hover:shadow-2xl transition-all duration-300 group-hover:-translate-y-1">
+                      <div className="relative aspect-[16/10] w-full bg-hs-bluenavy">
                         {cover ? (
                           <Image
                             src={cover.url}
                             alt={cover.alt}
                             fill
                             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                            className="object-cover"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="h-full w-full bg-neutral-100" />
+                          <div className="h-full w-full flex items-center justify-center text-hs-yellow/50 font-bold">No Image</div>
                         )}
                       </div>
                     </Link>
-                    <div className="mt-4">
-                      <div className="text-[12px] font-semibold tracking-widest uppercase text-hughes-blue">{type || ""}</div>
-                      <h3 className="mt-2 text-2xl font-semibold leading-snug text-hughes-blue">{title}</h3>
-                      <Link href={href} className="group inline-flex items-center mt-3">
-                        <span className="relative text-base font-semibold text-hughes-blue">
-                          Read more
-                          <span
-                            className="absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-                            style={{ background: "var(--hs-yellow)" }}
-                          />
-                        </span>
-                      </Link>
+                    
+                    <div className="mt-6 flex-grow flex flex-col items-start px-2">
+                      <div className="text-sm font-bold tracking-widest uppercase text-hs-bluenavy opacity-80 mb-2">
+                        {type || "Event"}
+                      </div>
+                      <h3 className="text-2xl md:text-3xl font-extrabold leading-tight text-hs-bluenavy mb-4 line-clamp-3">
+                        {title}
+                      </h3>
+                      <div className="mt-auto">
+                        <Link href={href} className="group/link inline-flex items-center">
+                          <span className="relative text-lg font-bold text-hs-bluenavy">
+                            Read more
+                            <span
+                              className="absolute left-0 -bottom-1 h-[3px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover/link:scale-x-100 bg-hs-bluenavy"
+                            />
+                          </span>
+                        </Link>
+                      </div>
                     </div>
                   </article>
                 );
@@ -322,12 +342,12 @@ export default function EventsClient({ initialType, initialPage }: Props) {
 
         {/* Paginación */}
         {totalPages > 1 && (
-          <div className="mt-10 flex items-center justify-center gap-2">
+          <div className="mt-16 flex items-center justify-center gap-3">
             <button
-              className="rounded-full border px-3 py-2 text-hughes-blue disabled:opacity-40"
+              className="rounded-full border-2 border-hs-bluenavy p-3 text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-hs-bluenavy"
               onClick={() => pushQuery({ page: Math.max(1, page - 1) })}
               disabled={page <= 1}
-              style={{ background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }}
+              aria-label="Previous page"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
@@ -339,12 +359,12 @@ export default function EventsClient({ initialType, initialPage }: Props) {
                 <button
                   key={p}
                   onClick={() => pushQuery({ page: p })}
-                  className="rounded-full px-4 py-2 text-sm tab-pill border"
-                  style={
-                    active
-                      ? { background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }
-                      : { background: "#ffffff", borderColor: "transparent" }
-                  }
+                  className={`h-12 w-12 rounded-full border-2 font-bold text-base transition-all ${
+                    active 
+                      ? "bg-hs-bluenavy border-hs-bluenavy text-hs-yellow scale-110 shadow-lg" 
+                      : "border-hs-bluenavy text-hs-bluenavy hover:bg-hs-bluenavy/10"
+                  }`}
+                  aria-current={active ? "page" : undefined}
                 >
                   {p}
                 </button>
@@ -352,16 +372,16 @@ export default function EventsClient({ initialType, initialPage }: Props) {
             })}
 
             <button
-              className="rounded-full border px-3 py-2 text-hughes-blue disabled:opacity-40"
+              className="rounded-full border-2 border-hs-bluenavy p-3 text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow transition-colors disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-hs-bluenavy"
               onClick={() => pushQuery({ page: Math.min(totalPages, page + 1) })}
               disabled={page >= totalPages}
-              style={{ background: "var(--hs-yellow)", borderColor: "var(--hs-yellow)" }}
+              aria-label="Next page"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
           </div>
         )}
       </div>
-    </section>
+    </main>
   );
 }

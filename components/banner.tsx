@@ -96,8 +96,8 @@ export default function BannerPrincipal() {
   px-10 text-[17px] font-semibold shadow-2xl transition-transform"
 >
 
-          <span className="absolute inset-0 rounded-full bg-white transition-opacity duration-200 group-hover:opacity-0" />
-          <span className="relative z-10 transition-colors duration-200 !text-[#110631] group-hover:!text-white">
+          <span className="absolute inset-0 rounded-full transition-opacity duration-200 group-hover:opacity-0" style={{ backgroundColor: "var(--hs-yellow)" }} />
+          <span className="relative z-10 transition-colors duration-200" style={{ color: "var(--hs-bluenavy)" }}>
             Apply Now
           </span>
         </motion.button>

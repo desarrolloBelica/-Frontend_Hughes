@@ -113,10 +113,10 @@ function SectionHeading() {
   return (
     <div className="mb-10 text-center">
       {/* Título estilizado: “Hughes Newspaper” */}
-      <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-hughes-blue inline-flex items-center gap-3">
+      <h2 className="text-3xl md:text-4xl font-bold tracking-tight inline-flex items-center gap-3" style={{ color: "var(--hs-bluenavy)" }}>
         Hughes Schools Newspaper
       </h2>
-      <p className="text-sm md:text-base mt-2 text-hughes-blue/80">
+      <p className="text-sm md:text-base mt-2" style={{ color: "var(--hs-bluenavy)", opacity: 0.8 }}>
         Updates and highlights from our community.
       </p>
     </div>
@@ -162,12 +162,12 @@ function Card({
 
       {/* Texto */}
       <div className="mt-4">
-        <div className="text-[12px] font-semibold tracking-widest uppercase text-hughes-blue">
+        <div className="text-xs font-semibold tracking-widest uppercase" style={{ color: "var(--hs-bluenavy)" }}>
           Hughes Schools News
         </div>
 
         <a href={href}>
-          <h3 className="mt-2 text-2xl font-semibold leading-snug text-hughes-blue">
+          <h3 className="mt-2 text-2xl font-semibold leading-snug" style={{ color: "var(--hs-bluenavy)" }}>
             {title}
           </h3>
         </a>
@@ -176,13 +176,13 @@ function Card({
 <a
   href={href}
   className="mt-3 inline-flex items-center text-[17px] font-semibold group"
-  style={{ color: "var(--hs-yellow)" }}
+  style={{ color: "var(--hs-bluenavy)" }}
 >
   <span className="relative">
     Read More
     <span
       className="absolute left-0 -bottom-0.5 h-[2px] w-full origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100"
-      style={{ background: "var(--hs-yellow)" }}
+      style={{ background: "var(--hs-bluenavy)" }}
     />
   </span>
 </a>
@@ -202,11 +202,11 @@ function SeeAllButton({ href }: { href: string }) {
   return (
     <a
       href={href}
-      className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full border-2 px-8 text-[16px] font-semibold shadow-md transition-transform"
-      style={{ borderColor: "var(--hs-blue)", color: "var(--hs-blue)" }}
+      className="group relative inline-flex h-12 items-center justify-center overflow-hidden rounded-full border-2 px-8 text-[17px] font-semibold shadow-md transition-transform"
+      style={{ borderColor: "var(--hs-bluenavy)", color: "var(--hs-bluenavy)" }}
     >
       {/* overlay animado como en tu patrón global */}
-      <span className="absolute inset-0 rounded-full bg-[var(--hs-blue)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      <span className="absolute inset-0 rounded-full bg-[var(--hs-bluenavy)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <span className="relative z-10 transition-colors duration-300 group-hover:text-white">
         See all
       </span>
@@ -267,7 +267,7 @@ export default function NewspaperStrip() {
   }, [rows]);
 
   return (
-    <section className="section-white py-16">
+    <section className="py-16" style={{ backgroundColor: "var(--hs-yellow)" }}>
       <div className="mx-auto max-w-6xl px-4">
         <SectionHeading />
 
@@ -284,13 +284,13 @@ export default function NewspaperStrip() {
           </div>
         ) : error ? (
           <div
-            className="rounded-xl border p-6 text-center text-hs-blue"
-            style={{ borderColor: "var(--hs-yellow)" }}
+            className="rounded-xl border p-6 text-center"
+            style={{ borderColor: "var(--hs-bluenavy)", color: "var(--hs-bluenavy)" }}
           >
             Error loading news: {error}
           </div>
         ) : top6.length === 0 ? (
-          <p className="text-center text-hs-blue">No news yet.</p>
+          <p className="text-center" style={{ color: "var(--hs-bluenavy)" }}>No news yet.</p>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">

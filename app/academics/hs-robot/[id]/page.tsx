@@ -92,8 +92,6 @@ async function fetchCategory(id: string): Promise<RobotCategory | null> {
   const base = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
   
   // Endpoint: Intentamos obtener por ID. 
-  // Nota: En Strapi v5 si usas documentId la URL es /api/collection/:documentId
-  // En v4 es /api/collection/:id
   const url = `${base}/api/hs-robot-categories/${id}?populate=*`;
   
   console.log("Fetching Category:", url);
@@ -114,16 +112,17 @@ async function fetchCategory(id: string): Promise<RobotCategory | null> {
 }
 
 /* ───────────── 4. Componente UI para Texto Rico Actualizado ───────────── */
-const RichTextRenderer = ({ content, className = "text-gray-700" }: { content?: string, className?: string }) => {
+const RichTextRenderer = ({ content, className = "" }: { content?: string, className?: string }) => {
   if (!content) return <p className={`italic opacity-80 ${className}`}>No information available.</p>;
   
   return (
-    // Agregamos 'prose' para formato y 'className' para el color
-    <div className={`prose max-w-none whitespace-pre-wrap leading-relaxed ${className}`}>
+    // CAMBIO: Aseguramos que 'prose' herede el color del padre para no arruinar los fondos Navy/Yellow
+    <div className={`prose max-w-none whitespace-pre-wrap leading-relaxed prose-headings:text-inherit prose-p:text-inherit prose-strong:text-inherit prose-li:text-inherit prose-a:text-inherit ${className}`}>
       {content}
     </div>
   );
 };
+
 /* ───────────── 5. Metadatos SEO ───────────── */
 
 export async function generateMetadata({ params }: PageInput) {
@@ -166,10 +165,11 @@ export default async function CategoryDetailPage({ params }: PageInput) {
   const helperImages = getMediaArray(helpersRaw);
 
   return (
-    <main className="min-h-screen bg-[#f8f9fc] pb-20">
+    // CAMBIO: Fondo general oscuro
+    <main className="min-h-screen bg-hs-bluenavy pb-20">
       
       {/* --- HERO SECTION --- */}
-      <div className="relative h-[40vh] min-h-[300px] w-full bg-[#110631] overflow-hidden">
+      <div className="relative h-[40vh] min-h-[300px] w-full bg-hs-bluenavy overflow-hidden">
         {mainImageUrl && (
           <Image
             src={mainImageUrl}
@@ -179,14 +179,19 @@ export default async function CategoryDetailPage({ params }: PageInput) {
             priority // Importante para LCP
           />
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#f8f9fc] via-transparent to-transparent" />
+        {/* CAMBIO: Gradiente adaptado al bluenavy */}
+        {/* Gradiente adaptado al bluenavy */}
+        <div className="absolute inset-0 bg-gradient-to-t from-hs-bluenavy via-hs-bluenavy/60 to-transparent" />
         
-        <div className="absolute inset-0 flex flex-col justify-end px-6 pb-12 max-w-7xl mx-auto">
-          {/* Ojo: ajusta este href a tu ruta real de listado */}
-          <Link href="/academics/hs-robot" className="mb-6 inline-flex items-center gap-2 text-white/80 hover:text-[var(--hs-yellow)] transition-colors">
+        <div className="absolute inset-0 flex flex-col justify-end px-6 pb-12 max-w-7xl mx-auto z-10">
+          {/* CORRECCIÓN: Separamos el color (text-hs-yellow) de la opacidad (opacity-80) */}
+          <Link 
+            href="/academics/hs-robot" 
+            className="mb-6 inline-flex items-center gap-2 text-hs-yellow opacity-80 hover:opacity-100 transition-opacity font-medium drop-shadow-md"
+          >
             <ChevronLeft size={20} /> Back to Categories
           </Link>
-          <h1 className="text-4xl md:text-6xl font-bold text-[#110631] drop-shadow-sm">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-hs-yellow drop-shadow-lg leading-tight">
             {title}
           </h1>
         </div>
@@ -201,35 +206,35 @@ export default async function CategoryDetailPage({ params }: PageInput) {
           <div className="lg:col-span-2 space-y-8">
             
             {/* Overview */}
-            <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-3 mb-4 text-[var(--hs-blue)]">
-                <Info className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Overview</h2>
+            {/* CAMBIO: bg-yellow text-bluenavy */}
+            <section className="bg-hs-yellow text-hs-bluenavy rounded-3xl p-8 md:p-10 shadow-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <Info className="w-8 h-8" />
+                <h2 className="text-2xl md:text-3xl font-bold">Overview</h2>
               </div>
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-base md:text-lg font-medium opacity-90 leading-relaxed text-justify">
                 {description}
               </p>
             </section>
 
-           
-
              {/* Reglas */}
-             <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-3 mb-4 text-[var(--hs-blue)]">
-                <FileText className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Competition Rules</h2>
+             <section className="bg-hs-yellow text-hs-bluenavy rounded-3xl p-8 md:p-10 shadow-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <FileText className="w-8 h-8" />
+                <h2 className="text-2xl md:text-3xl font-bold">Competition Rules</h2>
               </div>
-              <RichTextRenderer content={rules} />
+              <RichTextRenderer content={rules} className="text-base md:text-lg font-medium opacity-90 text-justify" />
             </section>
 
              {/* Características */}
-            <section className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
-              <div className="flex items-center gap-3 mb-4 text-[var(--hs-blue)]">
-                <CheckCircle className="w-6 h-6" />
-                <h2 className="text-2xl font-bold">Robot Characteristics</h2>
+            <section className="bg-hs-yellow text-hs-bluenavy rounded-3xl p-8 md:p-10 shadow-xl">
+              <div className="flex items-center gap-3 mb-6">
+                <CheckCircle className="w-8 h-8" />
+                <h2 className="text-2xl md:text-3xl font-bold">Robot Characteristics</h2>
               </div>
-              <div className="bg-blue-50/50 p-6 rounded-2xl border border-blue-100">
-                <RichTextRenderer content={characteristics} />
+              {/* CAMBIO: Caja interna con leve transparencia de navy */}
+              <div className="bg-hs-bluenavy/5 p-6 md:p-8 rounded-2xl border-2 border-hs-bluenavy/10">
+                <RichTextRenderer content={characteristics} className="text-base md:text-lg font-medium opacity-90 text-justify" />
               </div>
             </section>
 
@@ -239,26 +244,26 @@ export default async function CategoryDetailPage({ params }: PageInput) {
           <div className="space-y-8">
             
             {/* Teams */}
-            <div className="bg-[var(--hs-blue)] text-white rounded-3xl p-8 shadow-lg">
-              <div className="flex items-center gap-3 mb-4 text-[var(--hs-yellow)]">
-                <Users className="w-6 h-6" />
-                <h3 className="text-xl font-bold">Teams Info</h3>
+            {/* CAMBIO: Invertimos los colores para contraste. bg-bluenavy text-yellow */}
+            <div className="bg-hs-bluenavy text-hs-yellow rounded-3xl p-8 md:p-10 shadow-xl border-2 border-hs-yellow">
+              <div className="flex items-center gap-3 mb-6">
+                <Users className="w-8 h-8" />
+                <h3 className="text-2xl md:text-3xl font-bold">Teams Info</h3>
               </div>
-              <div className="text-white/90">
-                 {/* AQUI ESTA EL CAMBIO: text-white y prose-invert para fondo oscuro */}
+              <div className="opacity-90">
                  <RichTextRenderer 
                     content={teamsDescription} 
-                    className="text-white prose-invert prose-p:text-white prose-headings:text-white" 
+                    className="text-base md:text-lg font-medium text-justify" 
                  />
               </div>
             </div>
 
             {/* Evaluation */}
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--hs-yellow)]/10 rounded-bl-full -mr-4 -mt-4" />
-              <h3 className="text-xl font-bold text-[var(--hs-blue)] mb-4">Evaluation</h3>
-              <div className="text-sm text-gray-600">
-                <RichTextRenderer content={evaluationParameters} />
+            <div className="bg-hs-yellow text-hs-bluenavy rounded-3xl p-8 md:p-10 shadow-xl relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-24 h-24 bg-hs-bluenavy/10 rounded-bl-full -mr-4 -mt-4" />
+              <h3 className="text-2xl md:text-3xl font-bold mb-6">Evaluation</h3>
+              <div className="opacity-90">
+                <RichTextRenderer content={evaluationParameters} className="text-base md:text-lg font-medium text-justify" />
               </div>
             </div>
 
@@ -268,9 +273,9 @@ export default async function CategoryDetailPage({ params }: PageInput) {
         {/* --- GALERÍA --- */}
         {helperImages.length > 0 && (
           <section className="mt-16 mb-16">
-            <div className="flex items-center gap-3 mb-8 text-[var(--hs-blue)]">
-              <ImageIcon className="w-6 h-6" />
-              <h2 className="text-3xl font-bold">Reference Gallery</h2>
+            <div className="flex items-center gap-3 mb-8 text-hs-yellow">
+              <ImageIcon className="w-8 h-8" />
+              <h2 className="text-3xl md:text-4xl font-bold">Reference Gallery</h2>
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -280,7 +285,7 @@ export default async function CategoryDetailPage({ params }: PageInput) {
                 if(!url) return null;
                 
                 return (
-                  <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden group shadow-md">
+                  <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden group shadow-md border-2 border-transparent hover:border-hs-yellow transition-all">
                     <Image 
                       src={url} 
                       alt={alt} 
@@ -294,15 +299,16 @@ export default async function CategoryDetailPage({ params }: PageInput) {
           </section>
         )}
 
-        <a
-              href={"https://docs.google.com/forms/d/e/1FAIpQLSfEQgzP6Dp5AN9GFeD0iGZt4aOU4wnB3opAqo3tf6uk1PCMgA/viewform"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-lg transition-all hover:scale-105 hover:shadow-xl"
-              style={{ backgroundColor: "#FFD700", color: "#003366" }}
-            >
-              Join Now
-            </a>
+        <div className="flex justify-center mt-12 mb-8">
+          <a
+            href={"https://docs.google.com/forms/d/e/1FAIpQLSfEQgzP6Dp5AN9GFeD0iGZt4aOU4wnB3opAqo3tf6uk1PCMgA/viewform"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-10 py-5 rounded-full font-bold text-lg md:text-xl shadow-xl transition-all hover:scale-105 hover:shadow-2xl bg-hs-yellow text-hs-bluenavy border-2 border-hs-yellow hover:bg-hs-bluenavy hover:text-hs-yellow"
+          >
+            Join Now
+          </a>
+        </div>
 
       </div>
     </main>

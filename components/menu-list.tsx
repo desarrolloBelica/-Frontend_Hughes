@@ -65,14 +65,14 @@ function TriggerLabel({ children }: { children: React.ReactNode }) {
       animate="rest"
       whileHover="hover"
       className="relative inline-block text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg"
-      style={{ color: BRAND.blue }}
+      style={{ color: BRAND.yellow }}
     >
       {children}
       <motion.span
         variants={{ rest: { width: 0 }, hover: { width: "100%" } }}
         transition={{ duration: 0.28 }}
         className="absolute left-0 bottom-0 h-[2px]"
-        style={{ backgroundColor: BRAND.blue }}
+        style={{ backgroundColor: BRAND.yellow }}
       />
     </motion.span>
   );
@@ -86,15 +86,15 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
           href={href}
           target={newTab ? "_blank" : undefined}
           rel={newTab ? "noopener noreferrer" : undefined}
-          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 text-white hover:shadow-md"
-          style={{ backgroundColor: BRAND.blue }}
+          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 hover:shadow-md"
+          style={{ backgroundColor: BRAND.yellow, color: "var(--hs-bluenavy)" }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = BRAND.yellow;
-            e.currentTarget.style.color = BRAND.blue;
+            e.currentTarget.style.backgroundColor = BRAND.white;
+            e.currentTarget.style.color = "var(--hs-bluenavy)";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = BRAND.blue;
-            e.currentTarget.style.color = BRAND.white;
+            e.currentTarget.style.backgroundColor = BRAND.yellow;
+            e.currentTarget.style.color = "var(--hs-bluenavy)";
           }}
         >
           {label}
@@ -105,7 +105,7 @@ function SimpleItem({ href, label, newTab = false }: SimpleItemProps) {
             whileHover={{ width: "100%" }}
             transition={{ duration: 0.28 }}
             className="absolute left-0 bottom-0 h-[2px]"
-            style={{ backgroundColor: BRAND.yellow }}
+            style={{ backgroundColor: "var(--hs-bluenavy)" }}
           />
         </Link>
       </NavigationMenuLink>
@@ -137,11 +137,11 @@ function ColLink({
     >
       <div className="flex items-center gap-2">
         <span className="text-lg font-bold" style={{ color: BRAND.yellow }}>•</span>
-        <div className="text-base font-semibold" style={{ color: BRAND.blue }}>
+        <div className="text-base font-semibold" style={{ color: BRAND.yellow }}>
           {title}
         </div>
       </div>
-      {desc && <p className="mt-1 ml-6 text-sm text-gray-600 leading-snug">{desc}</p>}
+      {desc && <p className="mt-1 ml-6 text-sm leading-snug" style={{ color: "rgba(255, 187, 0, 0.7)" }}>{desc}</p>}
     </Link>
   );
 }
@@ -163,24 +163,13 @@ function ContactScrollItem({ label = "📲" }: { label?: string }) {
           type="button"
           onClick={onClick}
           aria-label="Contact"
-          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300 hover:shadow-md"
-          style={{ backgroundColor: BRAND.yellow, color: BRAND.blue }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = BRAND.blue;
-            e.currentTarget.style.color = BRAND.white;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = BRAND.yellow;
-            e.currentTarget.style.color = BRAND.blue;
-          }}
+          className="relative text-base font-semibold tracking-wide px-3 py-2 uppercase rounded-lg transition-all duration-300"
+          style={{ backgroundColor: "transparent", color: "var(--hs-yellow)" }}
         >
           {label}
-          <motion.span
-            initial={{ width: 0 }}
-            whileHover={{ width: "100%" }}
-            transition={{ duration: 0.28 }}
-            className="absolute left-0 bottom-0 h-[2px]"
-            style={{ backgroundColor: BRAND.blue }}
+          <span
+            className="absolute left-0 bottom-0 w-full h-[2px]"
+            style={{ backgroundColor: "var(--hs-yellow)" }}
           />
         </button>
       </NavigationMenuLink>
@@ -196,6 +185,7 @@ export default function MenuList() {
     { href: "/academics/graduates", title: "Where Our Graduates Go" },
     { href: "/academics/hs-robot", title: "Hughes Schools Robotics" },
     { href: "/academics/hughes-space", title: "Hughes Space School" },
+    { href: "/academics/hs-mun", title: "HSMUN" },
   ];
 
   const aboutLinks: MenuEntry[] = [
@@ -231,7 +221,7 @@ export default function MenuList() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[520px] max-w-[820px]">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
+              <div className="p-6 rounded-xl shadow-xl" style={{ backgroundColor: "var(--hs-bluenavy)" }}>
                 <ColumnMenu items={academicsLinks} />
               </div>
             </div>
@@ -245,7 +235,7 @@ export default function MenuList() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[520px] max-w-[820px]">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
+              <div className="p-6 rounded-xl shadow-xl" style={{ backgroundColor: "var(--hs-bluenavy)" }}>
                 <ColumnMenu items={aboutLinks} />
               </div>
             </div>
@@ -259,7 +249,7 @@ export default function MenuList() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[420px] max-w-[700px]">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
+              <div className="p-6 rounded-xl shadow-xl" style={{ backgroundColor: "var(--hs-bluenavy)" }}>
                 <ColumnMenu items={eventsLinks} />
               </div>
             </div>
@@ -273,7 +263,7 @@ export default function MenuList() {
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="min-w-[360px] max-w-[600px]">
-              <div className="p-6 bg-white rounded-xl shadow-xl">
+              <div className="p-6 rounded-xl shadow-xl" style={{ backgroundColor: "var(--hs-bluenavy)" }}>
                 <ColumnMenu items={portalLinks} />
               </div>
             </div>

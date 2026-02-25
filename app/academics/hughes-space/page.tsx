@@ -2,12 +2,7 @@
 
 import Image from "next/image";
 import { Rocket, BookOpen, Users, Target, Award, Star, Sparkles, Zap } from "lucide-react";
-import { CountingNumber } from "@/components/CountingNumber";
-
-const BRAND = {
-  blue: "var(--hs-blue)",
-  yellow: "var(--hs-yellow)",
-};
+// import { CountingNumber } from "@/components/CountingNumber"; // Asegúrate de usarlo si lo necesitas
 
 type Program = {
   id: string;
@@ -34,15 +29,27 @@ const programs: Program[] = [
   },
 ];
 
+// Componente para la línea divisoria
+const Divider = () => (
+  <div className="flex justify-center my-8">
+    <div 
+      className="w-24 h-[2px] rounded-full opacity-70 bg-hs-yellow" 
+    />
+  </div>
+);
+
 export default function HughesSpacePage() {
   return (
-    <main className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
-        <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
+    /* Contenedor principal con el fondo aplicado a TODA la página */
+    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950">
+      
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-700/20 via-slate-900/50 to-slate-950" />
+      <div className="absolute inset-0 pointer-events-none bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0ic3RhcnMiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSIxIiBmaWxsPSJ3aGl0ZSIgb3BhY2l0eT0iMC44Ii8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iODAiIHI9IjEuNSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNiIvPjxjaXJjbGUgY3g9IjkwIiBjeT0iMTQwIiByPSIwLjgiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjkiLz48Y2lyY2xlIGN4PSIxNzAiIGN5PSIzMCIgcj0iMSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuNyIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iMTcwIiByPSIxLjIiIGZpbGw9IndoaXRlIiBvcGFjaXR5PSIwLjUiLz48Y2lyY2xlIGN4PSIxMzAiIGN5PSIxNjAiIHI9IjAuOSIgZmlsbD0id2hpdGUiIG9wYWNpdHk9IjAuOCIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNzdGFycykiLz48L3N2Zz4=')] opacity-80" />
+      
+      <div className="relative z-10">
         
-        <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 sm:py-24">
+        {/* Hero Section */}
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="text-center space-y-10">
             {/* Logo */}
             <div className="flex justify-center">
@@ -56,155 +63,119 @@ export default function HughesSpacePage() {
                 />
               </div>
             </div>
-            
             {/* Title */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-hs-yellow leading-tight">
               Hughes Space School
             </h1>
-            
             {/* Slogan */}
             <div className="space-y-2">
-              <p className="text-2xl sm:text-3xl lg:text-4xl font-light text-white/90">
+              <p className="text-2xl md:text-3xl lg:text-4xl font-light text-hs-yellow opacity-90">
                 The place to find your passion.
               </p>
-              <p 
-                className="text-3xl sm:text-4xl lg:text-5xl font-black italic"
-                style={{ color: BRAND.yellow }}
-              >
+              <p className="text-3xl md:text-4xl lg:text-5xl font-black italic text-hs-yellow">
                 FOR SPACE!!
               </p>
             </div>
-            
             {/* Icon decoration */}
-            <div className="flex justify-center gap-6 pt-6">
-              <Rocket className="w-8 h-8 text-white/70 animate-bounce" />
-              <Sparkles className="w-8 h-8 animate-spin" style={{ color: BRAND.yellow, animationDuration: '3s' }} />
-              <Star className="w-8 h-8" style={{ color: BRAND.yellow }} />
-              <Zap className="w-8 h-8 animate-pulse" style={{ color: BRAND.yellow }} />
-              <Rocket className="w-8 h-8 text-white/70 animate-bounce" style={{ animationDelay: '0.5s' }} />
+            <div className="flex justify-center gap-6 pt-6 text-hs-yellow">
+              <Rocket className="w-8 h-8 opacity-70 animate-bounce" />
+              <Sparkles className="w-8 h-8 animate-spin" style={{ animationDuration: '3s' }} />
+              <Star className="w-8 h-8" />
+              <Zap className="w-8 h-8 animate-pulse" />
+              <Rocket className="w-8 h-8 opacity-70 animate-bounce" style={{ animationDelay: '0.5s' }} />
             </div>
           </div>
-        </div>
+        </section>
 
-        
-      </section>
+        <Divider />
 
-      {/* What is HSS Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-b section-gradient-soft-yellow">
-        <div className="mx-auto max-w-7xl px-6">
+        {/* What is HSS Section */}
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="mx-auto max-w-4xl">
             {/* Section Title */}
-            <div className="flex items-center justify-center gap-3 mb-8">
-              <BookOpen className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 
-                className="text-4xl sm:text-5xl font-bold"
-                style={{ color: BRAND.blue }}
-              >
+            <div className="flex items-center justify-center gap-3 mb-8 text-hs-yellow">
+              <BookOpen className="w-10 h-10" />
+              <h2 className="text-4xl sm:text-5xl font-bold">
                 What is HSS?
               </h2>
             </div>
-            
             {/* Content */}
-            <div className="space-y-6 text-lg text-gray-700 leading-relaxed">
-              <p className="text-xl font-semibold" style={{ color: BRAND.blue }}>
+            <div className="space-y-6 text-lg md:text-xl text-white opacity-90 leading-relaxed font-medium text-justify">
+              <p className="text-xl md:text-2xl font-bold text-hs-yellow text-center">
                 Hughes Space School is the largest space education organization in Bolivia.
               </p>
-              
               <p>
-                At the heart of our teaching method is <strong>enthusiasm</strong>. Through 
+                At the heart of our teaching method is <strong className="text-hs-yellow">enthusiasm</strong>. Through 
                 enthusiasm and passion for space, we teach from the most basic algebra to 
                 space science.
               </p>
-              
               <p>
                 In addition to this, we are responsible for recruiting and selecting Bolivian 
-                and Latin American students for the <strong>United Space School</strong> camp 
+                and Latin American students for the <strong className="text-hs-yellow">United Space School</strong> camp 
                 in the USA.
               </p>
-              
-              <div 
-                className="mt-8 p-8 rounded-2xl text-center border-2"
-                style={{ 
-                  backgroundColor: 'rgba(var(--hs-blue-rgb), 0.05)',
-                  borderColor: BRAND.blue 
-                }}
-              >
-                <p className="text-2xl font-bold" style={{ color: BRAND.blue }}>
+              <div className="mt-8 p-8 md:p-10 rounded-3xl text-center border-2 border-hs-yellow bg-white/5 backdrop-blur-sm shadow-xl">
+                <p className="text-2xl font-bold text-hs-yellow">
                   A strong curriculum, incredible university prospects, and a bright future 
                   await Hughes Space School students.
                 </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Our Learning Section */}
-      <section className="py-16 sm:py-24 bg-gradient-to-b sction-gradient-soft from-white to-blue-50">
-        <div className="mx-auto max-w-7xl px-6">
+        <Divider />
+
+        {/* Our Learning Section */}
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="mx-auto max-w-5xl">
             {/* Section Title */}
-            <div className="flex items-center justify-center gap-3 mb-12">
-              <Target className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 
-                className="text-4xl sm:text-5xl font-bold"
-                style={{ color: BRAND.blue }}
-              >
+            <div className="flex items-center justify-center gap-3 mb-12 text-hs-yellow">
+              <Target className="w-10 h-10" />
+              <h2 className="text-4xl sm:text-5xl font-bold">
                 Our Learning
               </h2>
             </div>
-            
             {/* Learning Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Card 1: Exact Sciences */}
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ backgroundColor: 'rgba(var(--hs-blue-rgb), 0.1)' }}
-                >
-                  <BookOpen className="w-8 h-8" style={{ color: BRAND.blue }} />
+              {/* Card 1 */}
+              <div className="bg-hs-bluenavy/40 backdrop-blur-md rounded-3xl p-8 shadow-xl border-2 border-hs-yellow/30 hover:border-hs-yellow transition-all duration-300">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-hs-yellow text-hs-bluenavy">
+                  <BookOpen className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-4" style={{ color: BRAND.blue }}>
+                <h3 className="text-2xl font-bold mb-4 text-hs-yellow">
                   Exact Sciences Focus
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-base md:text-lg text-white opacity-90 leading-relaxed font-medium">
                   We have a focus on exact sciences (mathematics, physics, and chemistry), and 
                   we inspire our students to apply themselves in these fields. The best way to 
-                  learn exact sciences is to see them in action. <strong>There&apos;s no more 
+                  learn exact sciences is to see them in action. <strong className="text-hs-yellow">There&apos;s no more 
                   fun way to learn!</strong>
                 </p>
               </div>
-
-              {/* Card 2: Leadership */}
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ backgroundColor: 'rgba(var(--hs-blue-rgb), 0.1)' }}
-                >
-                  <Users className="w-8 h-8" style={{ color: BRAND.blue }} />
+              {/* Card 2 */}
+              <div className="bg-hs-bluenavy/40 backdrop-blur-md rounded-3xl p-8 shadow-xl border-2 border-hs-yellow/30 hover:border-hs-yellow transition-all duration-300">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-hs-yellow text-hs-bluenavy">
+                  <Users className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-4" style={{ color: BRAND.blue }}>
+                <h3 className="text-2xl font-bold mb-4 text-hs-yellow">
                   Leadership & Cooperation
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-base md:text-lg text-white opacity-90 leading-relaxed font-medium">
                   In addition to inspiring our students to use their intelligence in exact sciences, 
                   we create in them a capacity for leadership and cooperation. Because to solve the 
                   greatest problems, we need the most capable leaders.
                 </p>
               </div>
-
-              {/* Card 3: Passion */}
-              <div className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ backgroundColor: 'rgba(var(--hs-blue-rgb), 0.1)' }}
-                >
-                  <Star className="w-8 h-8" style={{ color: BRAND.yellow }} />
+              {/* Card 3 */}
+              <div className="bg-hs-bluenavy/40 backdrop-blur-md rounded-3xl p-8 shadow-xl border-2 border-hs-yellow/30 hover:border-hs-yellow transition-all duration-300">
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mb-6 bg-hs-yellow text-hs-bluenavy">
+                  <Star className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold mb-4" style={{ color: BRAND.blue }}>
+                <h3 className="text-2xl font-bold mb-4 text-hs-yellow">
                   Passion for Excellence
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className="text-base md:text-lg text-white opacity-90 leading-relaxed font-medium">
                   Finally, the most important thing... Every person who achieved something great 
                   did so because they had a passion for the subject. We seek to create that passion 
                   in our students.
@@ -212,90 +183,53 @@ export default function HughesSpacePage() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Programs Section */}
-      <section className="py-16 sm:py-24 bg-white relative overflow-hidden">
-        
-        {/* Glowing orbs */}
-        <div className="absolute top-10 left-10 w-64 h-64 bg-yellow-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '4s' }} />
-        <div className="absolute bottom-10 right-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-pulse" style={{ animationDuration: '5s', animationDelay: '1s' }} />
-        <div className="mx-auto max-w-7xl px-6 relative z-10">
-          {/* Section Header */}
+        <Divider />
+
+        {/* Programs Section */}
+        <section className="mx-auto max-w-7xl px-6 py-16 sm:py-24">
           <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <Award className="w-10 h-10" style={{ color: BRAND.blue }} />
-              <h2 
-                className="text-4xl sm:text-5xl font-bold"
-                style={{ color: BRAND.blue }}
-              >
+            <div className="flex items-center justify-center gap-3 mb-4 text-hs-yellow">
+              <Award className="w-10 h-10" />
+              <h2 className="text-4xl sm:text-5xl font-bold">
                 Our Programs
               </h2>
             </div>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mt-4">
+            <p className="text-xl text-white opacity-80 max-w-2xl mx-auto mt-4 font-medium">
               Click to learn more and enroll
             </p>
           </div>
-
-          {/* Programs Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {programs.map((program, index) => (
+            {programs.map((program) => (
               <div
                 key={program.id}
-                className={`relative group bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 border-2 hover:scale-105 hover:-translate-y-2 ${
+                className={`relative group bg-hs-bluenavy/60 backdrop-blur-md rounded-3xl p-8 md:p-10 shadow-2xl transition-all duration-300 border-2 hover:scale-[1.02] hover:-translate-y-2 ${
                   program.highlight 
-                    ? 'border-[var(--hs-yellow)] shadow-[0_0_30px_rgba(234,179,8,0.3)]' 
-                    : 'border-gray-200 hover:border-[var(--hs-blue)] hover:shadow-[0_0_20px_rgba(59,130,246,0.3)]'
+                    ? 'border-hs-yellow shadow-[0_0_30px_rgba(234,179,8,0.2)]' 
+                    : 'border-white/20 hover:border-hs-yellow'
                 }`}
               >
                 {/* Highlight badge */}
                 {program.highlight && (
-                  <div 
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full font-bold text-sm shadow-lg"
-                    style={{ 
-                      backgroundColor: BRAND.yellow,
-                      color: BRAND.blue 
-                    }}
-                  >
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-2 rounded-full font-bold text-sm shadow-lg bg-hs-yellow text-hs-bluenavy">
                     ⭐ Featured Program
                   </div>
                 )}
-
                 {/* Icon */}
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-6"
-                  style={{ 
-                    backgroundColor: program.highlight 
-                      ? 'rgba(var(--hs-yellow-rgb), 0.2)' 
-                      : 'rgba(var(--hs-blue-rgb), 0.1)' 
-                  }}
-                >
-                  <Rocket 
-                    className="w-8 h-8" 
-                    style={{ color: program.highlight ? BRAND.yellow : BRAND.blue }} 
-                  />
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-6 shadow-lg ${program.highlight ? 'bg-hs-yellow text-hs-bluenavy' : 'bg-white/10 text-hs-yellow'}`}>
+                  <Rocket className="w-8 h-8" />
                 </div>
-
                 {/* Content */}
-                <h3 
-                  className="text-2xl font-bold mb-2"
-                  style={{ color: BRAND.blue }}
-                >
+                <h3 className="text-2xl md:text-3xl font-bold mb-2 text-hs-yellow">
                   {program.title}
                 </h3>
-                
-                <p 
-                  className="text-sm font-semibold mb-4"
-                  style={{ color: program.highlight ? BRAND.yellow : BRAND.blue }}
-                >
+                <p className="text-lg font-bold mb-6 text-white opacity-90">
                   {program.audience}
                 </p>
-                
-                <p className="text-gray-700 leading-relaxed mb-6">
+                <p className="text-base md:text-lg text-white opacity-80 leading-relaxed mb-8 font-medium">
                   {program.description}
                 </p>
-
                 {/* CTA Button */}
                 <a
                   href={
@@ -305,21 +239,20 @@ export default function HughesSpacePage() {
                       ? '/academics/hughes-space/united-space-school'
                       : '#'
                   }
-                  className="block w-full py-3 px-6 rounded-xl font-semibold text-center transition-all duration-300 hover:scale-105"
-                  style={{
-                    backgroundColor: program.highlight ? BRAND.yellow : BRAND.blue,
-                    color: program.highlight ? BRAND.blue : 'white',
-                  }}
+                  className={`block w-full py-4 px-6 rounded-full font-bold text-lg text-center transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 ${
+                    program.highlight 
+                      ? 'bg-hs-yellow text-hs-bluenavy' 
+                      : 'bg-transparent border-2 border-hs-yellow text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy'
+                  }`}
                 >
                   Learn More & Enroll
                 </a>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      
+        </section>
+        
+      </div>
     </main>
   );
 }
