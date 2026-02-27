@@ -116,7 +116,7 @@ export default function OpinionsSection({
 			id="opinions"
 			className="relative mt-10 overflow-hidden rounded-3xl border border-[#d8deed] p-6 shadow-lg"
 			style={{
-				background: "linear-gradient(135deg, var(--hs-blue) 0%, var(--hs-blue-medium) 55%, #0b1220 100%)",
+				background: "linear-gradient(135deg, var(--hs-bluenavy) 0%, var(--hs-blue-darker) 55%, #0b1220 100%)",
 				color: "white",
 			}}
 		>

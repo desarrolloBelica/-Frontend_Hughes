@@ -61,7 +61,7 @@ export default function FooterHS({
   const mapSrc = `https://www.google.com/maps?q=${query}&z=15&output=embed`;
 
   return (
-    <footer id="footer" className="w-full bg-[#0E1621] text-white">
+    <footer id="footer" className="w-full bg-hs-bluenavy text-white">
       {/* CTA Pill */}
       <div className="mx-auto max-w-7xl px-6">
         <div className="relative -translate-y-8">
