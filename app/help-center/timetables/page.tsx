@@ -130,7 +130,9 @@ async function fetchParent(): Promise<AnyObj | null> {
       const json = await fetchJSON(u, sess.tokenU);
       const items = parseList(json);
       if (items[0]) return items[0];
-    } catch {}
+    } catch (e) {
+    console.error("Error buscando padre en la URL:", u, "Detalle:", e);
+  }
   }
   return null;
 }

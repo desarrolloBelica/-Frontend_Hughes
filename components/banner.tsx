@@ -65,7 +65,7 @@ export default function BannerPrincipal() {
           transition={{ duration: 0.6 }}
           className="font-extrabold leading-tight drop-shadow-xl"
         >
-          <span className="block text-white text-4xl sm:text-5xl lg:text-6xl 2xl:text-7xl">
+          <span className="block text-hs-yellow text-4xl sm:text-5xl lg:text-6xl 2xl:text-7xl">
             The Art of
           </span>
           <span

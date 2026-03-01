@@ -219,7 +219,12 @@ function SeatReservationForm() {
       setLoading(true); setError(null);
       try {
         const p = await fetchParent();
-        if (!p) { setError("No se pudo leer la sesión del padre."); setLoading(false); return; }
+        if (!p) {
+          setError("No se pudo leer la sesión del padre.");
+          console.error("Error: No se pudo leer la sesión del padre.", { localStorage: { hs_parent_session: localStorage.getItem("hs_parent_session"), hs_parent: localStorage.getItem("hs_parent") } });
+          setLoading(false);
+          return;
+        }
         setParent(p);
         const studs = relArray(body(p).students);
         if (studs.length === 0) { setError("No hay estudiantes vinculados."); setLoading(false); return; }
@@ -426,7 +431,12 @@ function LeaveRequestForm() {
       setLoading(true); setError(null);
       try {
         const p = await fetchParent();
-        if (!p) { setError("No se pudo leer la sesión del padre."); setLoading(false); return; }
+        if (!p) {
+          setError("No se pudo leer la sesión del padre. (Detalles en consola)");
+          console.error("Error: No se pudo leer la sesión del padre.", { localStorage: { hs_parent_session: localStorage.getItem("hs_parent_session"), hs_parent: localStorage.getItem("hs_parent") } });
+          setLoading(false);
+          return;
+        }
         setParent(p);
 
         const studs = relArray(body(p).students);
