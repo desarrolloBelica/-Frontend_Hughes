@@ -10,7 +10,7 @@ const BRAND = {
   yellow: "var(--hs-yellow)",
 };
 
-const HSC_URL = "https://docs.google.com/forms/d/e/1FAIpQLScbqbZUv5HpSEtqUunv5V-tm7ioIxVOi_fG379RndG2zjY5-w/viewform";
+const HSC_URL = process.env.NEXT_PUBLIC_SPACE_CURRICULUM_FORM || "https://docs.google.com/forms/d/e/1FAIpQLScbqbZUv5HpSEtqUunv5V-tm7ioIxVOi_fG379RndG2zjY5-w/viewform";
 
 function EnrollButton({ className = "" }: { className?: string }) {
   return (
@@ -67,7 +67,7 @@ export default function SpaceCurriculumPage() {
             </p>
             <div className="flex justify-center gap-4 pt-8">
               <a
-                href="https://www.hughesspace.org"
+                href={process.env.NEXT_PUBLIC_HUGHES_SPACE_WEBSITE || "https://www.hughesspace.org"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all hover:scale-110 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] border-2 border-white/30 text-white bg-white/10 backdrop-blur-md"

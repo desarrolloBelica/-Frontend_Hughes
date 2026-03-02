@@ -400,7 +400,7 @@ export default function HSRobotPage() {
                 </div>
                 
                 <a
-                  href="https://wa.link/u0l996"
+                  href={process.env.NEXT_PUBLIC_HS_ROBOT_RAFFLE_WHATSAPP || "https://wa.link/u0l996"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-6 inline-flex items-center gap-2 px-6 py-3 text-base md:text-lg font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl bg-[#25D366] text-white hover:bg-[#128C7E]"
@@ -610,7 +610,7 @@ export default function HSRobotPage() {
               <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
                 {/* Learn More Button */}
                 <a
-                  href="https://ideasycodigo.com/hs-robot-rumble"
+                  href={process.env.NEXT_PUBLIC_HS_ROBOT_INFO_URL || "https://ideasycodigo.com/hs-robot-rumble"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 text-base md:text-lg font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl bg-hs-yellow text-hs-bluenavy"
@@ -621,7 +621,7 @@ export default function HSRobotPage() {
                 
                 {/* Register Now Button */}
                 <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSfEQgzP6Dp5AN9GFeD0iGZt4aOU4wnB3opAqo3tf6uk1PCMgA/viewform"
+                  href={process.env.NEXT_PUBLIC_HS_ROBOT_REGISTER_FORM || "https://docs.google.com/forms/d/e/1FAIpQLSfEQgzP6Dp5AN9GFeD0iGZt4aOU4wnB3opAqo3tf6uk1PCMgA/viewform"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 text-base md:text-lg font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl bg-hs-yellow text-hs-bluenavy border-2 border-hs-yellow"
@@ -632,7 +632,7 @@ export default function HSRobotPage() {
                 
                 {/* Join WhatsApp Group Button */}
                 <a
-                  href="https://chat.whatsapp.com/HVCd6oJkxKf71ALTeRrnbL?mode=wwt"
+                  href={process.env.NEXT_PUBLIC_HS_ROBOT_WHATSAPP_GROUP || "https://chat.whatsapp.com/HVCd6oJkxKf71ALTeRrnbL?mode=wwt"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 text-base md:text-lg font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-xl bg-[#25D366] text-white hover:bg-[#128C7E]"

@@ -5,7 +5,7 @@ import { Rocket, Globe, Users, BookCheck, FileText, ArrowLeft, Sparkles } from "
 import Image from "next/image";
 import { CountingNumber } from "@/components/CountingNumber";
 
-const APPLICATION_URL = "https://docs.google.com/forms/d/e/1FAIpQLSebFiZI9bn8C74mE4N7KIZVxtFgOJ55oTM1S1Oi28rm7g7zhw/viewform";
+const APPLICATION_URL = process.env.NEXT_PUBLIC_UNITED_SPACE_SCHOOL_FORM || "https://docs.google.com/forms/d/e/1FAIpQLSebFiZI9bn8C74mE4N7KIZVxtFgOJ55oTM1S1Oi28rm7g7zhw/viewform";
 
 // Componente de Botón Reutilizable
 function ApplyButton({ className = "" }: { className?: string }) {
@@ -63,7 +63,7 @@ export default function UnitedSpaceSchoolPage() {
             </p>
             <div className="flex justify-center gap-4 pt-8">
               <a
-                href="https://www.hughesspace.org"
+                href={process.env.NEXT_PUBLIC_HUGHES_SPACE_WEBSITE || "https://www.hughesspace.org"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold text-lg shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all hover:scale-110 hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] border-2 border-white/30 text-white bg-white/10 backdrop-blur-md"

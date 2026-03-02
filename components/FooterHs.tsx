@@ -13,22 +13,22 @@ type SocialLink = {
 
 const defaultSocials: SocialLink[] = [
   {
-    href: "https://www.instagram.com/hughesschools/",
+    href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com/hughesschools/",
     label: "Instagram",
     icon: FaInstagram,
   },
   {
-    href: "https://www.facebook.com/HughesSchoolsCbba",
+    href: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com/HughesSchoolsCbba",
     label: "Facebook",
     icon: FaFacebook,
   },
   {
-    href: "https://www.youtube.com/@hughesschools1133",
+    href: process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://www.youtube.com/@hughesschools1133",
     label: "YouTube",
     icon: FaYoutube,
   },
   {
-    href: "https://wa.link/c2ke7a",
+    href: process.env.NEXT_PUBLIC_WHATSAPP_URL || "https://wa.link/c2ke7a",
     label: "WhatsApp",
     icon: FaWhatsapp,
   },
