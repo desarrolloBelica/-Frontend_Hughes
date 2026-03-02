@@ -61,68 +61,48 @@ function ParentLoginInner() {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  /**
-   * Busca al padre en Strapi por email y, si lo encuentra,
-   * guarda la sesión (id, email, fullName) en localStorage.
-   */
-  async function fetchAndStoreParentByEmail(emailToFind: string): Promise<void> {
-    const base = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:1337";
-    const url = new URL(`${base}/api/parents`);
-    url.searchParams.set("filters[email][$eq]", emailToFind);
-    // url.searchParams.set("populate[students][populate][section][populate][timetableEntries]", "true");
-
-    const res = await fetch(url.toString());
-    if (!res.ok) {
-      throw new Error(`No se pudo leer el padre en Strapi. HTTP ${res.status}`);
-    }
-
-    const json = (await res.json()) as StrapiList<ParentAttrs>;
-    if (!json?.data?.length) {
-      throw new Error("No se encontró información del padre por email.");
-    }
-
-    const parent = json.data[0];
-    saveParentSession({
-      id: parent.id,
-      email: emailToFind,
-      fullName: parent.attributes?.fullName,
-    });
-  }
-
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
     try {
-      // 1) Validar credenciales contra tu API interna
+      // 1) Hacemos el login a través de tu API interna
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const data: unknown = await res.json();
+      const data: any = await res.json();
 
       if (!res.ok) {
-        const msg =
-          (typeof data === "object" &&
-            data !== null &&
-            "message" in data &&
-            typeof (data as { message?: string }).message === "string" &&
-            (data as { message: string }).message) ||
-          "Credenciales inválidas";
-        throw new Error(msg);
+        throw new Error(data?.message || "Credenciales inválidas");
       }
 
-      // 2) Guardar/actualizar sesión del padre (Strapi) por email
+      // 2) Extraemos los datos del padre y el token DIRECTAMENTE de la respuesta
+      const parentData = data.parent || data.user;
+      const uid = parentData?.id || parentData?.documentId;
+      const token = data.jwt || data.token || "";
+
+      // 3) Creamos el objeto de sesión (Igual que el del estudiante)
+      const session = {
+        id: uid,
+        email: email,
+        fullName: parentData?.fullName || parentData?.name || "",
+        tokenU: token, // ¡Vital para que funcione la página de horarios!
+        createdAt: new Date().toISOString()
+      };
+
+      // 4) Guardamos en localStorage
       try {
-        await fetchAndStoreParentByEmail(email);
+        localStorage.setItem(PARENT_KEY, JSON.stringify(session));
+        localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(session));
       } catch (err) {
-        console.warn("Aviso: sesión del padre no pudo guardarse:", err);
+        console.warn("No se pudo escribir en localStorage", err);
       }
 
-      // 3) Redirigir al portal
+      // 5) Redirigimos al portal
       router.push(redirectTo);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error inesperado al iniciar sesión");

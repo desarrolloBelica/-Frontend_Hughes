@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     // Opcional: log detail server-side
   }
 
-  const res = NextResponse.json({ parent: data.parent });
+  const res = NextResponse.json({ parent: data.parent, jwt: data.jwt });
   res.cookies.set(COOKIE_NAME, data.jwt, {
     httpOnly: true,
     sameSite: 'lax',
