@@ -25,11 +25,17 @@ type ParentSession = {
   fullName?: string;
 };
 
+
 const PARENT_KEY = "hs_parent";
+const PARENT_SESSION_KEY = "hs_parent_session";
 
 function saveParentSession(s: ParentSession) {
   try {
+    // Guardar en hs_parent
     localStorage.setItem(PARENT_KEY, JSON.stringify(s));
+    // Guardar en hs_parent_session (agregando createdAt)
+    const session = { ...s, createdAt: new Date().toISOString() };
+    localStorage.setItem(PARENT_SESSION_KEY, JSON.stringify(session));
   } catch {
     // no-op
   }
