@@ -80,7 +80,7 @@ export default function BannerPrincipal() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="mt-3 text-white/90 text-base sm:text-[1.05rem] lg:text-lg 2xl:text-xl max-w-3xl"
+          className="mt-3 text-white/90 text-lg sm:text-[1.5rem] lg:text-xl 2xl:text-2xl max-w-3xl"
         >
           Academic excellence in STEM, performing arts and bilingual education.
         </motion.p>
