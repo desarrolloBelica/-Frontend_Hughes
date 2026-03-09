@@ -145,9 +145,13 @@ async function fetchTimetableBySectionId(sectionId: number) {
 }
 
 /* Artístico: por grupo (manyToMany = art_groups) */
-async function fetchArtTimetableByGroupId(groupId: number) {
+async function fetchArtTimetableByGroupId(groupId: number | string, groupDocId?: string) {
+  // Strapi v5: try with documentId first for manyToMany relations
+  const filterValue = groupDocId || groupId;
+  const filterField = groupDocId ? 'documentId' : 'id';
+  
   const qs =
-    `filters[art_groups][id][$in]=${encodeURIComponent(String(groupId))}` +
+    `filters[art_groups][${filterField}][$in]=${encodeURIComponent(String(filterValue))}` +
     `&populate[subject][fields][0]=name` +
     `&populate[subject][fields][1]=shortName` +
     `&populate[subject][fields][2]=color` +
@@ -541,11 +545,12 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
         console.log("[ART DEBUG] art_group relation:", agRel);
         const agBody = agRel ? body(agRel) : null;
         const groupId = agRel?.id ?? agRel?.documentId ?? null;
-        console.log("[ART DEBUG] Extracted groupId:", groupId, "groupName:", agBody?.name);
+        const groupDocId = agRel?.documentId ?? null;
+        console.log("[ART DEBUG] Extracted groupId:", groupId, "groupDocId:", groupDocId, "groupName:", agBody?.name);
         setGroupName(agBody?.name || "");
         if (!groupId) { setError("El estudiante no tiene grupo artístico asignado."); setLoading(false); return; }
 
-        const entries = await fetchArtTimetableByGroupId(Number(groupId));
+        const entries = await fetchArtTimetableByGroupId(Number(groupId), groupDocId);
         console.log("[ART DEBUG] Entries returned:", entries.length, entries);
         const { slots: s, grid: g } = buildSlotsAndGrid(entries);
 
