@@ -84,11 +84,13 @@ function ParentLoginInner() {
       const parentData = data.parent || data.user;
       const uid = parentData?.id || parentData?.documentId;
       const token = data.jwt || data.token || "";
+      // Usar el email del backend si está disponible (normalizado), sino el del input
+      const normalizedEmail = parentData?.email || email;
 
       // 3) Creamos el objeto de sesión (Igual que el del estudiante)
       const session = {
         id: uid,
-        email: email,
+        email: normalizedEmail,
         fullName: parentData?.fullName || parentData?.name || "",
         tokenU: token, // ¡Vital para que funcione la página de horarios!
         createdAt: new Date().toISOString()

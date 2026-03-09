@@ -6,7 +6,7 @@ import * as React from "react";
 import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { User, Tag, Download } from "lucide-react";
-import { useParentAuth } from "@/hooks/useParentAuth";
+import { useParentAuth, fetchParentFromAPI } from "@/hooks/useParentAuth";
 
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 const API = process.env.NEXT_PUBLIC_BACKEND_URL ;
@@ -79,7 +79,8 @@ function getParentFromStorage(): { email?: string; id?: number | string; tokenU?
     const b = localStorage.getItem("hs_parent");
     const pA = a ? JSON.parse(a) : {};
     const pB = b ? JSON.parse(b) : {};
-    return { email: pA?.email || pB?.email, id: pA?.id ?? pB?.id, tokenU: pA?.tokenU };
+    // Leer tokenU de ambos lugares con fallback (igual que email e id)
+    return { email: pA?.email || pB?.email, id: pA?.id ?? pB?.id, tokenU: pA?.tokenU || pB?.tokenU };
   } catch {
     return null;
   }
@@ -114,26 +115,63 @@ function qParentById(id: number | string) {
   p.set("pagination[pageSize]", "1");
   return `${API}/api/parents?${p.toString()}`;
 }
+
+/**
+ * Obtiene los datos del padre con estudiantes.
+ * PRIORIDAD: 
+ * 1. API de Next.js (usa cookies httpOnly - más seguro y confiable en producción)
+ * 2. Query directa a Strapi con token de localStorage (fallback)
+ */
 async function fetchParent(): Promise<AnyObj | null> {
+  // 1. Intentar obtener desde la API de Next.js (usando cookies httpOnly)
+  try {
+    const parentFromAPI = await fetchParentFromAPI();
+    if (parentFromAPI && (parentFromAPI.id || parentFromAPI.documentId)) {
+      console.log("fetchParent: datos obtenidos desde API de Next.js");
+      return parentFromAPI as AnyObj;
+    }
+  } catch (e) {
+    console.warn("fetchParent: error obteniendo desde API, intentando fallback...", e);
+  }
+
+  // 2. Fallback: Query directa a Strapi con token de localStorage
   const sess = getParentFromStorage();
-  if (!sess) return null;
+  if (!sess) {
+    console.warn("fetchParent: no hay sesión en localStorage");
+    return null;
+  }
+  
   const urls: string[] = [];
-  if (sess.id !== undefined && sess.id !== null && String(sess.id) !== "") urls.push(qParentById(sess.id as any));
-  if (sess.email) urls.push(qParentByEmail(sess.email));
+  if (sess.id !== undefined && sess.id !== null && String(sess.id) !== "") {
+    urls.push(qParentById(sess.id as any));
+  }
+  if (sess.email) {
+    urls.push(qParentByEmail(sess.email));
+  }
+  
+  // Verificar también hs_parent por si tiene email diferente
   try {
     const raw = localStorage.getItem("hs_parent");
     const obj = raw ? JSON.parse(raw) : null;
-    if (obj?.email && obj.email !== sess.email) urls.push(qParentByEmail(obj.email));
+    if (obj?.email && obj.email !== sess.email) {
+      urls.push(qParentByEmail(obj.email));
+    }
   } catch {}
+  
   for (const u of urls) {
     try {
       const json = await fetchJSON(u, sess.tokenU);
       const items = parseList(json);
-      if (items[0]) return items[0];
+      if (items[0]) {
+        console.log("fetchParent: datos obtenidos desde Strapi directamente");
+        return items[0];
+      }
     } catch (e) {
-    console.error("Error buscando padre en la URL:", u, "Detalle:", e);
+      console.error("Error buscando padre en la URL:", u, "Detalle:", e);
+    }
   }
-  }
+  
+  console.warn("fetchParent: no se pudo obtener datos del padre por ningún método");
   return null;
 }
 

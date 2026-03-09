@@ -182,7 +182,7 @@ function Hero() {
             </span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight text-white drop-shadow-lg">
+          <h1 className="text-5xl md:text-7xl font-extrabold leading-tight text-hs-yellow drop-shadow-lg">
             Once a Hughes student, <br className="hidden md:block"/> 
             <span className="text-hs-yellow italic font-serif font-light">always family.</span>
           </h1>
@@ -227,7 +227,7 @@ function MissionAndCommunity() {
     <div className="grid lg:grid-cols-12 gap-12 lg:gap-20 items-start">
       {/* Columna Izquierda: Título Grande */}
       <div className="lg:col-span-5 space-y-6 sticky top-24">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-hs-yellow leading-tight">
           Alumni Network <br/>
           <span className="text-hs-yellow">& Community</span>
         </h2>
@@ -334,7 +334,7 @@ function EngageGrid() {
   return (
     <div className="space-y-12">
       <div className="text-center max-w-2xl mx-auto">
-        <h3 className="text-3xl md:text-5xl font-extrabold text-white mb-4">
+        <h3 className="text-3xl md:text-5xl font-extrabold text-hs-yellow mb-4">
           Get <span className="text-hs-yellow">Involved</span>
         </h3>
         <p className="text-lg font-medium text-white/80">Give back to the community that helped shape your path.</p>
@@ -385,7 +385,7 @@ function DirectorsMessage() {
   return (
     <div className="py-12 md:py-20 flex flex-col items-center text-center">
       <Quote className="w-16 h-16 text-hs-yellow mb-8 opacity-80" />
-      <blockquote className="text-2xl md:text-4xl lg:text-5xl italic text-white font-medium leading-tight max-w-5xl mx-auto mb-10 font-serif">
+      <blockquote className="text-2xl md:text-4xl lg:text-5xl italic text-hs-yellow font-medium leading-tight max-w-5xl mx-auto mb-10 font-serif">
         "To all our beloved alumni: Your achievements inspire us every day. No matter where life takes you, <span className="text-hs-yellow">Hughes Schools will always be your home.</span>"
       </blockquote>
       <div className="h-1 w-24 bg-hs-yellow rounded-full mb-6" />

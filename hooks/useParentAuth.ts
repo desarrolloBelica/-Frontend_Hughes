@@ -4,11 +4,39 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+// Tipos para las relaciones de estudiantes
+export type StudentSection = {
+  id: number;
+  documentId?: string;
+  name?: string;
+  [key: string]: unknown;
+};
+
+export type StudentArtGroup = {
+  id: number;
+  documentId?: string;
+  name?: string;
+  [key: string]: unknown;
+};
+
+export type ParentStudent = {
+  id: number;
+  documentId?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  section?: StudentSection | null;
+  art_group?: StudentArtGroup | null;
+  [key: string]: unknown;
+};
+
 export type ParentUser = {
   id: number;
+  documentId?: string;
   email: string;
   fullName?: string;
-  // ... otros campos de tu API
+  students?: ParentStudent[];
+  [key: string]: unknown;
 };
 
 type AuthState = {
@@ -66,8 +94,10 @@ export function useParentAuth(redirectOnError = true) {
 
         // Autenticado correctamente
         const data = await res.json();
+        // Extraer el objeto parent del response (el backend retorna { parent: {...} })
+        const parentData = data?.parent || data;
         setState({ 
-          user: data as ParentUser, 
+          user: parentData as ParentUser, 
           loading: false, 
           error: null 
         });
@@ -97,4 +127,36 @@ export function useParentAuth(redirectOnError = true) {
  */
 export function useParentAuthOptional() {
   return useParentAuth(false);
+}
+
+/**
+ * Función para obtener los datos completos del padre (con estudiantes) desde la API de Next.js.
+ * Útil para páginas que necesitan los estudiantes para cargar horarios.
+ * Esta función usa cookies httpOnly para autenticación (más seguro que localStorage).
+ */
+export async function fetchParentFromAPI(): Promise<ParentUser | null> {
+  try {
+    const res = await fetch("/api/auth/me", {
+      cache: "no-store",
+      credentials: "include", // Asegurar que se envíen las cookies
+    });
+
+    if (!res.ok) {
+      console.warn("fetchParentFromAPI: respuesta no ok", res.status);
+      return null;
+    }
+
+    const data = await res.json();
+    const parentData = data?.parent || data;
+    
+    if (!parentData || (!parentData.id && !parentData.documentId)) {
+      console.warn("fetchParentFromAPI: datos de padre inválidos", data);
+      return null;
+    }
+
+    return parentData as ParentUser;
+  } catch (error) {
+    console.error("fetchParentFromAPI: error", error);
+    return null;
+  }
 }

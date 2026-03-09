@@ -16,7 +16,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: data?.error?.message || 'Login falló' }, { status: r.status });
   }
 
-  const res = NextResponse.json({ student: data.student });
+  // Retornamos el JWT en el body (igual que el flujo de padres) para que el frontend pueda guardarlo
+  const res = NextResponse.json({ student: data.student, jwt: data.jwt });
   res.cookies.set(COOKIE, data.jwt, {
     httpOnly: true,
     sameSite: 'lax',

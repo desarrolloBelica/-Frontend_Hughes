@@ -61,8 +61,10 @@ export function useStudentAuth(redirectOnError = true) {
         }
 
         const data = await res.json();
+        // Extraer el objeto student del response (el backend retorna { student: {...} })
+        const studentData = data?.student || data;
         setState({ 
-          user: data as StudentUser, 
+          user: studentData as StudentUser, 
           loading: false, 
           error: null 
         });

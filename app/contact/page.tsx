@@ -1,4 +1,4 @@
-// app/help-center/page.tsx
+// app/contact/page.tsx
 "use client";
 
 import * as React from "react";
@@ -18,194 +18,76 @@ import {
 /* ───────────────────── Brand helpers ───────────────────── */
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 const EVENT_ROOM_URL = "http://hughesschools.org/eventos";
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
 
-/* ───────────────────── Types & Data ───────────────────── */
+/* ───────────────────── Types ───────────────────── */
 type ContactCard = {
   id: string;
-  area: string; // filtro
-  title: string; // encabezado dentro de la card
+  area: string;
+  title: string;
   bullets: string[];
   person: string;
   email?: string;
-  whatsapp?: string; // solo número (o texto si te sirve)
-  office?: string; // tel oficina
+  whatsapp?: string;
+  office?: string;
   roomUrl?: string;
   hours?: string;
 };
 
-const CARDS: ContactCard[] = [
-  {
-    id: "adm-coord",
-    area: "Administración",
-    title: "Coordinación Administrativa",
-    bullets: [
-      "Horarios de clases académicos y artísticos",
-      "Consultas sobre el programa artístico",
-      "Registro de estudiantes",
-      "Encargado de festivales de música",
-    ],
-    person: "Mr. Álvaro Lanza",
-    email: "alvaro.lanza@hughesschools.org",
-    whatsapp: "77640675",
-    office: "4716262 – 4717354",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–12:00 • Lun/Mié/Vie 14:00–17:00",
-  },
-  {
-    id: "wellbeing-1",
-    area: "Bienestar",
-    title: "Coordinación de Bienestar Estudiantil",
-    bullets: [
-      "Conflictos de interacción social",
-      "Conflictos personales del estudiante o padres",
-      "Solicitud de entrevista con Docentes",
-      "Solicitud de entrevista con Coordinación Académica o Artística",
-      "Admisión de Estudiantes nuevos",
-    ],
-    person: "Mrs. Pilar Doering",
-    email: "client.service@hughesschools.org",
-    whatsapp: "70272837",
-    office: "4716262 – 4717354",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–17:00",
-  },
-  {
-    id: "wellbeing-folk",
-    area: "Bienestar",
-    title:
-      "Coordinación de Bienestar Estudiantil – Dirección Musical Folclórica",
-    bullets: [
-      "Conflictos sociales y personales",
-      "Solicitud de entrevista (académica / artística / docentes / dirección)",
-      "Admisión de estudiantes nuevos",
-      "Coordinación Música Folclórica y Grupo Musical Kusi Rima",
-      "Viajes Grupo Musical y Elenco Folclórico",
-      "Problemas del área artística o académica",
-    ],
-    person: "Mr. Bernabé Guzmán",
-    email: "bernabe.guzman@hughesschools.org",
-    whatsapp: "75939884",
-    office: "4716262 – 4717354",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–17:00",
-  },
-  {
-    id: "assistant",
-    area: "Administración",
-    title: "Asistente administrativo",
-    bullets: [
-      "Asistencia a clases (consultas)",
-      "Recepción de licencias",
-      "Información general",
-      "Recepción de documentos",
-      "Uniformes, transporte",
-      "Bloqueos y clases virtuales",
-      "Manejo plataforma Zoom",
-    ],
-    person: "Mr. André Bolaños",
-    office: "4716262 – 4717354",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–17:00",
-  },
-  {
-    id: "dde",
-    area: "Educación",
-    title: "Coordinación Departamento de Educación",
-    bullets: [
-      "Documentación DDE",
-      "Documentación Bachilleres",
-      "Emisión de libretas y certificados de notas",
-      "Revisión de documentación de registro",
-      "Comunicación con Defensoría de la Niñez",
-    ],
-    person: "Mr. Ricardo Salvatierra",
-    email: "systems@hughesschools.org",
-    whatsapp: "60343135",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Mar 08:00–13:00 y 14:00–17:00",
-  },
-  {
-    id: "acad-hugo",
-    area: "Académico",
-    title: "Coordinación Académica",
-    bullets: [
-      "Programas académicos",
-      "Programas analíticos",
-      "Ferias de Matemáticas, Ciencias y Tecnología",
-      "Horarios Académicos",
-      "Rendimiento académico",
-    ],
-    person: "Mr. Hugo Pozo",
-    email: "hugo.pozo@hughesschools.org",
-    whatsapp: "77954495",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 14:00–16:30",
-  },
-  {
-    id: "acad-carolina",
-    area: "Académico",
-    title: "Coordinación Académica",
-    bullets: [
-      "Programas académicos",
-      "Programas analíticos",
-      "ESL (Inglés como segunda lengua)",
-      "Rendimiento académico del idioma Inglés",
-      "Horarios Académicos",
-      "Rendimiento Académico",
-    ],
-    person: "Mrs. Carolina Cortés",
-    email: "carolina.cortes@hughesschools.org",
-    whatsapp: "65383231",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 14:00–16:30",
-  },
-  {
-    id: "dance-primary",
-    area: "Artes",
-    title: "Coordinación de danza (nivel primaria)",
-    bullets: [
-      "Festivales de danza de primaria",
-      "Vestuario de danza (general)",
-      "Ensayos para festivales",
-    ],
-    person: "Mrs. Celia Luna",
-    email: "celia.luna@hughesschools.org",
-    whatsapp: "79767611",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–13:00 y 14:00–17:00",
-  },
-  {
-    id: "accounting",
-    area: "Finanzas",
-    title: "Contabilidad",
-    bullets: [
-      "Consultas del área económica de Hughes Schools",
-      "Pagos Banco Mercantil Santa Cruz",
-      "Contratos de escolaridad",
-      "Contratos personal Hughes Schools",
-    ],
-    person: "Mr. Luis Sejas",
-    email: "luis.sejas@hughesschools.org",
-    whatsapp: "75474744",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun 08:00–12:00 y 15:30–17:00 • Mar–Vie 15:30–17:00",
-  },
-  {
-    id: "cashier",
-    area: "Finanzas",
-    title: "Caja",
-    bullets: [
-      "Pagos área económica",
-      "Pagos Banco Mercantil Santa Cruz",
-      "Consultas sobre otros pagos",
-    ],
-    person: "Mr. Gary García",
-    email: "cashier@hughesschools.org",
-    whatsapp: "64866129",
-    roomUrl: EVENT_ROOM_URL,
-    hours: "Lun a Vie 08:00–12:00 y 13:00–17:00",
-  },
-];
+/* ───────────────────── API Response Types ───────────────────── */
+interface StrapiHelpCenterCard {
+  id: number;
+  documentId: string;
+  area: string;
+  tittle: string; // Note: typo in backend schema
+  bullets: string[];
+  personName: string;
+  email?: string;
+  whatsapp?: string;
+  officePhone?: string;
+  roomUrl?: string;
+  hours?: string;
+  order?: number;
+}
+
+interface StrapiResponse {
+  data: StrapiHelpCenterCard[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+/* ───────────────────── Data Fetching ───────────────────── */
+async function fetchHelpCenterCards(): Promise<ContactCard[]> {
+  const res = await fetch(
+    `${API_URL}/api/help-center-cards?sort=order:asc&pagination[pageSize]=100&filters[publishedAt][$notNull]=true`,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener los datos del centro de ayuda");
+  }
+
+  const json: StrapiResponse = await res.json();
+
+  return json.data.map((item) => ({
+    id: item.documentId || String(item.id),
+    area: item.area || "General",
+    title: item.tittle || "", // Map from backend typo
+    bullets: Array.isArray(item.bullets) ? item.bullets : [],
+    person: item.personName || "",
+    email: item.email || undefined,
+    whatsapp: item.whatsapp || undefined,
+    office: item.officePhone || undefined,
+    roomUrl: item.roomUrl || EVENT_ROOM_URL,
+    hours: item.hours || undefined,
+  }));
+}
 
 /* ───────────────────── Small UI bits ───────────────────── */
 
@@ -234,19 +116,35 @@ function IconAvatar() {
 
 /* ───────────────────── Page ───────────────────── */
 
-export default function HelpCenterPage() {
+export default function ContactPage() {
+  const [cards, setCards] = React.useState<ContactCard[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const [query, setQuery] = React.useState("");
   const [area, setArea] = React.useState<string>("All");
   const [showAll, setShowAll] = React.useState(false);
 
+  React.useEffect(() => {
+    fetchHelpCenterCards()
+      .then((data) => {
+        setCards(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching help center cards:", err);
+        setError("Error al cargar los datos. Por favor, intente de nuevo.");
+        setLoading(false);
+      });
+  }, []);
+
   const areas = React.useMemo(
-    () => ["All", ...Array.from(new Set(CARDS.map((c) => c.area)))],
-    []
+    () => ["All", ...Array.from(new Set(cards.map((c) => c.area)))],
+    [cards]
   );
 
   const filtered = React.useMemo(() => {
     const q = query.toLowerCase().trim();
-    let list = CARDS.filter((c) => (area === "All" ? true : c.area === area));
+    let list = cards.filter((c) => (area === "All" ? true : c.area === area));
     if (q) {
       list = list.filter(
         (c) =>
@@ -258,9 +156,39 @@ export default function HelpCenterPage() {
       );
     }
     return list;
-  }, [area, query]);
+  }, [area, query, cards]);
 
   const toRender = showAll ? filtered : filtered.slice(0, 6);
+
+  // Loading state
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center" style={{ background: "#f9f9fb" }}>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: BRAND.blue }} />
+          <p className="text-hughes-blue">Cargando información...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <main className="min-h-screen flex items-center justify-center" style={{ background: "#f9f9fb" }}>
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="rounded-full border px-4 py-2 text-sm font-semibold"
+            style={{ background: BRAND.yellow, borderColor: BRAND.yellow, color: BRAND.blue }}
+          >
+            Reintentar
+          </button>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen" style={{ background: "#f9f9fb" }}>

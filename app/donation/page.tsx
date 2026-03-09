@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   GraduationCap,
@@ -11,7 +12,12 @@ import {
   Phone,
   ArrowRight,
   HeartHandshake,
-  Link
+  Link,
+  CreditCard,
+  QrCode,
+  X,
+  Download,
+  AlertCircle
 } from "lucide-react";
 
 const HERO_IMAGE = "/38.JPG";
@@ -148,12 +154,15 @@ function WhyWeGive() {
 
 // Donation Widget - Complete Form
 function DonationWidget() {
+  const router = useRouter();
   const [designation, setDesignation] = useState<DonationDesignation>("Student Application Fund");
   const [frequency, setFrequency] = useState<"once" | "monthly">("once");
   const [amount, setAmount] = useState<string>("150");
   const [tributeType, setTributeType] = useState<TributeType>("none");
   const [tributeName, setTributeName] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showQRModal, setShowQRModal] = useState(false);
+  const [showCardUnavailable, setShowCardUnavailable] = useState(false);
   
   const [donorInfo, setDonorInfo] = useState<DonorInfo>({
     firstName: "",
@@ -239,6 +248,24 @@ function DonationWidget() {
       alert("An error occurred. Please try again.");
       setIsProcessing(false);
     }
+  }
+
+  function handleCardPayment() {
+    setShowCardUnavailable(true);
+    setTimeout(() => setShowCardUnavailable(false), 3000);
+  }
+
+  function handleQRDownload() {
+    const link = document.createElement('a');
+    link.href = '/QR.jpeg';
+    link.download = 'Hughes-Schools-Donation-QR.jpeg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function handleDonationCompleted() {
+    router.push('/donation/success');
   }
 
   return (
@@ -468,21 +495,101 @@ function DonationWidget() {
             )}
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Buttons */}
           <div className="pt-8 border-t-2 border-gray-100">
-            <button
-              onClick={handleDonation}
-              disabled={isProcessing}
-              className="w-full py-5 px-8 rounded-full font-extrabold text-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_10px_40px_rgba(255,187,0,0.4)] bg-hs-yellow text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow border-4 border-hs-yellow"
-            >
-              {isProcessing ? "Processing Securely..." : `Complete Donation - $${Number(amount || 0).toLocaleString()}`}
-            </button>
+            {/* Card Unavailable Message */}
+            {showCardUnavailable && (
+              <div className="mb-6 p-4 rounded-xl bg-red-50 border-2 border-red-200 flex items-center gap-3">
+                <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
+                <p className="text-red-600 font-bold">Card payment method is currently unavailable. Please use QR donation.</p>
+              </div>
+            )}
+            
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              {/* Card Payment Button - Disabled */}
+              <button
+                onClick={handleCardPayment}
+                className="w-full py-5 px-8 rounded-full font-extrabold text-xl transition-all duration-300 opacity-50 cursor-not-allowed bg-gray-300 text-gray-600 border-4 border-gray-300 flex items-center justify-center gap-3"
+              >
+                <CreditCard className="w-6 h-6" />
+                Donate with Card
+              </button>
+              
+              {/* QR Payment Button */}
+              <button
+                onClick={() => setShowQRModal(true)}
+                className="w-full py-5 px-8 rounded-full font-extrabold text-xl transition-all duration-300 hover:scale-105 shadow-[0_10px_40px_rgba(255,187,0,0.4)] bg-hs-yellow text-hs-bluenavy hover:bg-hs-bluenavy hover:text-hs-yellow border-4 border-hs-yellow flex items-center justify-center gap-3"
+              >
+                <QrCode className="w-6 h-6" />
+                Donate with QR
+              </button>
+            </div>
+            
             <p className="text-sm font-bold text-gray-400 text-center mt-6 uppercase tracking-widest">
-              Secure payment processed by Stripe. <br className="sm:hidden"/> Tax-deductible under 501(c)(3).
+              Secure payment. <br className="sm:hidden"/> Tax-deductible under 501(c)(3).
             </p>
           </div>
         </div>
       </div>
+
+      {/* QR Modal */}
+      {showQRModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 relative animate-in fade-in zoom-in duration-300">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowQRModal(false)}
+              className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <X className="w-6 h-6 text-gray-500" />
+            </button>
+            
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-extrabold text-hs-bluenavy mb-2">
+                Scan to Donate
+              </h3>
+              <p className="text-gray-600 font-medium mb-6">
+                Use your phone camera or banking app to scan this QR code
+              </p>
+              
+              {/* QR Image */}
+              <div className="relative w-64 h-64 mx-auto mb-6 rounded-2xl overflow-hidden border-4 border-hs-bluenavy shadow-lg">
+                <Image
+                  src="/QR.jpeg"
+                  alt="Donation QR Code"
+                  fill
+                  className="object-contain p-2"
+                />
+              </div>
+              
+              {/* Amount Reminder */}
+              <div className="p-4 rounded-xl bg-hs-yellow/20 border-2 border-hs-yellow mb-6">
+                <p className="text-hs-bluenavy font-bold">
+                  Your donation amount: <span className="text-2xl">${Number(amount || 0).toLocaleString()}</span>
+                </p>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  onClick={handleQRDownload}
+                  className="flex-1 py-4 px-6 rounded-full font-bold text-lg transition-all hover:scale-105 bg-gray-100 text-hs-bluenavy hover:bg-gray-200 flex items-center justify-center gap-2"
+                >
+                  <Download className="w-5 h-5" />
+                  Download QR
+                </button>
+                <button
+                  onClick={handleDonationCompleted}
+                  className="flex-1 py-4 px-6 rounded-full font-bold text-lg transition-all hover:scale-105 bg-hs-bluenavy text-hs-yellow hover:bg-hs-yellow hover:text-hs-bluenavy border-2 border-hs-bluenavy flex items-center justify-center gap-2"
+                >
+                  <CheckCircle2 className="w-5 h-5" />
+                  Donation Completed
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

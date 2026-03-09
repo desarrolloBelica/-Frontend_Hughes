@@ -17,9 +17,205 @@ import {
   GraduationCap,
   Bus,
   MessageCircleQuestion,
+  BookOpen,
+  Users,
+  Calendar,
+  Heart,
+  Star,
+  Info,
+  HelpCircle,
+  LucideIcon,
 } from "lucide-react";
 
+/* ───────────────────── Constants ───────────────────── */
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
+/* ───────────────────── Icon Mapping ───────────────────── */
+const ICON_MAP: Record<string, LucideIcon> = {
+  "shield-check": ShieldCheck,
+  "clock": Clock,
+  "utensils-crossed": UtensilsCrossed,
+  "salad": Salad,
+  "smartphone": Smartphone,
+  "graduation-cap": GraduationCap,
+  "bus": Bus,
+  "message-circle-question": MessageCircleQuestion,
+  "book-open": BookOpen,
+  "users": Users,
+  "calendar": Calendar,
+  "heart": Heart,
+  "star": Star,
+  "info": Info,
+  "help-circle": HelpCircle,
+};
+
+/* ───────────────────── Types ───────────────────── */
+interface BlockChild {
+  type: string;
+  text?: string;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  children?: BlockChild[];
+}
+
+interface Block {
+  type: string;
+  children?: BlockChild[];
+  level?: number;
+}
+
+interface StrapiFAQ {
+  id: number;
+  documentId: string;
+  category: string;
+  question: string;
+  answer: Block[];
+  icon: string;
+  order?: number;
+}
+
+interface StrapiResponse {
+  data: StrapiFAQ[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+interface FAQItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: Block[];
+  icon: string;
+}
+
+/* ───────────────────── Data Fetching ───────────────────── */
+async function fetchFAQs(): Promise<FAQItem[]> {
+  const res = await fetch(
+    `${API_URL}/api/faqs?sort=order:asc&pagination[pageSize]=100&filters[publishedAt][$notNull]=true`,
+    { next: { revalidate: 60 } }
+  );
+
+  if (!res.ok) {
+    throw new Error("Error al obtener las preguntas frecuentes");
+  }
+
+  const json: StrapiResponse = await res.json();
+
+  return json.data.map((item) => ({
+    id: item.documentId || String(item.id),
+    category: item.category || "general",
+    question: item.question || "",
+    answer: item.answer || [],
+    icon: item.icon || "help-circle",
+  }));
+}
+
+/* ───────────────────── Blocks Renderer ───────────────────── */
+function renderBlockChild(child: BlockChild, index: number): React.ReactNode {
+  if (child.type === "text") {
+    let content: React.ReactNode = child.text || "";
+    if (child.bold) content = <strong key={index}>{content}</strong>;
+    if (child.italic) content = <em key={index}>{content}</em>;
+    if (child.underline) content = <u key={index}>{content}</u>;
+    return content;
+  }
+  if (child.type === "link" && child.children) {
+    return (
+      <span key={index}>
+        {child.children.map((c, i) => renderBlockChild(c, i))}
+      </span>
+    );
+  }
+  return child.text || "";
+}
+
+function renderBlock(block: Block, index: number): React.ReactNode {
+  const children = block.children?.map((child, i) => renderBlockChild(child, i)) || [];
+  
+  switch (block.type) {
+    case "paragraph":
+      return <p key={index} className="mb-2 last:mb-0">{children}</p>;
+    case "heading":
+      const level = block.level || 3;
+      if (level === 1) return <h1 key={index} className="font-bold mb-2 text-xl">{children}</h1>;
+      if (level === 2) return <h2 key={index} className="font-bold mb-2 text-lg">{children}</h2>;
+      if (level === 3) return <h3 key={index} className="font-bold mb-2 text-base">{children}</h3>;
+      if (level === 4) return <h4 key={index} className="font-bold mb-2">{children}</h4>;
+      return <h5 key={index} className="font-bold mb-2">{children}</h5>;
+    case "list":
+      return <ul key={index} className="list-disc pl-5 mb-2">{children}</ul>;
+    case "list-item":
+      return <li key={index}>{children}</li>;
+    default:
+      return <span key={index}>{children}</span>;
+  }
+}
+
+function BlocksContent({ blocks }: { blocks: Block[] }) {
+  if (!blocks || blocks.length === 0) return null;
+  return <>{blocks.map((block, i) => renderBlock(block, i))}</>;
+}
+
+/* ───────────────────── Icon Component ───────────────────── */
+function FAQIcon({ iconName }: { iconName: string }) {
+  const IconComponent = ICON_MAP[iconName] || HelpCircle;
+  return <IconComponent className="h-6 w-6 text-hs-bluenavy" />;
+}
+
 export default function FAQPage() {
+  const [faqs, setFaqs] = React.useState<FAQItem[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    fetchFAQs()
+      .then((data) => {
+        setFaqs(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching FAQs:", err);
+        setError("Error al cargar las preguntas frecuentes.");
+        setLoading(false);
+      });
+  }, []);
+
+  // Loading state
+  if (loading) {
+    return (
+      <main className="min-h-screen bg-hs-bluenavy flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-hs-yellow mx-auto mb-4" />
+          <p className="text-white">Cargando preguntas frecuentes...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <main className="min-h-screen bg-hs-bluenavy flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="rounded-full bg-hs-yellow px-4 py-2 text-sm font-semibold text-hs-bluenavy"
+          >
+            Reintentar
+          </button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen bg-hs-bluenavy">
       {/* HERO — Azul institucional con detalles divertidos */}
@@ -50,83 +246,36 @@ export default function FAQPage() {
               </h2>
             </div>
 
-            <Accordion type="multiple" className="w-full">
-              <FAQItem
-                value="uniforms"
-                icon={<ShieldCheck className="h-6 w-6 text-hs-bluenavy" />}
-                question="What uniforms are used?"
-              >
-                Hughes Schools uses differentiated uniforms by level and
-                activity. Students wear a formal daily uniform, a sports uniform
-                for PE, and an artistic uniform for performances.
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="schedule"
-                icon={<Clock className="h-6 w-6 text-hs-bluenavy" />}
-                question="What are the school hours?"
-              >
-                The school day runs from <strong>8:00 a.m. to 3:30 p.m.</strong>{" "}
-                Monday to Friday. Extended hours are available for artistic
-                workshops and extracurricular activities.
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="cafeteria"
-                icon={<UtensilsCrossed className="h-6 w-6 text-hs-bluenavy" />}
-                question="Does the school have a cafeteria?"
-              >
-                Yes. Our cafeteria offers balanced, affordable meals and snacks.
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="healthy"
-                icon={<Salad className="h-6 w-6 text-hs-bluenavy" />}
-                question="How is healthy eating promoted?"
-              >
-                Healthy habits are promoted with awareness campaigns, balanced
-                menus, and limiting ultra-processed products on campus.
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="devices"
-                icon={<Smartphone className="h-6 w-6 text-hs-bluenavy" />}
-                question="What is the policy on electronic devices?"
-              >
-                Personal devices are not permitted during class unless authorized
-                for educational purposes.
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="admissions-age"
-                icon={<GraduationCap className="h-6 w-6 text-hs-bluenavy" />}
-                question="From what age can students apply?"
-              >
-                Admission starts at <strong>Pre-Kindergarten</strong> (4 years old
-                by June 30 of the entry year).
-              </FAQItem>
-
-              <Divider />
-
-              <FAQItem
-                value="transport"
-                icon={<Bus className="h-6 w-6 text-hs-bluenavy" />}
-                question="Does the school provide transportation?"
-              >
-                Yes. We offer safe, supervised bus service covering several areas
-                of Cochabamba.
-              </FAQItem>
-            </Accordion>
+            {faqs.length === 0 ? (
+              <div className="text-center py-8 text-hs-bluenavy">
+                No hay preguntas frecuentes disponibles.
+              </div>
+            ) : (
+              <Accordion type="multiple" className="w-full">
+                {faqs.map((faq, index) => (
+                  <React.Fragment key={faq.id}>
+                    {index > 0 && <Divider />}
+                    <AccordionItem value={faq.id} className="group border-none">
+                      <AccordionTrigger className="text-left px-4 md:px-6 py-5 rounded-2xl hover:bg-white/30 data-[state=open]:bg-white/30 transition-all hover:no-underline focus:outline-none">
+                        <div className="flex items-center gap-4">
+                          <span className="shrink-0">
+                            <FAQIcon iconName={faq.icon} />
+                          </span>
+                          <span className="font-bold text-lg md:text-xl text-hs-bluenavy">
+                            {faq.question}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="px-4 md:px-6 pb-6 pt-2">
+                        <div className="text-base md:text-lg font-medium text-hs-bluenavy opacity-90 leading-relaxed pl-10">
+                          <BlocksContent blocks={faq.answer} />
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </React.Fragment>
+                ))}
+              </Accordion>
+            )}
             
           </div>
         </div>
@@ -136,34 +285,6 @@ export default function FAQPage() {
 }
 
 /* ---------- helpers ---------- */
-
-function FAQItem({
-  value,
-  icon,
-  question,
-  children,
-}: {
-  value: string;
-  icon: React.ReactNode;
-  question: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <AccordionItem value={value} className="group border-none">
-      <AccordionTrigger className="text-left px-4 md:px-6 py-5 rounded-2xl hover:bg-white/30 data-[state=open]:bg-white/30 transition-all hover:no-underline focus:outline-none">
-        <div className="flex items-center gap-4">
-          <span className="shrink-0">{icon}</span>
-          <span className="font-bold text-lg md:text-xl text-hs-bluenavy">{question}</span>
-        </div>
-      </AccordionTrigger>
-      <AccordionContent className="px-4 md:px-6 pb-6 pt-2">
-        <p className="text-base md:text-lg font-medium text-hs-bluenavy opacity-90 leading-relaxed pl-10">
-          {children}
-        </p>
-      </AccordionContent>
-    </AccordionItem>
-  );
-}
 
 function Divider() {
   return <div className="mx-6 h-[2px] bg-hs-bluenavy/10 my-1" />;
