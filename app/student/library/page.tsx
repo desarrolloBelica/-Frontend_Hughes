@@ -112,25 +112,22 @@ export default function LibraryPage() {
     (async () => {
       setLoading(true); setError(null);
       try {
-        // 1) Obtener grado del estudiante autenticado
-        const sess = getStudentFromStorage();
-        if (!sess?.email) {
+        // 1) Obtener grado del estudiante autenticado usando API route
+        const stuRes = await fetch('/api/student-auth/profile?populate=grade', {
+          cache: 'no-store',
+        });
+        
+        if (!stuRes.ok) {
           setError('Student session not found.');
           setItems([]);
           return;
         }
-
-        const qp = new URLSearchParams();
-        qp.set('filters[email][$eq]', sess.email);
-        qp.set('populate[grade]', 'true');
-        qp.set('pagination[pageSize]', '1');
-        const stuUrl = `${API}/api/students?${qp.toString()}`;
-        const stuJson = await fetchJSON(stuUrl, sess.tokenU);
-        const stuList = parseList(stuJson);
-        const stuRow = stuList[0];
-        const gradeRel = stuRow ? relOne(body<any>(stuRow).grade) : null;
+        
+        const stuData = await stuRes.json();
+        const stuRow = stuData?.student;
+        const gradeRel = stuRow ? relOne(body<any>(stuRow).grade ?? stuRow.grade) : null;
         const gradeId = gradeRel ? String((gradeRel as any).id ?? (gradeRel as any).documentId) : '';
-        const gradeName = gradeRel ? body<any>(gradeRel).name || '' : '';
+        const gradeName = gradeRel ? (body<any>(gradeRel).name || (gradeRel as any).name || '') : '';
         if (!gradeId) {
           setError('The student has no assigned grade.');
           setItems([]);
@@ -138,7 +135,7 @@ export default function LibraryPage() {
         }
         setStudentGrade({ id: gradeId, name: gradeName || 'Grade' });
 
-        // 2) Fetch textbooks only for that grade
+        // 2) Fetch textbooks only for that grade (public endpoint)
         const p = new URLSearchParams();
         p.set('populate[file]', 'true');
         p.set('populate[grade]', 'true');
@@ -147,7 +144,7 @@ export default function LibraryPage() {
         p.set('filters[grade][id][$eq]', gradeId);
         p.set('pagination[pageSize]', '200');
         const url = `${API}/api/textbooks?${p.toString()}`;
-        const json = await fetchJSON(url, sess.tokenU);
+        const json = await fetchJSON(url);
         const list = parseList(json);
         setItems(list);
 

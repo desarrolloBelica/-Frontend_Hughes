@@ -99,80 +99,41 @@ async function fetchJSON(url: string, token?: string) {
 }
 
 /* populate estudiante: sección + grupo artístico (v5) */
-function qParentByEmail(email: string) {
-  const p = new URLSearchParams();
-  p.set("filters[email][$eq]", email);
-  p.set("populate[students][populate][section]", "true");
-  p.set("populate[students][populate][art_group]", "true");
-  p.set("pagination[pageSize]", "1");
-  return `${API}/api/parents?${p.toString()}`;
-}
-function qParentById(id: number | string) {
-  const p = new URLSearchParams();
-  p.set("filters[id][$eq]", String(id));
-  p.set("populate[students][populate][section]", "true");
-  p.set("populate[students][populate][art_group]", "true");
-  p.set("pagination[pageSize]", "1");
-  return `${API}/api/parents?${p.toString()}`;
-}
+// Note: These direct Strapi queries are deprecated in favor of API routes
+// function qParentByEmail(email: string) { ... }
+// function qParentById(id: number | string) { ... }
 
 /**
  * Obtiene los datos del padre con estudiantes.
- * PRIORIDAD: 
- * 1. API de Next.js (usa cookies httpOnly - más seguro y confiable en producción)
- * 2. Query directa a Strapi con token de localStorage (fallback)
+ * Usa la API Route de Next.js que maneja la autenticación via cookies httpOnly
  */
 async function fetchParent(): Promise<AnyObj | null> {
-  // 1. Intentar obtener desde la API de Next.js (usando cookies httpOnly)
   try {
-    const parentFromAPI = await fetchParentFromAPI();
-    if (parentFromAPI && (parentFromAPI.id || parentFromAPI.documentId)) {
-      console.log("fetchParent: datos obtenidos desde API de Next.js");
-      return parentFromAPI as AnyObj;
-    }
-  } catch (e) {
-    console.warn("fetchParent: error obteniendo desde API, intentando fallback...", e);
-  }
+    // Usar la API Route que maneja auth con cookies (más seguro y confiable)
+    const res = await fetch("/api/auth/profile?populate=students.section,students.art_group", {
+      cache: "no-store",
+      credentials: "include",
+    });
 
-  // 2. Fallback: Query directa a Strapi con token de localStorage
-  const sess = getParentFromStorage();
-  if (!sess) {
-    console.warn("fetchParent: no hay sesión en localStorage");
+    if (!res.ok) {
+      console.warn("fetchParent: error obteniendo datos del padre", res.status);
+      return null;
+    }
+
+    const data = await res.json();
+    const parentData = data?.parent || data;
+    
+    if (parentData && (parentData.id || parentData.documentId)) {
+      console.log("fetchParent: datos obtenidos exitosamente");
+      return parentData as AnyObj;
+    }
+    
+    console.warn("fetchParent: datos de padre inválidos", data);
+    return null;
+  } catch (e) {
+    console.error("fetchParent: error", e);
     return null;
   }
-  
-  const urls: string[] = [];
-  if (sess.id !== undefined && sess.id !== null && String(sess.id) !== "") {
-    urls.push(qParentById(sess.id as any));
-  }
-  if (sess.email) {
-    urls.push(qParentByEmail(sess.email));
-  }
-  
-  // Verificar también hs_parent por si tiene email diferente
-  try {
-    const raw = localStorage.getItem("hs_parent");
-    const obj = raw ? JSON.parse(raw) : null;
-    if (obj?.email && obj.email !== sess.email) {
-      urls.push(qParentByEmail(obj.email));
-    }
-  } catch {}
-  
-  for (const u of urls) {
-    try {
-      const json = await fetchJSON(u, sess.tokenU);
-      const items = parseList(json);
-      if (items[0]) {
-        console.log("fetchParent: datos obtenidos desde Strapi directamente");
-        return items[0];
-      }
-    } catch (e) {
-      console.error("Error buscando padre en la URL:", u, "Detalle:", e);
-    }
-  }
-  
-  console.warn("fetchParent: no se pudo obtener datos del padre por ningún método");
-  return null;
 }
 
 /* Académico: por sección */

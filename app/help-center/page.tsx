@@ -69,7 +69,7 @@ interface StrapiResponse {
 /* ───────────────────── Data Fetching ───────────────────── */
 async function fetchHelpCenterCards(): Promise<ContactCard[]> {
   const res = await fetch(
-    `${API_URL}/api/help-center-cards?sort=order:asc&pagination[pageSize]=100&filters[publishedAt][$notNull]=true`,
+    `${API_URL}/api/help-center-cards/public?sort=order:asc&pagination[pageSize]=100`,
     { next: { revalidate: 60 } }
   );
 

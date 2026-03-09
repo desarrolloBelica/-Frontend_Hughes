@@ -121,19 +121,19 @@ async function fetchJSON(url: string, token?: string) {
    Consultas
    ========================= */
 async function fetchStudentMe(): Promise<UnknownRecord | null> {
-  const sess = getStudentFromStorage();
-  if (!sess?.email) return null;
-
-  const p = new URLSearchParams();
-  p.set('filters[email][$eq]', sess.email);
-  p.set('populate[section]', 'true');
-  p.set('populate[art_group]', 'true');
-  p.set('pagination[pageSize]', '1');
-
-  const url = `${API}/api/students?${p.toString()}`;
-  const json = await fetchJSON(url, sess.tokenU);
-  const items = parseList(json);
-  return items[0] ?? null;
+  // Use API route which handles auth via cookies
+  const res = await fetch('/api/student-auth/profile?populate=section,art_group', {
+    cache: 'no-store',
+  });
+  
+  if (!res.ok) {
+    console.error('fetchStudentMe error:', res.status);
+    return null;
+  }
+  
+  const json = await res.json();
+  // The backend returns { student: {...} }
+  return json?.student ?? null;
 }
 
 async function fetchTimetableBySectionId(sectionId: number) {
