@@ -151,9 +151,13 @@ async function fetchTimetableBySectionId(sectionId: number) {
   const json = await fetchJSON(url);
   return parseList(json);
 }
-async function fetchArtTimetableByGroupId(groupId: number) {
+async function fetchArtTimetableByGroupId(groupId: number | string, groupDocId?: string) {
+  // Strapi v5: use documentId for manyToMany relations
+  const filterValue = groupDocId || groupId;
+  const filterField = groupDocId ? 'documentId' : 'id';
+  
   const qs =
-    `filters[art_groups][id][$in]=${encodeURIComponent(String(groupId))}` +
+    `filters[art_groups][${filterField}][$in]=${encodeURIComponent(String(filterValue))}` +
     `&populate[subject][fields][0]=name` +
     `&populate[subject][fields][1]=shortName` +
     `&populate[subject][fields][2]=color` +
@@ -161,7 +165,8 @@ async function fetchArtTimetableByGroupId(groupId: number) {
     `&populate[teacher][fields][1]=lastName` +
     `&pagination[pageSize]=200` +
     `&sort[0]=day:asc` +
-    `&sort[1]=startTime:asc`;
+    `&sort[1]=startTime:asc` +
+    `&status=published`;  // Strapi v5: draftAndPublish=true requires explicit status
   const url = `${API}/api/art-timetable-entries?${qs}`;
   const json = await fetchJSON(url);
   return parseList(json);
@@ -568,10 +573,11 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
         const agRel = relOne((sb as AnyObj).art_group ?? (sb as AnyObj).artGroup);
         const agBody = agRel ? body(agRel) : null;
         const groupId = (agRel as AnyObj)?.id ?? (agRel as AnyObj)?.documentId ?? null;
+        const groupDocId = (agRel as AnyObj)?.documentId ?? null;
         setGroupName((agBody as AnyObj)?.name || '');
         if (!groupId) { setError('The student has no assigned art group.'); setLoading(false); return; }
 
-        const entries = await fetchArtTimetableByGroupId(Number(groupId));
+        const entries = await fetchArtTimetableByGroupId(Number(groupId), groupDocId);
         const { slots: s, grid: g } = buildSlotsAndGrid(entries);
 
         for (const it of entries) {
