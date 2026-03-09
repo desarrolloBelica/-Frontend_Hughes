@@ -6,7 +6,7 @@ import * as React from "react";
 import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CheckCircle2, Info, Send, XCircle } from "lucide-react";
-import { useParentAuth, fetchParentFromAPI } from "@/hooks/useParentAuth";
+import { useParentAuth } from "@/hooks/useParentAuth";
 
 /* ─────────── Config ─────────── */
 const API = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:1337";
@@ -204,15 +204,17 @@ export default function HelpCenterFormsPage() {
 
 /* ──────────────────────────────────────────────────────────
    Reserva de plaza (gestión 2026 + bloqueo si ya respondió)
+   Con selector de múltiples estudiantes
    ────────────────────────────────────────────────────────── */
 function SeatReservationForm() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
   const [parent, setParent] = React.useState<AnyObj | null>(null);
-  const [student, setStudent] = React.useState<AnyObj | null>(null);
+  const [students, setStudents] = React.useState<Array<{ id: number; row: AnyObj }>>([]);
+  const [selectedStudentId, setSelectedStudentId] = React.useState<number | null>(null);
+  
   const [sectionName, setSectionName] = React.useState("");
-
   const [existing, setExisting] = React.useState<AnyObj | null>(null); // reserva ya enviada (2026)
 
   const [confirm, setConfirm] = React.useState<"SI" | "NO" | "">("");
@@ -220,6 +222,7 @@ function SeatReservationForm() {
   const [submitting, setSubmitting] = React.useState(false);
   const [done, setDone] = React.useState<"ok" | "err" | "">("");
 
+  // Cargar padre y estudiantes
   React.useEffect(() => {
     (async () => {
       setLoading(true); setError(null);
@@ -227,36 +230,52 @@ function SeatReservationForm() {
         const p = await fetchParent();
         if (!p) {
           setError("No se pudo leer la sesión del padre.");
-          console.error("Error: No se pudo leer la sesión del padre.", { localStorage: { hs_parent_session: localStorage.getItem("hs_parent_session"), hs_parent: localStorage.getItem("hs_parent") } });
           setLoading(false);
           return;
         }
         setParent(p);
         const studs = relArray(body(p).students);
         if (studs.length === 0) { setError("No hay estudiantes vinculados."); setLoading(false); return; }
-        const st = studs[0];
-        setStudent(st);
-        const sec = relOne(body(st).section);
-        setSectionName(sec ? body(sec).name || "" : "");
-
-        // ¿Ya existe reserva 2026 para este estudiante?
-        const stId = st.id ?? (st as any).documentId;
-        if (stId) {
-          try {
-            const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
-            setExisting(ex);
-          } catch (err) {
-            // Silently handle 403 - permissions issue, allow form to display
-            console.warn("Could not fetch existing reservation:", err);
-          }
-        }
+        
+        const list = studs.map((s) => ({ id: Number(s?.id ?? s?.documentId ?? 0), row: s }));
+        setStudents(list);
+        setSelectedStudentId(list[0]?.id ?? null);
       } catch (e: any) { setError(e?.message || String(e)); }
       finally { setLoading(false); }
     })();
   }, []);
 
+  // Cuando cambia el estudiante seleccionado, actualizar sección y verificar reserva existente
+  React.useEffect(() => {
+    if (!selectedStudentId || students.length === 0) return;
+    
+    (async () => {
+      const sItem = students.find((x) => x.id === selectedStudentId);
+      if (!sItem) return;
+      
+      const st = sItem.row;
+      const sec = relOne(body(st).section);
+      setSectionName(sec ? body(sec).name || "" : "");
+      setExisting(null);
+      setConfirm("");
+      setDone("");
+
+      // ¿Ya existe reserva 2026 para este estudiante?
+      const stId = st.id ?? (st as any).documentId;
+      if (stId) {
+        try {
+          const ex = await fetchExistingSeatReservation(stId, TARGET_YEAR);
+          setExisting(ex);
+        } catch (err) {
+          console.warn("Could not fetch existing reservation:", err);
+        }
+      }
+    })();
+  }, [selectedStudentId, students]);
+
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const student = students.find((x) => x.id === selectedStudentId)?.row;
     if (!parent || !student || !confirm) return;
 
     setSubmitting(true); setDone(""); setError(null);
@@ -264,11 +283,11 @@ function SeatReservationForm() {
       const sess = getParentFromStorage();
       const payload = {
         data: {
-          parent: (parent.id ?? (parent as any).documentId) ?? null,      // relation
-          student: (student.id ?? (student as any).documentId) ?? null,   // relation
+          parent: (parent.id ?? (parent as any).documentId) ?? null,
+          student: (student.id ?? (student as any).documentId) ?? null,
           sectionName,
           schoolYear: TARGET_YEAR,
-          confirm, // "SI" | "NO"
+          confirm,
         },
       };
       await fetchJSON(`${API}/api/seat-reservations`, sess?.tokenU, {
@@ -294,7 +313,8 @@ function SeatReservationForm() {
     }
   }
 
-  const sBody = student ? body(student) : {};
+  const selectedStudent = students.find((x) => x.id === selectedStudentId)?.row;
+  const sBody = selectedStudent ? body(selectedStudent) : {};
 
   // Si ya hay una reserva para 2026 → mostrar mensaje y NO el formulario
   if (!loading && !error && existing) {
@@ -304,6 +324,23 @@ function SeatReservationForm() {
     return (
       <div className="rounded-2xl border bg-white p-6 shadow-sm" style={{ borderColor: "#ececf4" }}>
         <h3 className="text-xl font-bold text-hughes-blue">Reserva de plaza — Gestión {TARGET_YEAR}</h3>
+
+        {/* Selector de estudiante (siempre visible si hay más de uno) */}
+        {students.length > 1 && (
+          <div className="mt-4 flex items-center gap-3">
+            <label className="text-sm font-semibold text-hughes-blue">Estudiante:</label>
+            <select 
+              value={selectedStudentId ?? ""} 
+              onChange={(e) => setSelectedStudentId(Number(e.target.value))}
+              className="rounded-md border px-3 py-1.5 text-sm"
+            >
+              {students.map((s) => {
+                const sb = body(s.row);
+                return <option key={s.id} value={s.id}>{`${sb.firstName ?? ""} ${sb.lastName ?? ""}`.trim()}</option>;
+              })}
+            </select>
+          </div>
+        )}
 
         <div className="mt-4 rounded-xl border p-4 bg-slate-50" style={{ borderColor: "#e2e8f0" }}>
           <p className="flex items-center gap-2 text-hughes-blue">
@@ -336,14 +373,27 @@ function SeatReservationForm() {
 
       {!loading && !error && (
         <form onSubmit={onSubmit} className="mt-5 space-y-5">
-          {/* Resumen estudiante */}
+          {/* Selector de estudiante */}
           <div className="rounded-xl border p-4" style={{ borderColor: "#ececf4" }}>
             <p className="text-sm text-hughes-blue/70">Estudiante</p>
-            <p className="text-hughes-blue font-semibold">
-              {[sBody.firstName, sBody.lastName].filter(Boolean).join(" ")}
-            </p>
+            {students.length > 1 ? (
+              <select 
+                value={selectedStudentId ?? ""} 
+                onChange={(e) => setSelectedStudentId(Number(e.target.value))}
+                className="mt-1 w-full rounded-md border px-3 py-2 text-sm font-semibold text-hughes-blue"
+              >
+                {students.map((s) => {
+                  const sb = body(s.row);
+                  return <option key={s.id} value={s.id}>{`${sb.firstName ?? ""} ${sb.lastName ?? ""}`.trim()}</option>;
+                })}
+              </select>
+            ) : (
+              <p className="text-hughes-blue font-semibold">
+                {[sBody.firstName, sBody.lastName].filter(Boolean).join(" ")}
+              </p>
+            )}
             {sectionName && (
-              <p className="text-sm text-hughes-blue/80">Sección: {sectionName}</p>
+              <p className="text-sm text-hughes-blue/80 mt-1">Sección: {sectionName}</p>
             )}
           </div>
 
@@ -407,14 +457,17 @@ function SeatReservationForm() {
 }
 
 /* ──────────────────────────────────────────────────────────
-   Solicitud de licencia (sin cambios funcionales)
+   Solicitud de licencia
+   Con selector de múltiples estudiantes
    ────────────────────────────────────────────────────────── */
 function LeaveRequestForm() {
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
 
   const [parent, setParent] = React.useState<AnyObj | null>(null);
-  const [student, setStudent] = React.useState<AnyObj | null>(null);
+  const [students, setStudents] = React.useState<Array<{ id: number; row: AnyObj }>>([]);
+  const [selectedStudentId, setSelectedStudentId] = React.useState<number | null>(null);
+  
   const [sectionName, setSectionName] = React.useState("");
   const [groupName, setGroupName] = React.useState("");
 
@@ -432,14 +485,14 @@ function LeaveRequestForm() {
   const [submitting, setSubmitting] = React.useState(false);
   const [done, setDone] = React.useState<"ok" | "err" | "">("");
 
+  // Cargar padre y estudiantes
   React.useEffect(() => {
     (async () => {
       setLoading(true); setError(null);
       try {
         const p = await fetchParent();
         if (!p) {
-          setError("No se pudo leer la sesión del padre. (Detalles en consola)");
-          console.error("Error: No se pudo leer la sesión del padre.", { localStorage: { hs_parent_session: localStorage.getItem("hs_parent_session"), hs_parent: localStorage.getItem("hs_parent") } });
+          setError("No se pudo leer la sesión del padre.");
           setLoading(false);
           return;
         }
@@ -447,19 +500,42 @@ function LeaveRequestForm() {
 
         const studs = relArray(body(p).students);
         if (studs.length === 0) { setError("No hay estudiantes vinculados."); setLoading(false); return; }
-        const st = studs[0];
-        setStudent(st);
+        
+        const list = studs.map((s) => ({ id: Number(s?.id ?? s?.documentId ?? 0), row: s }));
+        setStudents(list);
+        setSelectedStudentId(list[0]?.id ?? null);
+      } catch (e: any) {
+        setError(e?.message || String(e));
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-        const sec = relOne(body(st).section);
-        setSectionName(sec ? body(sec).name || "" : "");
+  // Cuando cambia el estudiante seleccionado, actualizar sección, grupo y materias
+  React.useEffect(() => {
+    if (!selectedStudentId || students.length === 0) return;
+    
+    (async () => {
+      const sItem = students.find((x) => x.id === selectedStudentId);
+      if (!sItem) return;
+      
+      const st = sItem.row;
+      const sec = relOne(body(st).section);
+      setSectionName(sec ? body(sec).name || "" : "");
 
-        const ag = relOne(body(st).art_group ?? (body(st) as any).artGroup);
-        setGroupName(ag ? body(ag).name || "" : "");
+      const ag = relOne(body(st).art_group ?? (body(st) as any).artGroup);
+      setGroupName(ag ? body(ag).name || "" : "");
 
-        // Cargar materias (académicas + artísticas) para la opción "parcial"
-        const sectionId = sec?.id ?? sec?.documentId ?? null;
-        const groupId = ag?.id ?? ag?.documentId ?? null;
+      // Resetear selección de materias al cambiar estudiante
+      setSubjects([]);
+      setAllSubjects([]);
 
+      // Cargar materias (académicas + artísticas) para la opción "parcial"
+      const sectionId = sec?.id ?? sec?.documentId ?? null;
+      const groupId = ag?.id ?? ag?.documentId ?? null;
+
+      try {
         const [acad, art] = await Promise.all([
           sectionId ? fetchSectionEntries(Number(sectionId)) : Promise.resolve([]),
           groupId ? fetchGroupEntries(Number(groupId)) : Promise.resolve([]),
@@ -477,13 +553,11 @@ function LeaveRequestForm() {
 
         const list = Array.from(names).sort().map((n, i) => ({ id: String(i + 1), name: n }));
         setAllSubjects(list);
-      } catch (e: any) {
-        setError(e?.message || String(e));
-      } finally {
-        setLoading(false);
+      } catch (e) {
+        console.warn("Error loading subjects:", e);
       }
     })();
-  }, []);
+  }, [selectedStudentId, students]);
 
   function toggleSubject(name: string) {
     setSubjects((prev) => (prev.includes(name) ? prev.filter((x) => x !== name) : [...prev, name]));
@@ -491,6 +565,7 @@ function LeaveRequestForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const student = students.find((x) => x.id === selectedStudentId)?.row;
     if (!parent || !student) return;
 
     // Validaciones simples
@@ -522,7 +597,7 @@ function LeaveRequestForm() {
         payload.data.dateEnd = dateEnd;
       } else {
         payload.data.datePartial = datePartial;
-        payload.data.subjects = subjects; // arreglo de strings
+        payload.data.subjects = subjects;
       }
 
       await fetchJSON(`${API}/api/leave-requests`, sess?.tokenU, {
@@ -530,7 +605,7 @@ function LeaveRequestForm() {
         body: JSON.stringify(payload),
       });
       setDone("ok");
-      // limpiar
+      // limpiar campos pero mantener estudiante seleccionado
       setReason("");
       setDateStart(""); setDateEnd("");
       setDatePartial(""); setSubjects([]);
@@ -544,7 +619,8 @@ function LeaveRequestForm() {
   }
 
   const pBody = parent ? body(parent) : {};
-  const sBody = student ? body(student) : {};
+  const selectedStudent = students.find((x) => x.id === selectedStudentId)?.row;
+  const sBody = selectedStudent ? body(selectedStudent) : {};
 
   return (
     <div className="rounded-2xl border bg-white p-6 shadow-sm" style={{ borderColor: "#ececf4" }}>
@@ -555,7 +631,7 @@ function LeaveRequestForm() {
 
       {!loading && !error && (
         <form onSubmit={onSubmit} className="mt-5 space-y-6">
-          {/* Resumen padre + alumno */}
+          {/* Resumen padre + selector de estudiante */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="rounded-xl border p-4" style={{ borderColor: "#ececf4" }}>
               <p className="text-sm text-hughes-blue/70">Padre/Madre/Tutor</p>
@@ -564,10 +640,23 @@ function LeaveRequestForm() {
             </div>
             <div className="rounded-xl border p-4" style={{ borderColor: "#ececf4" }}>
               <p className="text-sm text-hughes-blue/70">Estudiante</p>
-              <p className="text-hughes-blue font-semibold">
-                {[sBody.firstName, sBody.lastName].filter(Boolean).join(" ")}
-              </p>
-              {sectionName && <p className="text-sm text-hughes-blue/80">Sección: {sectionName}</p>}
+              {students.length > 1 ? (
+                <select 
+                  value={selectedStudentId ?? ""} 
+                  onChange={(e) => setSelectedStudentId(Number(e.target.value))}
+                  className="mt-1 w-full rounded-md border px-3 py-2 text-sm font-semibold text-hughes-blue"
+                >
+                  {students.map((s) => {
+                    const sb = body(s.row);
+                    return <option key={s.id} value={s.id}>{`${sb.firstName ?? ""} ${sb.lastName ?? ""}`.trim()}</option>;
+                  })}
+                </select>
+              ) : (
+                <p className="text-hughes-blue font-semibold">
+                  {[sBody.firstName, sBody.lastName].filter(Boolean).join(" ")}
+                </p>
+              )}
+              {sectionName && <p className="text-sm text-hughes-blue/80 mt-1">Sección: {sectionName}</p>}
               {groupName && <p className="text-sm text-hughes-blue/80">Grupo artístico: {groupName}</p>}
             </div>
           </div>

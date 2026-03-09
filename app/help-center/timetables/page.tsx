@@ -6,7 +6,7 @@ import * as React from "react";
 import ParentsPortalNav from "@/components/parents/ParentsPortalNav";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { User, Tag, Download } from "lucide-react";
-import { useParentAuth, fetchParentFromAPI } from "@/hooks/useParentAuth";
+import { useParentAuth } from "@/hooks/useParentAuth";
 
 const BRAND = { blue: "var(--hs-blue)", yellow: "var(--hs-yellow)" };
 const API = process.env.NEXT_PUBLIC_BACKEND_URL ;
@@ -72,20 +72,6 @@ const DAY_ES: Record<Day, string> = {
 };
 const DAYS: Day[] = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
-/* ─────────── Storage ─────────── */
-function getParentFromStorage(): { email?: string; id?: number | string; tokenU?: string } | null {
-  try {
-    const a = localStorage.getItem("hs_parent_session");
-    const b = localStorage.getItem("hs_parent");
-    const pA = a ? JSON.parse(a) : {};
-    const pB = b ? JSON.parse(b) : {};
-    // Leer tokenU de ambos lugares con fallback (igual que email e id)
-    return { email: pA?.email || pB?.email, id: pA?.id ?? pB?.id, tokenU: pA?.tokenU || pB?.tokenU };
-  } catch {
-    return null;
-  }
-}
-
 /* ─────────── Fetchers ─────────── */
 async function fetchJSON(url: string, token?: string) {
   const headers: HeadersInit = {};
@@ -121,10 +107,15 @@ async function fetchParent(): Promise<AnyObj | null> {
     }
 
     const data = await res.json();
+    console.log("[PARENT DEBUG] Raw response from /api/auth/profile:", JSON.stringify(data, null, 2));
     const parentData = data?.parent || data;
     
     if (parentData && (parentData.id || parentData.documentId)) {
       console.log("fetchParent: datos obtenidos exitosamente");
+      // Log students data specifically
+      if (parentData.students) {
+        console.log("[PARENT DEBUG] Students data:", JSON.stringify(parentData.students, null, 2));
+      }
       return parentData as AnyObj;
     }
     
@@ -164,9 +155,12 @@ async function fetchArtTimetableByGroupId(groupId: number) {
     `&populate[teacher][fields][1]=lastName` +
     `&pagination[pageSize]=200` +
     `&sort[0]=day:asc` +
-    `&sort[1]=startTime:asc`;
+    `&sort[1]=startTime:asc` +
+    `&status=published`;  // Strapi v5: draftAndPublish=true requiere status explícito
   const url = `${API}/api/art-timetable-entries?${qs}`;
+  console.log("[ART TIMETABLE] Fetching URL:", url);
   const json = await fetchJSON(url);
+  console.log("[ART TIMETABLE] Response:", json);
   return parseList(json);
 }
 
@@ -540,15 +534,19 @@ function ArtisticGrid({ printMode = false }: { printMode?: boolean }) {
         if (!sItem) return;
 
         const sBody = body(sItem.row);
+        console.log("[ART DEBUG] Student body:", sBody);
         setStudentName([sBody.firstName, sBody.lastName].filter(Boolean).join(" "));
 
         const agRel = relOne((sBody as any).art_group ?? (sBody as any).artGroup);
+        console.log("[ART DEBUG] art_group relation:", agRel);
         const agBody = agRel ? body(agRel) : null;
         const groupId = agRel?.id ?? agRel?.documentId ?? null;
+        console.log("[ART DEBUG] Extracted groupId:", groupId, "groupName:", agBody?.name);
         setGroupName(agBody?.name || "");
         if (!groupId) { setError("El estudiante no tiene grupo artístico asignado."); setLoading(false); return; }
 
         const entries = await fetchArtTimetableByGroupId(Number(groupId));
+        console.log("[ART DEBUG] Entries returned:", entries.length, entries);
         const { slots: s, grid: g } = buildSlotsAndGrid(entries);
 
         for (const it of entries) {
